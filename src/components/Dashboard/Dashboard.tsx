@@ -1,11 +1,65 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Users, CalendarDays, Wallet, NotepadText, Phone, AlertCircle, Settings, HelpCircle, MapPin, RefreshCw, Cake, Video, BookOpen, FileText, TrendingUp, ChevronRight, Crown, Send } from "lucide-react";
+import { Users, CalendarDays, Wallet, NotepadText, Phone, AlertCircle, Settings, HelpCircle, MapPin, RefreshCw, Cake, Video, BookOpen, FileText, TrendingUp, ChevronRight, Crown, Send, Network, Layers, Target } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase"
 import { TownProps } from '../../types/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import StatsCard from './StatsCard';
+import AttendanceHeatMap from './AttendanceHeatMap';
+import GrowthRunway from './GrowthRunway';
+import KPIStrip from './KPIStrip';
+import RecruitmentFunnel from './RecruitmentFunnel';
+import NineBoxMatrix from './NineBoxMatrix';
+import RetentionGauge from './RetentionGauge';
+import LifecycleMap from './LifecycleMap';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
+import { Quotes } from "@phosphor-icons/react";
+import LoadingSpinner from '../UI/LoadingSpinner';
+
+const trafficData = [
+  { time: '00:00', in: 200, out: 800 },
+  { time: '04:00', in: 150, out: 600 },
+  { time: '08:00', in: 500, out: 1800 },
+  { time: '12:00', in: 900, out: 2400 },
+  { time: '16:00', in: 800, out: 2100 },
+  { time: '20:00', in: 1100, out: 2800 },
+  { time: '23:59', in: 400, out: 1200 },
+];
+
+const loadData = [
+  { name: 'SALES', value: 85 },
+  { name: 'CREDIT', value: 65 },
+  { name: 'TECH', value: 45 },
+  { name: 'SUPPORT', value: 30 },
+  { name: 'HR', value: 75 },
+];
+
+const payrollData = [
+  { month: 'Jan', base: 28, bonus: 20, overtime: 14 },
+  { month: 'Feb', base: 30, bonus: 21, overtime: 15 },
+  { month: 'Mar', base: 31, bonus: 22, overtime: 15 },
+  { month: 'Apr', base: 30, bonus: 21, overtime: 16 },
+  { month: 'May', base: 33, bonus: 23, overtime: 17 },
+  { month: 'Jun', base: 35, bonus: 24, overtime: 17 },
+  { month: 'Jul', base: 36, bonus: 25, overtime: 18 },
+];
+
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-[var(--sidebar)] border border-[var(--p-line)] p-3 rounded-lg shadow-2xl">
+        <p className="text-[10px] font-mono text-[var(--t4)] mb-1">{label}</p>
+        {payload.map((p: any, i: number) => (
+          <p key={i} className="text-xs font-bold" style={{ color: p.color }}>
+            {p.name}: {p.value}
+          </p>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
 
 interface AreaTownMapping {
   [area: string]: string[];
@@ -56,8 +110,23 @@ export default function DashboardMain({ selectedTown, onTownChange, selectedRegi
   const [recentActivity, setRecentActivity] = useState<ActivityItem[]>([]);
   const [isNewsLoading, setIsNewsLoading] = useState(true);
   const [isSendingBirthdaySMS, setIsSendingBirthdaySMS] = useState(false);
+  const [isLightMode, setIsLightMode] = useState(document.body.classList.contains('light'));
 
   const navigate = useNavigate();
+
+  // Theme detection for logo
+  useEffect(() => {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          setIsLightMode(document.body.classList.contains('light'));
+        }
+      });
+    });
+
+    observer.observe(document.body, { attributes: true });
+    return () => observer.disconnect();
+  }, []);
 
   // Phone formatting function for SMS
   const formatPhoneNumberForSMS = (phone: string): string => {
@@ -740,245 +809,243 @@ export default function DashboardMain({ selectedTown, onTownChange, selectedRegi
   };
 
   return (
-    <div className="min-h-screen p-6 md:p-8 font-sans bg-transparent">
-      {/* Popup Messages */}
+    <div className="w-full animate-pgIn">
+
+      {/* Toasts */}
       <AnimatePresence>
         {showUnauthorizedPopup && (
-          <motion.div
-            initial={{ opacity: 0, y: -20, x: 100 }}
-            animate={{ opacity: 1, y: 0, x: 0 }}
-            exit={{ opacity: 0, y: -20, x: 100 }}
-            className="fixed top-5 right-5 p-4 rounded-xl text-white z-[1000] shadow-2xl bg-red-500 flex items-center"
-          >
-            <AlertCircle className="w-4 h-4 mr-2" />
-            <span className="text-sm font-medium">Unauthorized access</span>
-          </motion.div>
-        )}
-
-        {showSupportPopup && (
-          <motion.div
-            initial={{ opacity: 0, y: -20, x: 100 }}
-            animate={{ opacity: 1, y: 0, x: 0 }}
-            exit={{ opacity: 0, y: -20, x: 100 }}
-            className="fixed top-5 right-5 p-4 rounded-xl text-white z-[1000] shadow-2xl bg-emerald-500 flex items-center"
-          >
-            <Phone className="w-4 h-4 mr-2" />
-            <span className="text-sm font-medium">Support: 0700594586</span>
+          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+            className="fixed top-5 right-5 flex items-center gap-2 px-4 py-3 bg-[var(--red-d)] border border-[var(--red-glow)] rounded-xl z-[1000] shadow-2xl">
+            <AlertCircle className="w-4 h-4 text-[var(--red)]" />
+            <span className="text-[11px] font-bold text-[var(--red)] tracking-widest">Access Denied</span>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Modern Enterprise Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 pb-4 border-b border-gray-200">
-          <div>
-            <h1 className="text-2xl font-semibold text-gray-900 font-sans tracking-tight">
-              Dashboard Overview
-            </h1>
-            <div className="flex items-center gap-3 text-sm text-gray-500 mt-1">
-              <span className="flex items-center gap-1.5 font-medium">
-                <MapPin className="w-4 h-4 text-gray-400" />
-                {getDisplayName()}
-              </span>
-              <span className="w-1 h-1 rounded-full bg-gray-300 hidden sm:block"></span>
-              <span className="hidden sm:inline">
-                {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-              </span>
+      {isLoading ? (
+        <LoadingSpinner message="Loading" />
+      ) : (
+        <>
+
+          {/* ── KPI STRIP (Refined Density) ── */}
+          <KPIStrip 
+            items={[
+              { label: 'Total Employees', value: stats.employees.toLocaleString(), trend: '+12 this month', trendType: 'up' },
+              { label: 'On Leave Today', value: '14', trend: '3 returning tomorrow', trendType: 'up' },
+              { label: 'Gender Ratio', value: '64% M / 36% F', trend: 'Male majority', trendType: 'neutral' },
+              { label: "This Month's Payroll", value: 'KES 12.4M', trend: 'KES 400K higher than last month', trendType: 'up' },
+              { label: 'Open Jobs', value: '3', trend: '12 applications pending', trendType: 'up' },
+              { label: 'Expiring Contracts', value: '7', trend: 'Ending this month', trendType: 'warn' },
+            ]}
+          />
+
+          {/* ── LIFECYCLE MAP (Employee Journey) ── */}
+          <LifecycleMap />
+
+          {/* ── INSIGHT BAND (Integrated from claude.html) ── */}
+          <div className="grid grid-cols-10 gap-px bg-[var(--p-line)] border border-[var(--p-line)] rounded-xl overflow-hidden mb-7 shadow-xl">
+            {[
+              { label: 'PAYE Deducted', val: 'Kes 1.4m', sub: 'Ready for iTax', color: 'var(--t1)' },
+              { label: 'NSSF Deducted', val: 'Kes 420k', sub: 'Tier I & II', color: 'var(--t1)' },
+              { label: 'SHA Deducted', val: 'Kes 341k', sub: '2.75% applied', color: 'var(--t1)' },
+              { label: 'Housing Levy', val: 'Kes 186k', sub: 'Ready for Boma Yangu', color: 'var(--t1)' },
+              { label: 'Net Salaries to Pay', val: 'Kes 10.1m', sub: 'To Bank / M-Pesa', color: 'var(--green)' },
+            ].map((ib, i) => (
+              <div key={i} className="col-span-10 md:col-span-2 bg-[var(--card)] p-4 hover:bg-[var(--card-h)] transition-colors group">
+                <div className="text-[9px] font-bold text-[#ffffff] mb-2 tracking-widest">{ib.label}</div>
+                <div className="text-[17px] font-bold tracking-tight tabular-nums" style={{ color: ib.color }}>{ib.val}</div>
+                <div className="text-[9px] text-[var(--t3)] mt-1 font-medium">{ib.sub}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* ── ROW 1.5: Heatmap & Growth Runway ── */}
+          <div className="grid grid-cols-12 gap-3 mb-7">
+            <div className="col-span-12 lg:col-span-5">
+              <AttendanceHeatMap />
+            </div>
+            <div className="col-span-12 lg:col-span-7">
+              <GrowthRunway />
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleRefresh}
-              disabled={isLoading}
-              className="inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1"
-            >
-              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-              Refresh Data
-            </button>
-          </div>
-        </div>
-
-        {/* Filters & Tabs */}
-        <div className="flex items-center justify-between pb-2">
-          <div className="flex gap-6">
-            <button
-              onClick={() => setActiveTab('overview')}
-              className={`pb-2 text-sm font-medium relative transition-colors ${activeTab === 'overview' ? 'text-indigo-600' : 'text-gray-500 hover:text-gray-900'}`}
-            >
-              Overview
-              {activeTab === 'overview' && (
-                <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-[2px] bg-indigo-600" />
-              )}
-            </button>
-            <button
-              className="pb-2 text-sm font-medium text-gray-400 cursor-not-allowed"
-              disabled
-            >
-              Analytics
-            </button>
-          </div>
-          <div className="text-xs text-gray-500">
-            Last updated: {new Date().toLocaleTimeString()}
-          </div>
-        </div>
-
-        {isLoading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="relative w-16 h-16">
-              <div className="absolute top-0 left-0 w-full h-full border-4 border-indigo-200 rounded-full opacity-20"></div>
-              <div className="absolute top-0 left-0 w-full h-full border-4 border-indigo-600 rounded-full border-t-transparent animate-spin"></div>
+          {/* ── ROW 1.6: Recruitment Funnel & Nine Box Matrix & Retention Gauge ── */}
+          <div className="grid grid-cols-12 gap-3 mb-7">
+            <div className="col-span-12 lg:col-span-4">
+              <RecruitmentFunnel />
+            </div>
+            <div className="col-span-12 lg:col-span-4">
+              <NineBoxMatrix />
+            </div>
+            <div className="col-span-12 lg:col-span-4">
+              <RetentionGauge 
+                label="Retention Index" 
+                sublabel="Rolling 12-month average"
+                value={96.8}
+              />
             </div>
           </div>
-        ) : (
-          /* Main Content - Bento Grid */
-          <div className="grid grid-cols-12 gap-8">
 
-            {/* Stats Cards - Updated Typography & Layout */}
-            <div className="col-span-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <StatsCard
-                title="Total Employees"
-                value={stats.employees}
-                icon={Users}
-                color="blue"
-              />
-              <StatsCard
-                title="Leave Requests"
-                value={stats.leaveRequests}
-                icon={CalendarDays}
-                color="orange"
-              />
-              <StatsCard
-                title="Active Branches"
-                value={stats.activeBranches}
-                icon={MapPin}
-                color="green"
-              />
-              <StatsCard
-                title="Departments"
-                value={stats.departments}
-                icon={BookOpen}
-                color="blue"
-              />
-            </div>
-
-            {/* Recent Activity - Live Data Feed */}
-            <div className="col-span-12 lg:col-span-8">
-              <div className="bg-white border text-gray-900 border-gray-200 rounded-lg p-6 flex flex-col h-full shadow-sm">
-                <div className="flex items-center justify-between mb-5">
-                  <div>
-                    <h2 className="text-base font-semibold">Recent Activity</h2>
-                    <p className="text-xs text-gray-500 mt-1">Live updates from the system</p>
+          {/* ── ROW 2: Compensation Trends & Flight Risk ── */}
+          <div className="grid grid-cols-12 gap-3 mb-3">
+            <div className="glass-card col-span-12 lg:col-span-8" style={{ padding: '18px' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '14px' }}>
+                <div>
+                  <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--t1)' }}>Payroll Trends</div>
+                  <div style={{ fontSize: '10px', color: 'var(--t3)', marginTop: '2px' }}>Total salaries paid over the last 7 months (in KES)</div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '9px', fontWeight: 500, color: 'var(--gold)' }}>
+                  <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--gold)', display: 'inline-block' }} />Audited
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '12px', marginBottom: '8px' }}>
+                {[['var(--p)', 'Base Pay'], ['var(--green)', 'Bonuses'], ['rgba(200,168,75,0.8)', 'Overtime']].map(([c, l]) => (
+                  <div key={l} style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '10px', color: 'var(--t2)' }}>
+                    <span style={{ width: 8, height: 8, borderRadius: 2, background: c, display: 'inline-block' }} />{l}
                   </div>
-                  <button className="text-gray-400 hover:text-gray-600 transition-colors">
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
+                ))}
+              </div>
+              <ResponsiveContainer width="100%" height={160}>
+                <AreaChart data={payrollData} margin={{ top: 5, right: 0, left: -20, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="gBase" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="var(--p)" stopOpacity={0.2} />
+                      <stop offset="95%" stopColor="var(--p)" stopOpacity={0} />
+                    </linearGradient>
+                    <linearGradient id="gBonus" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="var(--green)" stopOpacity={0.2} />
+                      <stop offset="95%" stopColor="var(--green)" stopOpacity={0} />
+                    </linearGradient>
+                    <linearGradient id="gOvertime" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="rgba(200,168,75,0.8)" stopOpacity={0.2} />
+                      <stop offset="95%" stopColor="rgba(200,168,75,0.8)" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--glass)" vertical={false} opacity={0.4} />
+                  <XAxis dataKey="month" stroke="var(--t4)" fontSize={9} tickLine={false} axisLine={false} />
+                  <YAxis stroke="var(--t4)" fontSize={9} tickLine={false} axisLine={false} />
+                  <RechartsTooltip content={<CustomTooltip />} />
+                  <Area type="monotone" dataKey="base" stroke="var(--p)" fill="url(#gBase)" strokeWidth={1.5} name="BASE PAY (M)" />
+                  <Area type="monotone" dataKey="bonus" stroke="var(--green)" fill="url(#gBonus)" strokeWidth={1.5} name="BONUSES (M)" />
+                  <Area type="monotone" dataKey="overtime" stroke="rgba(200,168,75,0.8)" fill="url(#gOvertime)" strokeWidth={1.5} name="OVERTIME (M)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
 
-                <div className="space-y-3 flex-1">
-                  {recentActivity.length > 0 ? recentActivity.map((activity, index) => (
-                    <div
-                      key={activity.id}
-                      className="group flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 hover:shadow-sm transition-all border border-transparent hover:border-gray-100"
-                    >
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm
-                        ${activity.type === 'leave' ? 'bg-orange-50 text-orange-600' :
-                          activity.type === 'advance' ? 'bg-red-50 text-red-600' :
-                            'bg-emerald-50 text-emerald-600'}
-                      `}>
-                        {activity.type === 'leave' && <CalendarDays className="w-4 h-4" />}
-                        {activity.type === 'advance' && <Wallet className="w-4 h-4" />}
-                        {activity.type === 'expense' && <NotepadText className="w-4 h-4" />}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex justify-between items-start mb-0.5">
-                          <h3 className="font-semibold text-gray-900 text-sm truncate pr-4">{activity.title}</h3>
-                          <span className="text-[10px] text-gray-400 whitespace-nowrap">
-                            {new Date(activity.date).toLocaleDateString()}
-                          </span>
-                        </div>
-                        <div className="flex justify-between items-end">
-                          <p className="text-xs text-gray-500 truncate">{activity.subtitle}</p>
-                          <div className="flex items-center gap-2">
-                            {activity.amount && (
-                              <span className="text-xs font-semibold text-gray-900 bg-gray-50 border border-gray-100 px-1.5 py-0.5 rounded shadow-sm">
-                                KSh {activity.amount.toLocaleString()}
-                              </span>
-                            )}
-                            <span className={`text-[10px] font-medium px-2 py-0.5 rounded border
-                              ${activity.status.toLowerCase() === 'approved' || activity.status.toLowerCase() === 'paid' ? 'bg-green-50 text-green-700 border-green-100' :
-                                activity.status.toLowerCase() === 'rejected' ? 'bg-red-50 text-red-700 border-red-100' :
-                                  'bg-amber-50 text-amber-700 border-amber-100'}
-                            `}>
-                              {activity.status}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )) : (
-                    <div className="text-center py-10">
-                      <div className="inline-flex w-12 h-12 bg-gray-50 rounded-full items-center justify-center mb-3">
-                        <RefreshCw className="w-5 h-5 text-gray-400" />
-                      </div>
-                      <p className="text-sm font-medium text-gray-900">No recent activity</p>
-                      <p className="text-xs text-gray-500 mt-1">Recent updates will appear here automatically.</p>
-                    </div>
-                  )}
+            <div className="glass-card col-span-12 lg:col-span-4" style={{ padding: '18px' }}>
+              <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--t1)', marginBottom: '4px' }}>Headcount by Department</div>
+              <div style={{ fontSize: '10px', color: 'var(--t3)', marginBottom: '14px' }}>Where are your employees placed?</div>
+              <ResponsiveContainer width="100%" height={160}>
+                <BarChart data={loadData} layout="vertical" margin={{ top: 0, right: 10, left: 10, bottom: 0 }}>
+                  <XAxis type="number" hide domain={[0, 100]} />
+                  <YAxis dataKey="name" type="category" stroke="var(--t4)" fontSize={10} tickLine={false} axisLine={false} width={55} />
+                  <RechartsTooltip content={<CustomTooltip />} cursor={{ fill: 'var(--glass)' }} />
+                  <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={10}>
+                    {loadData.map((_, idx) => {
+                      const cols = ['#FF4D4D', '#F5A623', '#FFB300', '#00F59B', '#F5A623'];
+                      return <Cell key={idx} fill={cols[idx % cols.length]} fillOpacity={0.8} />;
+                    })}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+              {/* Trio footer */}
+              <div style={{ display: 'flex', borderTop: '1px solid var(--p-line)', marginTop: '12px', paddingTop: '12px' }}>
+                {[['712', 'Total Staff'], ['4', 'New this month'], ['2', 'Left this month']].map(([n, l]) => (
+                  <div key={l} style={{ flex: 1, textAlign: 'center', borderLeft: 'none' }}>
+                    <div style={{ fontSize: '15px', fontWeight: 600, color: 'var(--t1)' }}>{n}</div>
+                    <div style={{ fontSize: '9px', color: 'var(--t3)', marginTop: 2 }}>{l}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+
+          {/* ── ROW 4: Recent Activity (c5) + News Bulletins (c4) + Quick Stats (c3) ── */}
+          <div className="grid grid-cols-12 gap-3">
+            {/* Statutory Compliance Audit Log */}
+            <div className="glass-card col-span-12 lg:col-span-5" style={{ display: 'flex', flexDirection: 'column' }}>
+              <div style={{ padding: '18px', borderBottom: '1px solid var(--p-line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--t1)' }}>Pending Approvals & Alerts</div>
+                  <div style={{ fontSize: '10px', color: 'var(--t3)', marginTop: 2 }}>Things that need your attention</div>
                 </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <span style={{ fontSize: '9px', color: 'var(--red)', fontWeight: 600 }}>ACTION NEEDED</span>
+                </div>
+              </div>
+              <div style={{ padding: '12px 18px', overflowY: 'auto', maxHeight: 300 }} className="custom-scrollbar">
+                {[
+                  { user: 'S. Kiprono', act: 'Leave request pending approval', time: 'Since yesterday', col: 'var(--amber)' },
+                  { user: 'J. Mwangi', act: 'Requested KES 5,000 salary advance', time: 'Today', col: 'var(--p)' },
+                  { user: 'A. Ochieng', act: 'Probation period ends in 3 days', time: 'Action needed', col: 'var(--red)' },
+                  { user: 'H. Njoroge', act: 'Missed clock-in today', time: 'Absent', col: 'var(--red)' },
+                  { user: 'System', act: 'Verify SHA numbers for 4 new hires', time: 'Before payroll', col: 'var(--t1)' },
+                ].map((log, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '10px 0', borderBottom: '1px solid var(--glass)' }}>
+                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: log.col, marginTop: 4, flexShrink: 0 }} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 11, fontWeight: 500, color: 'var(--t1)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{log.act}</div>
+                      <div style={{ fontSize: 9, color: 'var(--t3)', marginTop: 2 }}>{log.user}</div>
+                    </div>
+                    <div style={{ fontSize: '9px', color: 'var(--t4)' }}>{log.time}</div>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Right Column - News & Quick Stats */}
-            <div className="col-span-12 lg:col-span-4 space-y-6">
-              {/* Company News */}
-              <div className="bg-white border text-gray-900 border-gray-200 rounded-lg p-6 flex flex-col h-full shadow-sm">
-                <div className="flex items-center justify-between mb-5">
-                  <div>
-                    <h3 className="text-base font-semibold">Company Updates</h3>
+            {/* Executive Briefs */}
+            <div className="glass-card col-span-12 lg:col-span-4" style={{ display: 'flex', flexDirection: 'column' }}>
+              <div style={{ padding: '18px', borderBottom: '1px solid var(--p-line)' }}>
+                <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--t1)' }}>Company Announcements</div>
+                <div style={{ fontSize: '10px', color: 'var(--t3)', marginTop: 2 }}>Notice board</div>
+              </div>
+              <div style={{ padding: '12px 18px', overflowY: 'auto', maxHeight: 300 }} className="custom-scrollbar">
+                {isNewsLoading ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    {[1, 2, 3].map(i => <div key={i} style={{ height: 40, background: 'var(--glass)', borderRadius: 8, animation: 'blink 1.6s ease infinite' }} />)}
                   </div>
-                  <button className="text-gray-400 hover:text-gray-600 transition-colors">
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
-
-                <div className="space-y-3 flex-1">
-                  {isNewsLoading ? (
-                    <div className="animate-pulse space-y-4">
-                      {[1, 2, 3].map(i => (
-                        <div key={i} className="flex gap-4">
-                          <div className="w-10 h-10 bg-gray-100 rounded-lg" />
-                          <div className="flex-1">
-                            <div className="h-4 bg-gray-100 rounded w-3/4 mb-2" />
-                            <div className="h-3 bg-gray-50 rounded w-1/2" />
-                          </div>
-                        </div>
-                      ))}
+                ) : newsItems.slice(0, 5).map(news => (
+                  <div key={news.id} style={{ display: 'flex', gap: 10, padding: '8px 0', borderBottom: '1px solid var(--glass)', cursor: 'pointer' }}>
+                    <div style={{ width: 28, height: 28, borderRadius: 8, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--sidebar)', border: '1px solid var(--p-line)', color: 'var(--p)' }}>
+                      {getNewsIcon(news.type)}
                     </div>
-                  ) : (
-                    newsItems.slice(0, 4).map((news, index) => (
-                      <div
-                        key={news.id}
-                        className="flex gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors group cursor-pointer border border-transparent hover:border-gray-100"
-                      >
-                        <div className={`w-10 h-10 rounded-lg flex-shrink-0 flex items-center justify-center ${getNewsBgColor(news.type)} ${getNewsTextColor(news.type)} shadow-sm transition-transform`}>
-                          {getNewsIcon(news.type)}
-                        </div>
-                        <div>
-                          <h3 className="text-sm font-semibold text-gray-900 line-clamp-1 font-sans">{news.title}</h3>
-                          <p className="text-xs text-gray-500 line-clamp-2 mt-0.5">{news.description}</p>
-                          <span className="text-[10px] font-medium text-gray-400 mt-1 inline-block bg-white border border-gray-100 px-1.5 py-0.5 rounded shadow-sm">{news.date}</span>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
+                    <div style={{ flex: 1, overflow: 'hidden' }}>
+                      <div style={{ fontSize: 11, fontWeight: 500, color: 'var(--t1)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{news.title}</div>
+                      <div style={{ fontSize: 9, color: 'var(--t3)', marginTop: 2 }}>{news.description}</div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
+            {/* Quick metric tiles */}
+            <div className="glass-card col-span-12 lg:col-span-3" style={{ padding: '18px' }}>
+              <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--t1)', marginBottom: 14 }}>Statutory & Action Items</div>
+              {[
+                { label: 'Missing KRA PINs', val: '2', color: 'var(--amber)' },
+                { label: 'Pending SHA Numbers', val: '14', color: 'var(--red)' },
+                { label: 'Exp. Contracts', val: '3', color: 'var(--p)' },
+                { label: 'P9A Forms Ready', val: '100%', color: 'var(--green)' },
+              ].map((m, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '9px 0', borderBottom: '1px solid var(--glass)' }}>
+                  <span style={{ fontSize: 11, color: 'var(--t2)' }}>{m.label}</span>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: m.color }}>{m.val}</span>
+                </div>
+              ))}
+              <button
+                onClick={sendAllBirthdaySMS}
+                disabled={isSendingBirthdaySMS}
+                className="f-btn shimmer w-full mt-4"
+                style={{ fontSize: '11px', padding: '10px 0', justifyContent: 'center' }}
+              >
+                <Send className="w-3.5 h-3.5" />
+                {isSendingBirthdaySMS ? 'Sending...' : 'Send Birthday SMS'}
+              </button>
+            </div>
           </div>
-        )}
-      </div>
-    </div >
+        </>
+      )}
+    </div>
   );
 }

@@ -14,11 +14,11 @@ const MPesaSpreadsheetFullPage = ({ onBack, userRole }) => {
 
   // Simple table component
   const SimpleTable = () => (
-    <div className="overflow-x-auto">
-      <table className="w-full bg-white border border-gray-200">
+    <div className="overflow-x-auto glass-card border-[var(--p-line)]">
+      <table className="w-full text-[11px]">
         <thead>
-          <tr className="bg-gray-50 border-b border-gray-200">
-            <th className="p-2 border-r border-gray-200 w-12">
+          <tr className="bg-[var(--sidebar)] border-b border-[var(--p-line)]">
+            <th className="p-3 border-r border-[var(--p-line)] w-12">
               <input
                 type="checkbox"
                 onChange={(e) => {
@@ -28,15 +28,15 @@ const MPesaSpreadsheetFullPage = ({ onBack, userRole }) => {
                     setSelectedRows(new Set());
                   }
                 }}
-                className="h-4 w-4"
+                className="h-4 w-4 rounded bg-[var(--glass)] border-[var(--p-line)] accent-[var(--p)]"
               />
             </th>
-            <th className="p-2 border-r border-gray-200 text-left text-xs font-semibold">Employee ID</th>
-            <th className="p-2 border-r border-gray-200 text-left text-xs font-semibold">Employee Name</th>
-            <th className="p-2 border-r border-gray-200 text-left text-xs font-semibold">Phone Number</th>
-            <th className="p-2 border-r border-gray-200 text-left text-xs font-semibold">Amount</th>
-            <th className="p-2 border-r border-gray-200 text-left text-xs font-semibold">Status</th>
-            <th className="p-2 text-left text-xs font-semibold">Actions</th>
+            <th className="p-3 border-r border-[var(--p-line)] text-left text-[10px] font-bold text-[var(--t4)] uppercase tracking-widest">ID Node</th>
+            <th className="p-3 border-r border-[var(--p-line)] text-left text-[10px] font-bold text-[var(--t4)] uppercase tracking-widest">Personnel</th>
+            <th className="p-3 border-r border-[var(--p-line)] text-left text-[10px] font-bold text-[var(--t4)] uppercase tracking-widest">Communications</th>
+            <th className="p-3 border-r border-[var(--p-line)] text-left text-[10px] font-bold text-[var(--t4)] uppercase tracking-widest">Allocation</th>
+            <th className="p-3 border-r border-[var(--p-line)] text-left text-[10px] font-bold text-[var(--t4)] uppercase tracking-widest">Signal</th>
+            <th className="p-3 text-left text-[10px] font-bold text-[var(--t4)] uppercase tracking-widest">Command</th>
           </tr>
         </thead>
         <tbody>
@@ -493,9 +493,9 @@ const MPesaSpreadsheetFullPage = ({ onBack, userRole }) => {
   const processingCount = rows.filter(row => row.status === 'processing').length;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen bg-[var(--page)] p-6 md:p-8 space-y-8 text-[var(--t1)]">
       {/* Header */}
-      <div className="bg-white rounded-lg shadow-sm p-4 mb-4">
+      <div className="glass-card p-6 mb-4 border-[var(--p-line)] bg-gradient-to-r from-[var(--sidebar)] to-transparent">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button
@@ -529,57 +529,57 @@ const MPesaSpreadsheetFullPage = ({ onBack, userRole }) => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
         {[
           { 
-            label: 'Total Records', 
+            label: 'Total records', 
             value: rows.length, 
-            color: 'bg-blue-500',
-            textColor: 'text-blue-600',
+            color: 'bg-[var(--sidebar)] border-[var(--p-line)]',
+            textColor: 'text-[var(--t1)]',
             icon: Users
           },
           { 
-            label: 'Valid Records', 
+            label: 'Validated', 
             value: validRowsCount, 
-            color: 'bg-green-500',
-            textColor: 'text-green-600',
+            color: 'bg-[var(--green-d)] border-[var(--green-glow)]',
+            textColor: 'text-[var(--green)]',
             icon: CheckCircle
           },
           { 
             label: 'Processing', 
             value: processingCount, 
-            color: 'bg-blue-500',
-            textColor: 'text-blue-600',
+            color: 'bg-[var(--p-dim)] border-[var(--p-line)]',
+            textColor: 'text-[var(--p)]',
             icon: Loader
           },
           { 
-            label: 'Sent', 
+            label: 'Relayed', 
             value: sentCount, 
-            color: 'bg-green-500',
-            textColor: 'text-green-600',
+            color: 'bg-[var(--green-d)] border-[var(--green-glow)]',
+            textColor: 'text-[var(--green)]',
             icon: Send
           },
           { 
             label: 'Failed', 
             value: failedCount, 
-            color: 'bg-red-500',
-            textColor: 'text-red-600',
+            color: 'bg-[var(--red-d)] border-[var(--red-glow)]',
+            textColor: 'text-[var(--red)]',
             icon: X
           }
         ].map((stat, index) => {
           const Icon = stat.icon;
           
           return (
-            <div key={index} className="bg-white rounded-lg shadow-sm p-3 border border-gray-200">
+            <div key={index} className={`glass-card p-4 border ${stat.color} hover:border-[var(--p-glow)] transition-all`}>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1">{stat.label}</p>
-                  <p className={`text-sm font-bold ${stat.textColor}`}>
+                  <p className="text-[10px] font-bold text-[var(--t4)] uppercase tracking-widest mb-1">{stat.label}</p>
+                  <p className={`text-lg font-bold ${stat.textColor}`}>
                     {stat.value}
                   </p>
                 </div>
-                <div className={`p-2 ${stat.color} rounded`}>
-                  <Icon className="w-3 h-3 text-white" />
+                <div className={`p-2.5 rounded-xl bg-[var(--glass)] border border-[var(--p-line)]`}>
+                  <Icon className={`w-4 h-4 ${stat.textColor}`} />
                 </div>
               </div>
             </div>
@@ -588,9 +588,10 @@ const MPesaSpreadsheetFullPage = ({ onBack, userRole }) => {
       </div>
 
       {/* Controls Bar */}
-      <div className="bg-white rounded-lg shadow-sm p-4 mb-4 border border-gray-200">
-        <div className="flex items-center gap-2 mb-4">
-          <h3 className="text-sm font-semibold text-gray-900">Payment Spreadsheet Controls</h3>
+      <div className="glass-card p-6 border-[var(--p-line)] bg-[var(--glass)]">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-1.5 h-1.5 rounded-full bg-[var(--p)] shadow-[0_0_8px_var(--p-glow)]" />
+          <h3 className="text-[11px] font-bold text-[var(--t4)] uppercase tracking-widest">Orchestration Interface</h3>
         </div>
         
         <div className="flex flex-wrap gap-3 items-center justify-between">
@@ -723,7 +724,7 @@ const MPesaSpreadsheetFullPage = ({ onBack, userRole }) => {
       </div>
 
       {/* Spreadsheet Container */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div className="glass-card border-[var(--p-line)] overflow-hidden">
         {filteredRows.length === 0 ? (
           <div className="text-center py-12">
             <div className="w-16 h-16 bg-gray-200 rounded flex items-center justify-center mx-auto mb-4">

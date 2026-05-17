@@ -592,12 +592,12 @@ Make sure to incorporate the severity level (${severity}) and be specific about 
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+      <div className="min-h-screen p-6">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-center h-64">
             <div className="flex flex-col items-center space-y-4">
-              <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
-              <p className="text-gray-600 font-medium">Loading warnings...</p>
+              <Loader2 className="w-12 h-12 text-[var(--gold)] animate-spin" />
+              <p className="text-[var(--t3)] font-medium">Loading warnings...</p>
             </div>
           </div>
         </div>
@@ -606,51 +606,51 @@ Make sure to incorporate the severity level (${severity}) and be specific about 
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+    <div className="min-h-screen p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center space-x-4 mb-3">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Warning Module</h1>
-              <p className="text-gray-600">Issue formal warnings to employees</p>
+              <h1 className="text-3xl font-bold text-[var(--t1)]">Disciplinary Logs</h1>
+              <p className="text-[var(--t3)]">Issue formal warnings to employees</p>
             </div>
           </div>
         </div>
 
         {/* Stats Card */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-xs border border-gray-200 p-6 transition-all hover:shadow-sm">
+          <div className="bg-[var(--card)] rounded-xl border border-[var(--p-line)] p-6 transition-all hover:bg-[var(--card-h)]">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Total Warnings</p>
-                <p className="text-3xl font-bold text-gray-900 mt-1">{warnings.length}</p>
+                <p className="text-xs font-medium text-[var(--t4)] uppercase tracking-wider">Total Warnings</p>
+                <p className="text-3xl font-bold text-[var(--t1)] mt-1">{warnings.length}</p>
               </div>
-              <div className="w-14 h-14 bg-red-50 rounded-xl flex items-center justify-center">
-                <AlertTriangle className="w-6 h-6 text-red-600" />
+              <div className="w-14 h-14 bg-red-500/10 rounded-xl flex items-center justify-center">
+                <AlertTriangle className="w-6 h-6 text-red-400" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-xs border border-gray-200 p-6 transition-all hover:shadow-sm">
+          <div className="bg-[var(--card)] rounded-xl border border-[var(--p-line)] p-6 transition-all hover:bg-[var(--card-h)]">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">High Severity</p>
-                <p className="text-3xl font-bold text-gray-900 mt-1">
+                <p className="text-xs font-medium text-[var(--t4)] uppercase tracking-wider">High Severity</p>
+                <p className="text-3xl font-bold text-[var(--t1)] mt-1">
                   {warnings.filter(w => w.severity === 'high').length}
                 </p>
               </div>
-              <div className="w-14 h-14 bg-red-50 rounded-xl flex items-center justify-center">
-                <BadgeAlert className="w-6 h-6 text-red-600" />
+              <div className="w-14 h-14 bg-red-500/10 rounded-xl flex items-center justify-center">
+                <BadgeAlert className="w-6 h-6 text-red-400" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-xs border border-gray-200 p-6 transition-all hover:shadow-sm">
+          <div className="bg-[var(--card)] rounded-xl border border-[var(--p-line)] p-6 transition-all hover:bg-[var(--card-h)]">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">This Month</p>
-                <p className="text-3xl font-bold text-gray-900 mt-1">
+                <p className="text-xs font-medium text-[var(--t4)] uppercase tracking-wider">This Month</p>
+                <p className="text-3xl font-bold text-[var(--t1)] mt-1">
                   {warnings.filter(w => {
                     const warningDate = new Date(w.issued_at);
                     const now = new Date();
@@ -659,15 +659,15 @@ Make sure to incorporate the severity level (${severity}) and be specific about 
                   }).length}
                 </p>
               </div>
-              <div className="w-14 h-14 bg-red-50 rounded-xl flex items-center justify-center">
-                <Calendar className="w-6 h-6 text-red-600" />
+              <div className="w-14 h-14 bg-red-500/10 rounded-xl flex items-center justify-center">
+                <Calendar className="w-6 h-6 text-red-400" />
               </div>
             </div>
           </div>
         </div>
 
         {/* Action Bar */}
-        <div className="bg-white rounded-xl shadow-xs border border-gray-200 p-5 mb-8">
+        <div className="bg-[var(--card)] rounded-xl border border-[var(--p-line)] p-5 mb-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex-1 w-full">
               <div className="relative">
@@ -715,9 +715,9 @@ Make sure to incorporate the severity level (${severity}) and be specific about 
 
         {/* Warning Form */}
         {showForm && (
-          <div className="bg-white rounded-xl shadow-xs border border-gray-200 p-6 mb-8">
+          <div className="bg-[var(--card)] rounded-xl border border-[var(--p-line)] p-6 mb-8">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-gray-900">Issue New Warning</h2>
+              <h2 className="text-xl font-semibold text-[var(--t1)]">Issue New Warning</h2>
               <button
                 onClick={() => setShowForm(false)}
                 className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -744,7 +744,7 @@ Make sure to incorporate the severity level (${severity}) and be specific about 
                   />
 
                   {showEmployeeDropdown && employeeSearchTerm && (
-                    <ul className="absolute z-10 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                    <ul className="absolute z-10 w-full bg-[var(--card)] border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
                       {employees
                         .filter((emp) => {
                           const search = employeeSearchTerm.toLowerCase();
@@ -785,7 +785,7 @@ Make sure to incorporate the severity level (${severity}) and be specific about 
                     </button>
 
                     {showTemplates && (
-                      <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
+                      <div className="absolute z-10 mt-1 w-full bg-[var(--card)] border border-gray-200 rounded-lg shadow-lg overflow-hidden">
                         {warningTemplates.map(template => (
                           <div
                             key={template.id}
@@ -830,7 +830,7 @@ Make sure to incorporate the severity level (${severity}) and be specific about 
                       Generate message using AI
                     </div>
                   </label>
-                  <div className="flex items-center space-x-2 bg-white px-3 py-1 rounded-full">
+                  <div className="flex items-center space-x-2 bg-[var(--card)] px-3 py-1 rounded-full">
                     <Brain className="w-4 h-4 text-purple-600" />
                     <span className="text-xs font-medium text-purple-700">Smart AI</span>
                   </div>
@@ -841,7 +841,7 @@ Make sure to incorporate the severity level (${severity}) and be specific about 
                     value={aiSpecificities}
                     onChange={(e) => setAiSpecificities(e.target.value)}
                     rows={4}
-                    className="w-full px-4 py-3 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all resize-none bg-white"
+                    className="w-full px-4 py-3 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all resize-none bg-[var(--card)]"
                     placeholder="Describe the warning situation in detail. For example:
 • 'Employee has been late 5 times this month, coming in 15-30 minutes after 9 AM'
 • 'Poor performance on quarterly reports with multiple errors and missed deadlines'
@@ -928,7 +928,7 @@ The AI will automatically determine the warning type and generate a professional
                         <button
                           type="button"
                           onClick={handleCancelTemplateEdit}
-                          className="px-3 py-1.5 border border-gray-300 text-gray-700 bg-white rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-100 transition-all duration-200 text-xs"
+                          className="px-3 py-1.5 border border-gray-300 text-gray-700 bg-[var(--card)] rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-100 transition-all duration-200 text-xs"
                         >
                           Cancel
                         </button>
@@ -992,7 +992,7 @@ The AI will automatically determine the warning type and generate a professional
                       <span className="text-xs text-green-600">Type: {warningType}</span>
                     </div>
                   </div>
-                  <div className="bg-white p-4 rounded-lg border border-green-200">
+                  <div className="bg-[var(--card)] p-4 rounded-lg border border-green-200">
                     <p className="text-gray-800">{customMessage}</p>
                   </div>
                   <div className="flex justify-between items-center mt-4">
@@ -1017,7 +1017,7 @@ The AI will automatically determine the warning type and generate a professional
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
-                  className="px-4 py-2.5 border border-gray-300 text-gray-700 bg-white rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-100 transition-all duration-200 font-medium"
+                  className="px-4 py-2.5 border border-gray-300 text-gray-700 bg-[var(--card)] rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-100 transition-all duration-200 font-medium"
                 >
                   Cancel
                 </button>
@@ -1044,7 +1044,7 @@ The AI will automatically determine the warning type and generate a professional
         )}
 
         {/* Warnings List */}
-        <div className="bg-white rounded-xl shadow-xs border border-gray-200 overflow-hidden">
+        <div className="bg-[var(--card)] rounded-xl shadow-xs border border-gray-200 overflow-hidden">
           <div className="border-b border-gray-200 px-6 py-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <h2 className="text-lg font-semibold text-gray-900">Warning History</h2>
@@ -1070,7 +1070,7 @@ The AI will automatically determine the warning type and generate a professional
             </div>
           ) : (
             <>
-              <div className="divide-y divide-gray-200">
+              <div className="divide-y divide-[var(--p-line)]">
                 {paginatedWarnings.map(warning => (
                   <div key={warning.id} className="px-6 py-4 hover:bg-gray-50 transition-colors">
                     <div className="flex items-start justify-between">
@@ -1131,7 +1131,7 @@ The AI will automatically determine the warning type and generate a professional
                       <button
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 1}
-                        className="p-2 rounded-md border border-gray-300 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-xs"
+                        className="p-2 rounded-md border border-gray-300 bg-[var(--card)] text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-xs"
                       >
                         <ChevronLeft className="w-4 h-4" />
                       </button>
@@ -1143,7 +1143,7 @@ The AI will automatically determine the warning type and generate a professional
                           disabled={page === '...'}
                           className={`min-w-[2.5rem] px-2 py-1 rounded-md border transition-colors text-xs ${currentPage === page
                               ? 'border-red-600 bg-red-600 text-white'
-                              : 'border-gray-300 bg-white text-gray-600 hover:bg-gray-50'
+                              : 'border-gray-300 bg-[var(--card)] text-gray-600 hover:bg-gray-50'
                             } ${page === '...' ? 'cursor-default' : ''}`}
                         >
                           {page}
@@ -1153,7 +1153,7 @@ The AI will automatically determine the warning type and generate a professional
                       <button
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={currentPage === totalPages}
-                        className="p-2 rounded-md border border-gray-300 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-xs"
+                        className="p-2 rounded-md border border-gray-300 bg-[var(--card)] text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-xs"
                       >
                         <ChevronRight className="w-4 h-4" />
                       </button>

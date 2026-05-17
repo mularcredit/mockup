@@ -66,7 +66,7 @@ function PremiumSelect({
             <button
                 type="button"
                 onClick={() => setOpen(o => !o)}
-                className={`w-full flex items-center justify-between gap-2 px-3 py-2.5 text-xs border rounded-xl bg-white transition-all ${open ? `border-violet-400 ring-2 ${ringColor}` : 'border-gray-200 hover:border-gray-300'}`}
+                className={`w-full flex items-center justify-between gap-2 px-3 py-2.5 text-xs border rounded-xl bg-[var(--card)] transition-all ${open ? `border-violet-400 ring-2 ${ringColor}` : 'border-gray-200 hover:border-gray-300'}`}
             >
                 <div className="flex items-center gap-2 min-w-0">
                     {Icon && <Icon className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />}
@@ -83,7 +83,7 @@ function PremiumSelect({
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 4, scale: 0.97 }}
                         transition={{ duration: 0.12 }}
-                        className="absolute z-50 left-0 right-0 mt-1.5 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden"
+                        className="absolute z-50 left-0 right-0 mt-1.5 bg-[var(--card)] border border-gray-200 rounded-xl shadow-lg overflow-hidden"
                     >
                         <div className="max-h-52 overflow-y-auto py-1">
                             {options.map(opt => (
@@ -142,7 +142,7 @@ function PremiumDatePicker({ value, onChange, label }: { value: string; onChange
             <button
                 type="button"
                 onClick={() => setOpen(o => !o)}
-                className={`w-full flex items-center justify-between gap-2 px-3 py-2.5 text-xs border rounded-xl bg-white transition-all ${open ? 'border-violet-400 ring-2 ring-violet-500' : 'border-gray-200 hover:border-gray-300'}`}
+                className={`w-full flex items-center justify-between gap-2 px-3 py-2.5 text-xs border rounded-xl bg-[var(--card)] transition-all ${open ? 'border-violet-400 ring-2 ring-violet-500' : 'border-gray-200 hover:border-gray-300'}`}
             >
                 <div className="flex items-center gap-2">
                     <Calendar className="w-3.5 h-3.5 text-gray-400" />
@@ -157,7 +157,7 @@ function PremiumDatePicker({ value, onChange, label }: { value: string; onChange
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 4, scale: 0.97 }}
                         transition={{ duration: 0.12 }}
-                        className="absolute z-50 left-0 mt-1.5 bg-white border border-gray-200 rounded-xl shadow-lg p-3 w-64"
+                        className="absolute z-50 left-0 mt-1.5 bg-[var(--card)] border border-gray-200 rounded-xl shadow-lg p-3 w-64"
                     >
                         <div className="flex items-center justify-between mb-3">
                             <button type="button" onClick={prevMonth} className="p-1 hover:bg-gray-100 rounded-lg"><ChevronLeft className="w-3.5 h-3.5" /></button>
@@ -520,7 +520,7 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
             </div>
 
             {/* Filters */}
-            <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-3">
+            <div className="bg-[var(--card)] border border-gray-200 rounded-xl p-4 space-y-3">
                 <div className="flex flex-wrap gap-3 items-center">
                     <div className="relative flex-1 min-w-[180px]">
                         <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -549,7 +549,7 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
                     {(['all', 'Probation', 'Contract', 'Permanent', 'Attachment', 'missing_date', 'overdue'] as const).map(f => (
                         <button key={f} onClick={() => { setFilter(f); setPage(1); }}
                             className={`px-3 py-1.5 rounded-lg text-[11px] font-medium border transition-all
-                                ${filter === f ? 'bg-violet-600 text-white border-violet-600' : 'bg-white text-gray-600 border-gray-200 hover:border-violet-300'}`}>
+                                ${filter === f ? 'bg-violet-600 text-white border-violet-600' : 'bg-[var(--card)] text-gray-600 border-gray-200 hover:border-violet-300'}`}>
                             {f === 'all' ? 'All' : f === 'missing_date' ? 'Missing Date' : f === 'overdue' ? 'Overdue' : f}
                         </button>
                     ))}
@@ -562,7 +562,7 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
                     <Loader2 className="w-6 h-6 animate-spin text-violet-500" />
                 </div>
             ) : filtered.length === 0 ? (
-                <div className="bg-white border border-gray-200 rounded-xl p-12 text-center">
+                <div className="bg-[var(--card)] border border-gray-200 rounded-xl p-12 text-center">
                     <Users className="w-8 h-8 text-gray-300 mx-auto mb-2" />
                     <p className="text-sm text-gray-500">No records found</p>
                 </div>
@@ -589,7 +589,7 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
                                     key={record.id}
                                     initial={{ opacity: 0, y: 6 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    className={`bg-white border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-sm transition-all ${isSelected ? 'border-violet-300 bg-violet-50/30' : 'border-gray-200'}`}
+                                    className={`bg-[var(--card)] border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-sm transition-all ${isSelected ? 'border-violet-300 bg-violet-50/30' : 'border-gray-200'}`}
                                 >
                                     <div className="flex items-center gap-3">
                                         <input
@@ -692,7 +692,7 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
             {showModal && selectedRecord && actionType && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
                     <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-                        className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6">
+                        className="bg-[var(--card)] rounded-2xl shadow-2xl w-full max-w-sm p-6">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-sm font-bold text-gray-900">
                                 {actionType === 'confirm' ? 'Confirm Probation' :
@@ -736,7 +736,7 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
             {showAddModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
                     <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-                        className="bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col max-h-[90vh] overflow-hidden">
+                        className="bg-[var(--card)] rounded-2xl shadow-2xl w-full max-w-md flex flex-col max-h-[90vh] overflow-hidden">
                         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
                             <div>
                                 <h3 className="text-sm font-bold text-gray-900">Assign Employment Status</h3>
@@ -834,7 +834,7 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
                             </div>
                         </div>
 
-                        <div className="px-6 py-4 border-t border-gray-100 flex gap-3 flex-shrink-0 bg-gray-50/50">
+                        <div className="px-6 py-4 border-t border-gray-100 flex gap-3 flex-shrink-0 bg-[var(--glass)]">
                             <button onClick={() => setShowAddModal(false)}
                                 className="flex-1 py-2.5 text-xs font-semibold border border-gray-200 rounded-xl hover:bg-gray-100 text-gray-600 transition-colors">Cancel</button>
                             <button onClick={handleAddStatus} disabled={saving}
@@ -851,7 +851,7 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
             {showBulkModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
                     <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-                        className="bg-white rounded-2xl shadow-2xl w-full max-w-xs p-6">
+                        className="bg-[var(--card)] rounded-2xl shadow-2xl w-full max-w-xs p-6">
                         <h3 className="text-sm font-bold text-gray-900 mb-1">Bulk Status Update</h3>
                         <p className="text-xs text-gray-500 mb-4">{selectedIds.size} employee(s) selected</p>
                         <div className="mb-4">

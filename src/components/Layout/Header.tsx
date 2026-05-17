@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Bell, LogOut, X, Trash2, CheckCircle, UserPlus, Calendar, Image, Upload, MapPin, ChevronDown, AlertTriangle, Clock } from 'lucide-react';
+import UserAvatar from '../UI/UserAvatar';
+import { Bell, LogOut, X, Trash2, CheckCircle, UserPlus, Calendar, Image, Upload, MapPin, ChevronDown, AlertTriangle, Clock, Search, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
@@ -16,6 +17,8 @@ interface HeaderProps {
   towns?: string[];
   regions?: string[];
   allTowns?: string[];
+  theme?: 'light' | 'dark';
+  onThemeToggle?: () => void;
 }
 
 interface NotificationItem {
@@ -73,15 +76,15 @@ const HeaderDropdown = ({ value, options, onChange, placeholder, icon: Icon }: {
           e.stopPropagation();
           setIsOpen(!isOpen);
         }}
-        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all duration-200 hover:bg-white hover:shadow-sm ${isOpen ? 'bg-white shadow-sm' : 'bg-transparent'}`}
+        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all duration-200 border border-transparent ${isOpen ? 'bg-[var(--p-dim)] border-[var(--p-line)]' : 'hover:bg-[var(--glass-h)]'}`}
       >
         <div className="flex items-center gap-2 max-w-[120px]">
-          {Icon && <Icon className={`w-3.5 h-3.5 ${isOpen ? 'text-[#03c04a]' : 'text-gray-400'}`} />}
-          <span className={`text-xs font-bold truncate ${selected ? 'text-gray-900' : 'text-gray-400'}`}>
+          {Icon && <Icon className={`w-3.5 h-3.5 ${isOpen ? 'text-[var(--p)]' : 'text-[var(--t4)]'}`} />}
+          <span className={`text-[11px] font-bold truncate ${selected ? 'text-[var(--t1)]' : 'text-[var(--t4)]'}`}>
             {selected ? selected.label : placeholder}
           </span>
         </div>
-        <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-3.5 h-3.5 text-[var(--t4)] transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       <AnimatePresence>
@@ -91,9 +94,9 @@ const HeaderDropdown = ({ value, options, onChange, placeholder, icon: Icon }: {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.95 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute top-full left-0 mt-2 min-w-[160px] bg-white border border-gray-100 rounded-xl shadow-[0_15px_30px_-5px_rgba(0,0,0,0.1)] overflow-hidden z-[100] ring-1 ring-black/5"
+            className="absolute top-full left-0 mt-2 min-w-[180px] bg-[var(--sidebar)] border border-[var(--p-line)] rounded-xl shadow-[var(--shadow-dropdown)] overflow-hidden z-[100] backdrop-blur-xl"
           >
-            <div className="py-1 max-h-60 overflow-y-auto thin-scrollbar">
+            <div className="py-1 max-h-60 overflow-y-auto custom-scrollbar">
               {options.map((opt) => (
                 <button
                   key={opt.value}
@@ -102,10 +105,10 @@ const HeaderDropdown = ({ value, options, onChange, placeholder, icon: Icon }: {
                     onChange(opt.value);
                     setIsOpen(false);
                   }}
-                  className={`w-full text-left px-4 py-2 text-xs transition-colors hover:bg-green-50/50 hover:text-[#03c04a] flex items-center justify-between group ${value === opt.value ? 'bg-green-50 text-[#03c04a] font-bold underline' : 'text-gray-600'}`}
+                  className={`w-full text-left px-4 py-2.5 text-[11px] transition-colors hover:bg-[var(--p-dim)] hover:text-[var(--p)] flex items-center justify-between group ${value === opt.value ? 'bg-[var(--p-dim)] text-[var(--p)] font-bold' : 'text-[var(--t2)]'}`}
                 >
                   <span>{opt.label}</span>
-                  {value === opt.value && <CheckCircle className="w-3.5 h-3.5 text-[#03c04a]" />}
+                  {value === opt.value && <CheckCircle className="w-3.5 h-3.5 text-[var(--p)]" />}
                 </button>
               ))}
             </div>
@@ -116,7 +119,7 @@ const HeaderDropdown = ({ value, options, onChange, placeholder, icon: Icon }: {
   );
 };
 // ...
-export default function Header({ user, onLogout, selectedTown, onTownChange, selectedRegion, onRegionChange, towns, regions }: HeaderProps) {
+export default function Header({ user, onLogout, selectedTown, onTownChange, selectedRegion, onRegionChange, towns, regions, theme, onThemeToggle }: HeaderProps) {
   const [notifications, setNotifications] = useState<NotificationState>({
     staff: 0,
     leave: 0,
@@ -509,126 +512,56 @@ export default function Header({ user, onLogout, selectedTown, onTownChange, sel
 
   return (
     <>
-      {/* Floating Header with Premium Glassmorphism */}
-      <motion.header
-        className="z-40 mx-6 mt-4 mb-6 relative font-sans"
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
-      >
-        <div
-          className="px-6 py-3 bg-white/60 backdrop-blur-2xl rounded-[24px] shadow-sm border border-white/40 flex items-center justify-between transition-all duration-300 hover:shadow-md hover:bg-white/70"
-        >
-          {/* Company Identity */}
-          <motion.div
-            className="flex items-center space-x-4 cursor-pointer group"
-            onClick={() => setProfileModalOpen(true)}
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.99 }}
+      <header className="sticky top-0 z-40 bg-[var(--sidebar)] border-b border-[var(--p-line)] h-[56px] flex items-center px-[26px] justify-end">
+        {/* Action Controls */}
+        <div className="flex items-center gap-3">
+
+          {/* Notifications */}
+          <button
+            className="relative p-2.5 text-[var(--t4)] hover:text-[var(--p)] transition-all rounded-xl hover:bg-[var(--glass-h)]"
+            onClick={handleBellClick}
           >
-            <div className="relative">
-              {companyProfile?.image_url ? (
-                <img
-                  src={companyProfile.image_url}
-                  alt="Company Logo"
-                  className="w-11 h-11 rounded-xl object-cover shadow-sm ring-2 ring-white/50 group-hover:ring-indigo-100 transition-all"
-                />
-              ) : (
-                <div className="w-11 h-11 bg-gradient-to-br from-blue-600 to-[#03c04a] rounded-xl flex items-center justify-center shadow-lg ring-2 ring-white/50 text-white font-bold text-lg font-sans">
-                  {companyProfile?.company_name?.[0] || 'Z'}
-                </div>
-              )}
-              {/* Edit indicator on hover */}
-              <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity text-[#03c04a]">
-                <div className="w-2.5 h-2.5 bg-[#03c04a] rounded-full border-2 border-white"></div>
-              </div>
-            </div>
-
-            <div className="flex flex-col">
-              <h1 className="text-sm font-bold text-gray-900 tracking-tight leading-tight group-hover:text-[#03c04a] transition-colors font-sans">
-                {companyProfile?.company_name || 'ZiraPro'}
-              </h1>
-              <p className="text-[10px] uppercase tracking-wider text-gray-500 font-medium">
-                {companyProfile?.company_tagline || 'Workspace'}
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Right Section: Location, Search, Profile */}
-          <div className="flex items-center space-x-2 md:space-x-5">
-            {/* Region/Town Selectors - Premium Style */}
-            {(regions && onRegionChange) && (
-              <div className="hidden lg:flex items-center bg-white/50 backdrop-blur-md rounded-2xl p-1 border border-gray-200/50 shadow-sm gap-1">
-                <HeaderDropdown
-                  value={selectedRegion || ''}
-                  options={regions.map(r => ({ label: r, value: r }))}
-                  onChange={onRegionChange}
-                  placeholder="Region"
-                  icon={MapPin}
-                />
-                <div className="w-px h-6 bg-gray-200/80 mx-0.5"></div>
-                <HeaderDropdown
-                  value={selectedTown || ''}
-                  options={[
-                    { label: 'All Towns', value: '' },
-                    ...(towns?.map(t => ({ label: t, value: t })) || [])
-                  ]}
-                  onChange={(val) => onTownChange && onTownChange(val)}
-                  placeholder="Town"
-                  icon={MapPin}
-                />
-              </div>
+            <Bell className="w-4 h-4" />
+            {showNotificationDot && totalNotifications > 0 && (
+              <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-[var(--red)] rounded-full ring-2 ring-[var(--sidebar)] animate-pulse shadow-[0_0_8px_var(--red-glow)]" />
             )}
+          </button>
 
-            <div className="w-px h-8 bg-gradient-to-b from-transparent via-gray-200 to-transparent hidden md:block"></div>
+          {/* Theme Toggle */}
+          <button
+            onClick={onThemeToggle}
+            className="p-2.5 text-[var(--t4)] hover:text-[var(--p)] transition-all rounded-xl hover:bg-[var(--glass-h)] flex items-center justify-center"
+            title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+          >
+            {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+          </button>
 
-
-            {/* Notification Bell */}
-            <motion.button
-              className="relative p-2.5 text-gray-500 hover:text-[#03c04a] transition-colors rounded-full hover:bg-green-50/50 group border border-transparent hover:border-green-100"
-              whileTap={{ scale: 0.95 }}
-              onClick={handleBellClick}
+          {/* Profile Control */}
+          <div className="flex items-center gap-3 pl-3 border-l border-[var(--p-line)]">
+            <div className="flex flex-col items-end hidden sm:flex">
+              <span className="text-[11px] font-semibold text-[var(--t1)] leading-none">{user?.email?.split('@')[0] || 'Operator'}</span>
+              <span className="text-[9px] text-[var(--t4)] font-semibold mt-1">{user?.role || 'Staff member'}</span>
+            </div>
+            <div 
+              className="cursor-pointer transition-all hover:scale-105 active:scale-95"
+              onClick={() => setProfileModalOpen(true)}
             >
-              <Bell className="w-5 h-5 stroke-[1.8px]" />
-              {showNotificationDot && totalNotifications > 0 && (
-                <span className="absolute top-2 right-2.5 w-2.5 h-2.5 bg-rose-500 rounded-full ring-2 ring-white animate-pulse"></span>
-              )}
-            </motion.button>
-
-            {/* User Profile Pill */}
-            <motion.div
-              className="flex items-center gap-3 pl-1 pr-4 py-1 rounded-full bg-white/80 border border-gray-100 shadow-sm hover:shadow-lg hover:border-green-100 transition-all cursor-pointer group"
-              whileHover={{ y: -1 }}
-            >
-              <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#1a1c2e] to-[#2e3250] text-white flex items-center justify-center text-xs font-bold ring-2 ring-white shadow-md">
-                {user?.email?.[0].toUpperCase() || 'U'}
-              </div>
-              <div className="flex flex-col items-start">
-                <span className="text-xs font-bold text-gray-800 group-hover:text-[#03c04a] transition-colors font-sans">
-                  {user?.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase() : 'Admin'}
-                </span>
-                <div className="flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
-                  <span className="text-[10px] text-gray-400 font-medium">Online</span>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Logout */}
-            {onLogout && (
-              <motion.button
-                onClick={onLogout}
-                className="p-2.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 rounded-full transition-all border border-transparent hover:border-rose-100"
-                title="Logout"
-                whileHover={{ rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <LogOut className="w-4 h-4 stroke-[2px]" />
-              </motion.button>
-            )}
+              <UserAvatar name={user?.email || 'Admin'} size={32} />
+            </div>
           </div>
+
+          {/* Logout */}
+          {onLogout && (
+            <button
+              onClick={onLogout}
+              className="p-2 text-[var(--t4)] hover:text-[var(--red)] transition-all"
+              title="Logout"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          )}
         </div>
-      </motion.header>
+      </header>
 
       {/* Company Profile Modal - Updated with curved design */}
       <AnimatePresence>
@@ -639,7 +572,7 @@ export default function Header({ user, onLogout, selectedTown, onTownChange, sel
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={handleCancelProfile}
-              className="fixed inset-0 bg-black bg-opacity-50 z-50"
+              className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50"
             />
 
             <motion.div
@@ -649,147 +582,86 @@ export default function Header({ user, onLogout, selectedTown, onTownChange, sel
               className="fixed inset-0 flex items-center justify-center z-50 p-4"
             >
               <div
-                className="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto"
-                style={{
-                  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)'
-                }}
+                className="glass-card w-full max-w-md max-h-[90vh] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-semibold text-gray-900" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                  <div className="flex items-center justify-between mb-5">
+                    <h2 className="text-[15px] font-semibold text-[var(--t1)] tracking-tight">
                       {companyProfile ? 'Edit Company Profile' : 'Create Company Profile'}
                     </h2>
                     <button
                       onClick={handleCancelProfile}
-                      className="text-gray-500 hover:text-gray-700 transition-colors rounded-lg p-1 hover:bg-gray-100"
+                      className="text-[var(--t4)] hover:text-[var(--t1)] transition-colors rounded-lg p-1 hover:bg-[var(--glass-h)]"
                     >
                       <X className="w-5 h-5" />
                     </button>
                   </div>
 
                   {/* Logo Upload */}
-                  <div className="mb-6">
-                    <label className="block text-xs font-medium text-gray-700 mb-2" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                      Company Logo
-                    </label>
-                    <div className="flex items-center space-x-4">
+                  <div className="mb-5">
+                    <label className="block text-[11px] font-bold text-[var(--t3)] uppercase tracking-wider mb-2">Company Logo</label>
+                    <div className="flex items-center gap-4">
                       <div className="relative">
                         {logoPreview ? (
                           <>
-                            <img
-                              src={logoPreview}
-                              alt="Logo Preview"
-                              className="w-16 h-16 rounded-xl object-cover shadow"
-                            />
+                            <img src={logoPreview} alt="Logo Preview" className="w-16 h-16 rounded-xl object-cover border border-[var(--p-line)]" />
                             <button
-                              onClick={() => {
-                                setLogoPreview(null);
-                                setSelectedFile(null);
-                              }}
-                              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-                              title="Remove logo"
+                              onClick={() => { setLogoPreview(null); setSelectedFile(null); }}
+                              className="absolute -top-2 -right-2 bg-[var(--red)] text-white rounded-full p-1 hover:opacity-80 transition-opacity"
                             >
                               <X className="w-3 h-3" />
                             </button>
                           </>
                         ) : companyProfile?.image_url ? (
-                          <img
-                            src={companyProfile.image_url}
-                            alt="Current Logo"
-                            className="w-16 h-16 rounded-xl object-cover shadow"
-                          />
+                          <img src={companyProfile.image_url} alt="Current Logo" className="w-16 h-16 rounded-xl object-cover border border-[var(--p-line)]" />
                         ) : (
-                          <div className="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center">
-                            <Image className="w-6 h-6 text-gray-400" />
+                          <div className="w-16 h-16 bg-[var(--glass-h)] border border-[var(--p-line)] rounded-xl flex items-center justify-center">
+                            <Image className="w-6 h-6 text-[var(--t4)]" />
                           </div>
                         )}
                       </div>
                       <div>
                         <label className="cursor-pointer">
-                          <div className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl flex items-center space-x-2 transition-colors">
+                          <div className="px-4 py-2 bg-[var(--glass)] hover:bg-[var(--glass-h)] border border-[var(--p-line)] text-[var(--t2)] rounded-xl flex items-center gap-2 transition-colors text-[12px]">
                             <Upload className="w-4 h-4" />
-                            <span style={{ fontFamily: "'Poppins', sans-serif" }}>
-                              {logoPreview ? 'Change Logo' : 'Upload Logo'}
-                            </span>
-                            <input
-                              type="file"
-                              className="hidden"
-                              accept="image/*"
-                              onChange={handleFileSelect}
-                              disabled={uploading}
-                            />
+                            <span>{logoPreview ? 'Change Logo' : 'Upload Logo'}</span>
+                            <input type="file" className="hidden" accept="image/*" onChange={handleFileSelect} disabled={uploading} />
                           </div>
                         </label>
-                        <p className="text-xs text-gray-500 mt-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                          Recommended size: 256x256px
-                        </p>
+                        <p className="text-[10px] text-[var(--t4)] mt-1">Recommended: 256×256px</p>
                       </div>
                     </div>
                   </div>
 
                   {/* Company Name */}
                   <div className="mb-4">
-                    <label htmlFor="company_name" className="block text-xs font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                      Company Name
-                    </label>
-                    <input
-                      type="text"
-                      id="company_name"
-                      value={newProfile.company_name}
+                    <label htmlFor="company_name" className="block text-[11px] font-bold text-[var(--t3)] uppercase tracking-wider mb-1">Company Name</label>
+                    <input type="text" id="company_name" value={newProfile.company_name}
                       onChange={(e) => setNewProfile({ ...newProfile, company_name: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                      style={{ fontFamily: "'Poppins', sans-serif" }}
-                      placeholder="Enter company name"
-                    />
+                      className="neo-input" placeholder="Enter company name" />
                   </div>
 
                   {/* Company Tagline */}
                   <div className="mb-6">
-                    <label htmlFor="company_tagline" className="block text-xs font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                      Tagline
-                    </label>
-                    <input
-                      type="text"
-                      id="company_tagline"
-                      value={newProfile.company_tagline}
+                    <label htmlFor="company_tagline" className="block text-[11px] font-bold text-[var(--t3)] uppercase tracking-wider mb-1">Tagline</label>
+                    <input type="text" id="company_tagline" value={newProfile.company_tagline}
                       onChange={(e) => setNewProfile({ ...newProfile, company_tagline: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                      style={{ fontFamily: "'Poppins', sans-serif" }}
-                      placeholder="Enter company tagline"
-                    />
+                      className="neo-input" placeholder="Enter company tagline" />
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="flex justify-end space-x-3">
-                    <button
-                      onClick={handleCancelProfile}
-                      className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-xl transition-colors"
-                      style={{ fontFamily: "'Poppins', sans-serif" }}
-                      disabled={uploading}
-                    >
+                  <div className="flex justify-end gap-3">
+                    <button onClick={handleCancelProfile} disabled={uploading}
+                      className="px-4 py-2 text-[12px] font-medium text-[var(--t3)] hover:text-[var(--t1)] hover:bg-[var(--glass-h)] rounded-xl transition-colors">
                       Cancel
                     </button>
-                    <button
-                      onClick={handleSaveProfile}
-                      className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl transition-colors flex items-center space-x-1"
-                      style={{ fontFamily: "'Poppins', sans-serif" }}
-                      disabled={uploading || (!newProfile.company_name && !newProfile.company_tagline && !selectedFile)}
-                    >
+                    <button onClick={handleSaveProfile} className="f-btn"
+                      disabled={uploading || (!newProfile.company_name && !newProfile.company_tagline && !selectedFile)}>
                       {uploading ? (
-                        <>
-                          <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                          {companyProfile ? 'Updating...' : 'Creating...'}
-                        </>
+                        <><svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>{companyProfile ? 'Updating...' : 'Creating...'}</>
                       ) : (
-                        <>
-                          <CheckCircle className="w-4 h-4" />
-                          <span>{companyProfile ? 'Update Profile' : 'Create Profile'}</span>
-                        </>
+                        <><CheckCircle className="w-4 h-4" /><span>{companyProfile ? 'Update Profile' : 'Create Profile'}</span></>
                       )}
                     </button>
                   </div>
@@ -809,7 +681,7 @@ export default function Header({ user, onLogout, selectedTown, onTownChange, sel
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSidebarOpen(false)}
-              className="fixed inset-0 bg-black bg-opacity-50 z-40"
+              className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40"
             />
 
             <motion.div
@@ -817,112 +689,93 @@ export default function Header({ user, onLogout, selectedTown, onTownChange, sel
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'tween', duration: 0.3 }}
-              className="fixed right-4 top-4 h-[95vh] w-96 bg-white z-50 flex flex-col rounded-2xl"
-              style={{
-                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
-                border: '1px solid rgba(255, 255, 255, 0.2)'
-              }}
+              className="fixed right-4 top-4 h-[95vh] w-96 bg-[var(--sidebar)] border border-[var(--p-line)] z-50 flex flex-col rounded-2xl shadow-[var(--shadow-hover)]"
             >
               {/* Header */}
-              <div className="p-4 border-b border-gray-200 bg-gray-50 rounded-t-2xl">
+              <div className="p-4 border-b border-[var(--p-line)] rounded-t-2xl">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Bell className="w-5 h-5 text-gray-700" />
-                    <h2 className="text-lg font-semibold text-gray-900" style={{ fontFamily: "'Poppins', sans-serif" }}>Notifications</h2>
+                  <div className="flex items-center gap-2">
+                    <Bell className="w-4 h-4 text-[var(--t3)]" />
+                    <h2 className="text-[13px] font-semibold text-[var(--t1)]">Notifications</h2>
                     {totalNotifications > 0 && (
-                      <span className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">
+                      <span className="bg-[var(--red-d)] text-[var(--red)] border border-[var(--red-glow)] text-[10px] font-bold px-2 py-0.5 rounded-full">
                         {totalNotifications}
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center gap-1">
                     {notifications.items.length > 0 && (
-                      <button
-                        onClick={handleClearAll}
-                        className="text-gray-500 hover:text-red-500 transition-colors rounded-lg p-1 hover:bg-gray-100"
-                        title="Clear all notifications"
-                      >
+                      <button onClick={handleClearAll} title="Clear all"
+                        className="text-[var(--t4)] hover:text-[var(--red)] transition-colors rounded-lg p-1.5 hover:bg-[var(--glass-h)]">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     )}
-                    <button
-                      onClick={() => setSidebarOpen(false)}
-                      className="text-gray-500 hover:text-gray-700 transition-colors rounded-lg p-1 hover:bg-gray-100"
-                    >
-                      <X className="w-5 h-5" />
+                    <button onClick={() => setSidebarOpen(false)}
+                      className="text-[var(--t4)] hover:text-[var(--t1)] transition-colors rounded-lg p-1.5 hover:bg-[var(--glass-h)]">
+                      <X className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
               </div>
 
               {/* Notifications List */}
-              <div className="flex-1 overflow-y-auto">
+              <div className="flex-1 overflow-y-auto custom-scrollbar">
                 {notifications.items.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center h-full text-gray-500">
-                    <Bell className="w-12 h-12 mb-4 opacity-50" />
-                    <p className="text-lg font-medium" style={{ fontFamily: "'Poppins', sans-serif" }}>No notifications</p>
-                    <p className="text-xs" style={{ fontFamily: "'Poppins', sans-serif" }}>You're all caught up!</p>
+                  <div className="flex flex-col items-center justify-center h-full text-[var(--t4)] gap-3">
+                    <Bell className="w-10 h-10 opacity-30" />
+                    <p className="text-[13px] font-medium text-[var(--t3)]">No notifications</p>
+                    <p className="text-[11px] text-[var(--t4)]">You're all caught up!</p>
                   </div>
                 ) : (
-                  <div className="divide-y divide-gray-200">
+                  <div className="flex flex-col">
                     {notifications.items.map((notification) => (
                       <motion.div
                         key={notification.id}
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className={`p-4 hover:bg-gray-50 cursor-pointer transition-colors relative ${!notification.isRead
-                            ? notification.type === 'hr'
-                              ? 'bg-amber-50 border-l-4 border-l-amber-500'
-                              : 'bg-blue-50 border-l-4 border-l-blue-500'
-                            : ''
-                          }`}
+                        className={`p-4 hover:bg-[var(--glass-h)] cursor-pointer transition-colors relative border-b border-[var(--p-line)]`}
                         onClick={() => handleNotificationClick(notification)}
                       >
                         <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleRemoveNotification(notification.id);
-                          }}
-                          className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-colors rounded-lg p-1 hover:bg-gray-100"
+                          onClick={(e) => { e.stopPropagation(); handleRemoveNotification(notification.id); }}
+                          className="absolute top-3 right-3 text-[var(--t4)] hover:text-[var(--t1)] transition-colors rounded-lg p-1 hover:bg-[var(--glass-h)]"
                         >
-                          <X className="w-4 h-4" />
+                          <X className="w-3.5 h-3.5" />
                         </button>
 
-                        <div className="flex items-start space-x-3">
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${notification.type === 'staff'
-                              ? 'bg-green-100 text-green-600'
-                              : notification.type === 'hr'
-                                ? 'bg-amber-100 text-amber-600'
-                                : 'bg-blue-100 text-blue-600'
-                            }`}>
-                            {notification.type === 'staff' ? (
-                              <UserPlus className="w-4 h-4" />
-                            ) : notification.type === 'hr' ? (
-                              <Clock className="w-4 h-4" />
-                            ) : (
-                              <Calendar className="w-4 h-4" />
-                            )}
+                        <div className="flex items-start gap-3">
+                          <div className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                            notification.type === 'staff' ? 'bg-[var(--green-d)] text-[var(--green)]'
+                              : notification.type === 'hr' ? 'bg-[var(--amber-d)] text-[var(--amber)]'
+                              : 'bg-[var(--p-dim)] text-[var(--p)]'
+                          }`}>
+                            {notification.type === 'staff' ? <UserPlus className="w-4 h-4" />
+                              : notification.type === 'hr' ? <Clock className="w-4 h-4" />
+                              : <Calendar className="w-4 h-4" />}
                           </div>
 
-                          <div className="flex-1 min-w-0">
-                            <h3 className="text-xs font-medium text-gray-900 truncate" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                              {notification.title}
-                            </h3>
-                            <p className="text-xs text-gray-600 mt-1 line-clamp-2" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                              {notification.message}
-                            </p>
+                          <div className="flex-1 min-w-0 pr-6">
+                            <div className="flex items-center gap-1.5 mb-0.5">
+                              <h3 className="text-[11px] font-semibold text-[var(--t1)] truncate">{notification.title}</h3>
+                              {!notification.isRead && (
+                                <span className="w-1 h-1 rounded-full bg-[var(--p)] animate-pulse" />
+                              )}
+                            </div>
+                            <p className="text-[10px] text-[var(--t3)] mt-0.5 line-clamp-2">{notification.message}</p>
                             {notification.type === 'hr' && (
-                              <span className="inline-flex items-center gap-1 mt-1 text-[10px] font-medium text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded-full">
+                              <span className="inline-flex items-center gap-1 mt-1 text-[9px] font-bold text-[var(--amber)] bg-[var(--amber-d)] border border-[var(--p-line)] px-1.5 py-0.5 rounded-full">
                                 <AlertTriangle className="w-2.5 h-2.5" /> HR Lifecycle
                               </span>
                             )}
-                            <p className="text-xs text-gray-500 mt-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                            <p className="text-[9px] text-[var(--t4)] mt-1">
                               {notification.timestamp.toLocaleDateString()} {notification.timestamp.toLocaleTimeString()}
                             </p>
                           </div>
 
                           {!notification.isRead && (
-                            <div className={`w-2 h-2 rounded-full flex-shrink-0 mt-2 ${notification.type === 'hr' ? 'bg-amber-500' : 'bg-blue-500'}`}></div>
+                            <div className={`w-2 h-2 rounded-full flex-shrink-0 mt-2 ${
+                              notification.type === 'hr' ? 'bg-[var(--amber)]' : 'bg-[var(--p)]'
+                            }`} />
                           )}
                         </div>
                       </motion.div>
@@ -933,8 +786,8 @@ export default function Header({ user, onLogout, selectedTown, onTownChange, sel
 
               {/* Footer */}
               {notifications.items.length > 0 && (
-                <div className="p-4 border-t border-gray-200 bg-gray-50 rounded-b-2xl">
-                  <p className="text-xs text-gray-500 text-center" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                <div className="p-4 border-t border-[var(--p-line)]">
+                  <p className="text-[10px] text-[var(--t4)] text-center">
                     {unreadItems.length} unread of {notifications.items.length} total
                   </p>
                 </div>

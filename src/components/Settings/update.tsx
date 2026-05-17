@@ -24,7 +24,7 @@ export const UpdateNotification: React.FC = () => {
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.92, y: 24, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 28 }}
-            className="bg-white rounded-2xl shadow-2xl max-w-sm w-full border border-gray-100 overflow-hidden"
+            className="glass-card  shadow-2xl max-w-sm w-full border border-gray-100 overflow-hidden"
           >
             {/* Green header band */}
             <div className="h-1.5 w-full" style={{ background: 'linear-gradient(90deg, #022c22, #16a34a, #4ade80)' }} />

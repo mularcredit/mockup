@@ -49,8 +49,8 @@ export const PDFViewer = ({ fileName, isPublic = true, onClose }: PDFViewerProps
 
   if (loading) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg p-6">
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="bg-[var(--card)] rounded-lg p-6">
           <div className="flex items-center gap-3">
             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-green-600"></div>
             <span>Loading PDF...</span>
@@ -62,8 +62,8 @@ export const PDFViewer = ({ fileName, isPublic = true, onClose }: PDFViewerProps
 
   if (error) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg p-6 max-w-md">
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="bg-[var(--card)] rounded-lg p-6 max-w-md">
           <div className="flex items-center gap-3 text-red-600 mb-4">
             <AlertCircle className="w-5 h-5" />
             <span>{error}</span>
@@ -80,8 +80,8 @@ export const PDFViewer = ({ fileName, isPublic = true, onClose }: PDFViewerProps
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg w-full max-w-6xl h-[90vh] flex flex-col">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-[var(--card)] rounded-lg w-full max-w-6xl h-[90vh] flex flex-col">
         <div className="flex justify-between items-center p-4 border-b">
           <h3 className="text-lg font-semibold text-gray-900">Resume: {fileName}</h3>
           <div className="flex items-center gap-2">

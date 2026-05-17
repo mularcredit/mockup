@@ -657,7 +657,7 @@ const EditEmployeePage = () => {
           onClick={() => navigate(`/employees`)}
           className="flex items-center text-gray-600 hover:text-gray-900 transition-colors group text-xs"
         >
-          <div className="p-1 rounded-full group-hover:bg-gray-100 transition-colors">
+          <div className="p-1 rounded-full group-hover:bg-[var(--glass-h)] transition-colors">
             <ArrowLeft className="w-5 h-5" />
           </div>
           <span className="ml-2 font-medium hidden sm:inline">Back to View</span>
@@ -868,7 +868,7 @@ const EditEmployeePage = () => {
                       <div className="mt-4 flex flex-col sm:flex-row gap-3">
                         <button
                           onClick={triggerFileInput}
-                          className="flex-1 flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors shadow-sm"
+                          className="flex-1 flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-[var(--glass-h)] transition-colors shadow-sm"
                         >
                           <Upload className="w-4 h-4 mr-2 text-gray-500" />
                           <span className="text-xs">{previewImage ? 'Change' : 'Upload'}</span>
@@ -879,7 +879,7 @@ const EditEmployeePage = () => {
                               setPreviewImage(null);
                               setProfileImage(null);
                             }}
-                            className="flex-1 flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors shadow-sm text-xs text-gray-700"
+                            className="flex-1 flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-[var(--glass-h)] transition-colors shadow-sm text-xs text-gray-700"
                           >
                             <X className="w-4 h-4 mr-2" />
                             Remove

@@ -122,7 +122,7 @@ const UserCard = ({
   const needsRoleUpdate = isMularCreditEmail && !MULAR_CREDIT_ROLES.includes(user.role);
 
   return (
-    <div className={`bg-white rounded-lg border p-4 shadow-sm hover:shadow-md transition-shadow ${needsRoleUpdate ? 'border-orange-300 bg-orange-50' : 'border-gray-200'
+    <div className={`glass-card  border p-4 shadow-sm hover:shadow-md transition-shadow ${needsRoleUpdate ? 'border-orange-300 bg-orange-50' : 'border-gray-200'
       }`}>
       {needsRoleUpdate && (
         <div className="flex items-center gap-1 mb-2 p-2 bg-orange-100 rounded-lg">
@@ -155,14 +155,14 @@ const UserCard = ({
           </button>
 
           {showDropdown && (
-            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+            <div className="absolute right-0 mt-2 w-48 glass-card  shadow-lg z-10 border border-gray-200">
               <div className="py-1">
                 <button
                   onClick={() => {
                     onEdit(user);
                     setShowDropdown(false);
                   }}
-                  className="flex items-center gap-2 px-4 py-2 text-xs text-gray-700 hover:bg-gray-100 w-full text-left"
+                  className="flex items-center gap-2 px-4 py-2 text-xs text-gray-700 hover:bg-[var(--glass-h)] w-full text-left"
                 >
                   <Edit className="w-4 h-4" />
                   Edit User
@@ -254,14 +254,14 @@ const Pagination = ({
         <button
           onClick={() => onPageChange(Math.max(1, currentPage - 1))}
           disabled={currentPage === 1}
-          className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50"
+          className="relative inline-flex items-center rounded-md border border-gray-300 bg-[var(--card)] px-4 py-2 text-xs font-medium text-gray-700 hover:bg-[var(--glass-h)]"
         >
           Previous
         </button>
         <button
           onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
           disabled={currentPage === totalPages}
-          className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50"
+          className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-[var(--card)] px-4 py-2 text-xs font-medium text-gray-700 hover:bg-[var(--glass-h)]"
         >
           Next
         </button>
@@ -277,7 +277,7 @@ const Pagination = ({
             <button
               onClick={() => onPageChange(Math.max(1, currentPage - 1))}
               disabled={currentPage === 1}
-              className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+              className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-[var(--glass-h)] focus:z-20 focus:outline-offset-0"
             >
               <span className="sr-only">Previous</span>
               <ChevronLeft className="h-4 w-4" aria-hidden="true" />
@@ -289,7 +289,7 @@ const Pagination = ({
                 onClick={() => onPageChange(page)}
                 className={`relative inline-flex items-center px-3 py-1.5 text-xs font-semibold ${currentPage === page
                   ? 'bg-green-600 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600'
-                  : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
+                  : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-[var(--glass-h)] focus:z-20 focus:outline-offset-0'
                   }`}
               >
                 {page}
@@ -299,7 +299,7 @@ const Pagination = ({
             <button
               onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
               disabled={currentPage === totalPages}
-              className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+              className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-[var(--glass-h)] focus:z-20 focus:outline-offset-0"
             >
               <span className="sr-only">Next</span>
               <ChevronRight className="h-4 w-4" aria-hidden="true" />
@@ -323,7 +323,7 @@ const RoleToggle = ({
   const roleInfo = ROLES[role];
 
   return (
-    <div className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+    <div className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-[var(--glass-h)] transition-colors">
       <div className="flex items-center gap-3">
         <div className={`p-2 rounded-lg ${role === 'ADMIN' ? 'bg-purple-100 text-purple-600' :
           role === 'REGIONAL' ? 'bg-violet-100 text-violet-600' :
@@ -348,7 +348,7 @@ const RoleToggle = ({
           onChange={() => onChange(role, !active)}
           className="sr-only peer"
         />
-        <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600"></div>
+        <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[var(--card)] after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600"></div>
       </label>
     </div>
   );
@@ -448,15 +448,15 @@ const UserEditModal = ({
   const currentRoleIsValidForMular = isMularCreditEmail && MULAR_CREDIT_ROLES.includes(editedUser.role);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-md">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="glass-card  shadow-lg w-full max-w-md">
         <div className="flex justify-between items-center p-4 border-b">
           <h3 className="text-lg font-semibold text-gray-900">
             {user ? 'Edit User' : 'Add New User'}
           </h3>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-gray-500 hover:text-[var(--t1)]"
           >
             <X className="w-5 h-5" />
           </button>
@@ -545,7 +545,7 @@ const UserEditModal = ({
                               role === 'OPERATIONS' ? 'border-indigo-500 bg-indigo-50 text-indigo-700' :
                                 role === 'STAFF' ? 'border-green-500 bg-green-50 text-green-700' :
                                   'border-gray-500 bg-gray-50 text-gray-700') :
-                      'border-gray-200 hover:bg-gray-50'
+                      'border-gray-200 hover:bg-[var(--glass-h)]'
                       } ${!isAllowedForMular ? 'opacity-50 cursor-not-allowed' : ''}`}
                     title={!isAllowedForMular ? 'Mular Credit emails must be Manager, Regional Manager or Operations' : ''}
                   >
@@ -566,19 +566,19 @@ const UserEditModal = ({
             <div className="grid grid-cols-3 gap-2">
               <button
                 onClick={() => setEditedUser({ ...editedUser, account_status: 'ACTIVE' })}
-                className={`p-2 border rounded-lg text-xs font-medium transition-colors ${editedUser.account_status === 'ACTIVE' ? 'border-green-500 bg-green-50 text-green-700' : 'border-gray-200 hover:bg-gray-50 text-gray-700'}`}
+                className={`p-2 border rounded-lg text-xs font-medium transition-colors ${editedUser.account_status === 'ACTIVE' ? 'border-green-500 bg-green-50 text-green-700' : 'border-gray-200 hover:bg-[var(--glass-h)] text-gray-700'}`}
               >
                 Active
               </button>
               <button
                 onClick={() => setEditedUser({ ...editedUser, account_status: 'SUSPENDED' })}
-                className={`p-2 border rounded-lg text-xs font-medium transition-colors ${editedUser.account_status === 'SUSPENDED' ? 'border-orange-500 bg-orange-50 text-orange-700' : 'border-gray-200 hover:bg-gray-50 text-gray-700'}`}
+                className={`p-2 border rounded-lg text-xs font-medium transition-colors ${editedUser.account_status === 'SUSPENDED' ? 'border-orange-500 bg-orange-50 text-orange-700' : 'border-gray-200 hover:bg-[var(--glass-h)] text-gray-700'}`}
               >
                 Suspended
               </button>
               <button
                 onClick={() => setEditedUser({ ...editedUser, account_status: 'DEACTIVATED' })}
-                className={`p-2 border rounded-lg text-xs font-medium transition-colors ${editedUser.account_status === 'DEACTIVATED' ? 'border-red-500 bg-red-50 text-red-700' : 'border-gray-200 hover:bg-gray-50 text-gray-700'}`}
+                className={`p-2 border rounded-lg text-xs font-medium transition-colors ${editedUser.account_status === 'DEACTIVATED' ? 'border-red-500 bg-red-50 text-red-700' : 'border-gray-200 hover:bg-[var(--glass-h)] text-gray-700'}`}
               >
                 Deactivated
               </button>
@@ -594,7 +594,7 @@ const UserEditModal = ({
         <div className="p-4 border-t flex justify-end gap-2">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs"
+            className="px-4 py-2 bg-gray-100 hover:bg-[var(--glass-h)] text-gray-700 rounded-lg text-xs"
           >
             Cancel
           </button>
@@ -665,15 +665,15 @@ const ResetPasswordModal = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-md">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="glass-card  shadow-lg w-full max-w-md">
         <div className="flex justify-between items-center p-4 border-b">
           <h3 className="text-lg font-semibold text-gray-900">
             Reset Password for {user?.email}
           </h3>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-gray-500 hover:text-[var(--t1)]"
           >
             <X className="w-5 h-5" />
           </button>
@@ -687,7 +687,7 @@ const ResetPasswordModal = ({
           </div>
 
           <div className="space-y-3">
-            <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+            <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-[var(--glass-h)]">
               <input
                 type="radio"
                 name="resetMethod"
@@ -704,7 +704,7 @@ const ResetPasswordModal = ({
               </div>
             </label>
 
-            <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+            <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-[var(--glass-h)]">
               <input
                 type="radio"
                 name="resetMethod"
@@ -769,7 +769,7 @@ const ResetPasswordModal = ({
         <div className="p-4 border-t flex justify-end gap-2">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs"
+            className="px-4 py-2 bg-gray-100 hover:bg-[var(--glass-h)] text-gray-700 rounded-lg text-xs"
           >
             Cancel
           </button>
@@ -798,15 +798,15 @@ const BulkUpdateModal = ({
   const [selectedRole, setSelectedRole] = useState<'MANAGER' | 'REGIONAL'>('MANAGER');
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="glass-card  shadow-lg w-full max-w-2xl">
         <div className="flex justify-between items-center p-4 border-b">
           <h3 className="text-lg font-semibold text-gray-900">
             Bulk Update Mular Credit Users
           </h3>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-gray-500 hover:text-[var(--t1)]"
           >
             <X className="w-5 h-5" />
           </button>
@@ -822,7 +822,7 @@ const BulkUpdateModal = ({
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-2">Select Role for Bulk Update</label>
             <div className="grid grid-cols-2 gap-3">
-              <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+              <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-[var(--glass-h)]">
                 <input
                   type="radio"
                   name="bulkRole"
@@ -840,7 +840,7 @@ const BulkUpdateModal = ({
                 </div>
               </label>
 
-              <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+              <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-[var(--glass-h)]">
                 <input
                   type="radio"
                   name="bulkRole"
@@ -893,7 +893,7 @@ const BulkUpdateModal = ({
         <div className="p-4 border-t flex justify-end gap-2">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs"
+            className="px-4 py-2 bg-gray-100 hover:bg-[var(--glass-h)] text-gray-700 rounded-lg text-xs"
           >
             Cancel
           </button>
@@ -981,7 +981,7 @@ export default function UserRolesSettings() {
   if (!supabaseAdmin) {
     return (
       <div className="p-6 bg-gray-50 min-h-screen flex items-center justify-center">
-        <div className="bg-white rounded-xl border border-gray-200 p-8 max-w-md text-center">
+        <div className="glass-card  border border-gray-200 p-8 max-w-md text-center">
           <Shield className="w-10 h-10 text-red-500 mx-auto mb-4" />
           <h2 className="text-xl font-bold text-gray-900 mb-2">Admin Access Required</h2>
           <p className="text-gray-600 mb-4 text-xs">
@@ -1247,7 +1247,7 @@ export default function UserRolesSettings() {
       <div className="max-w-screen-2xl mx-auto space-y-6">
 
         {/* MFA Security Settings Card */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div className="glass-card  border border-gray-200 shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-3">
             <div className="p-2 bg-green-50 rounded-lg">
               <Lock className="w-4 h-4 text-green-600" />
@@ -1290,7 +1290,7 @@ export default function UserRolesSettings() {
                 role="switch"
                 aria-checked={mfaEnabled}
               >
-                <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${mfaEnabled ? 'translate-x-5' : 'translate-x-0'
+                <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-[var(--card)] shadow ring-0 transition duration-200 ease-in-out ${mfaEnabled ? 'translate-x-5' : 'translate-x-0'
                   }`} />
               </button>
             </div>
@@ -1352,7 +1352,7 @@ export default function UserRolesSettings() {
         )}
 
         {/* Filters */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+        <div className="glass-card  shadow-sm border border-gray-200 p-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Search */}
             <div className="md:col-span-1">
@@ -1415,7 +1415,7 @@ export default function UserRolesSettings() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+          <div className="glass-card  border border-gray-200 p-4 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Total Users</p>
@@ -1427,7 +1427,7 @@ export default function UserRolesSettings() {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+          <div className="glass-card  border border-gray-200 p-4 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Active Users</p>
@@ -1439,7 +1439,7 @@ export default function UserRolesSettings() {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+          <div className="glass-card  border border-gray-200 p-4 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Mular Credit Users</p>
@@ -1451,7 +1451,7 @@ export default function UserRolesSettings() {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+          <div className="glass-card  border border-gray-200 p-4 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Needs Update</p>
@@ -1466,7 +1466,7 @@ export default function UserRolesSettings() {
 
         {/* Users Grid */}
         {loading ? (
-          <div className="bg-white rounded-xl border border-gray-200 p-8 flex items-center justify-center">
+          <div className="glass-card  border border-gray-200 p-8 flex items-center justify-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
           </div>
         ) : (
@@ -1483,7 +1483,7 @@ export default function UserRolesSettings() {
                   />
                 ))
               ) : (
-                <div className="col-span-full bg-white rounded-xl border border-gray-200 p-8 text-center">
+                <div className="col-span-full glass-card  border border-gray-200 p-8 text-center">
                   <p className="text-gray-500 text-xs">No users found matching your criteria</p>
                 </div>
               )}
@@ -1491,7 +1491,7 @@ export default function UserRolesSettings() {
 
             {/* Pagination */}
             {filteredUsers.length > usersPerPage && (
-              <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+              <div className="glass-card  border border-gray-200 overflow-hidden">
                 <Pagination
                   currentPage={currentPage}
                   totalPages={totalPages}
@@ -1503,7 +1503,7 @@ export default function UserRolesSettings() {
         )}
 
         {/* Role Permissions Section */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="glass-card  shadow-sm border border-gray-200 p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Role Permissions</h2>
           <div className="space-y-4">
             <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">

@@ -357,7 +357,7 @@ const GlowButton = ({
   };
   const variantClasses = {
     primary: "bg-green-50 border-green-500 text-green-600 hover:bg-green-100 hover:border-green-600 hover:text-green-700 hover:shadow-[0_0_20px_rgba(34,197,94,0.5)] focus:shadow-[0_0_25px_rgba(34,197,94,0.6)]",
-    secondary: "bg-gray-50 hover:bg-gray-100 text-gray-700 border-gray-300 hover:border-gray-400",
+    secondary: "bg-gray-50 hover:bg-[var(--glass-h)] text-gray-700 border-gray-300 hover:border-gray-400",
     danger: "bg-red-50 border-red-500 text-red-600 hover:bg-red-100 hover:border-red-600 hover:text-red-700 hover:shadow-[0_0_20px_rgba(239,68,68,0.5)]"
   };
 
@@ -494,7 +494,7 @@ const PayslipModal = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-xl shadow-lg w-full max-w-6xl max-h-[90vh] overflow-auto">
         <div className="sticky top-0 bg-white p-4 border-b border-gray-200 flex justify-between items-center z-10">
           <h2 className="text-xl font-semibold text-gray-900">Modern Payslip</h2>
@@ -1061,7 +1061,7 @@ const PayslipViewer = () => {
 
                   return (
                     <React.Fragment key={payslip.id}>
-                      <tr className="border-b border-gray-200 hover:bg-gray-50">
+                      <tr className="border-b border-gray-200 hover:bg-[var(--glass-h)]">
                         <td className="sticky left-0 z-10 bg-white px-4 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <button

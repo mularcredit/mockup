@@ -70,7 +70,7 @@ const BulkTerminateModal: React.FC<BulkTerminateModalProps> = ({
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-100"
+                    className="bg-[var(--card)] rounded-xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-100"
                 >
                     {/* Header */}
                     <div className="px-6 py-4 flex items-center justify-between border-b border-gray-100 bg-red-50/50">
@@ -124,7 +124,7 @@ const BulkTerminateModal: React.FC<BulkTerminateModalProps> = ({
                                 <select
                                     value={terminationReason}
                                     onChange={(e) => setTerminationReason(e.target.value)}
-                                    className="w-full h-[42px] px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/20 bg-white"
+                                    className="w-full h-[42px] px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500/20 bg-[var(--card)]"
                                 >
                                     <option value="" disabled>Select Reason</option>
                                     <option value="Resignation">Resignation</option>
@@ -154,10 +154,10 @@ const BulkTerminateModal: React.FC<BulkTerminateModalProps> = ({
                     </div>
 
                     {/* Footer */}
-                    <div className="p-4 border-t border-gray-100 bg-gray-50/50 flex gap-3 justify-end">
+                    <div className="p-4 border-t border-gray-100 bg-[var(--glass)] flex gap-3 justify-end">
                         <button
                             onClick={onClose}
-                            className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm"
+                            className="px-4 py-2 bg-[var(--card)] border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm"
                         >
                             Cancel
                         </button>

@@ -1,330 +1,264 @@
-import { useState } from 'react';
-import {
-  UsersRound,
-  CalendarRange,
-  Target,
-  Settings,
-  Wand2,
-  Menu,
-  ShieldAlert,
-  LayoutGrid,
-  Landmark,
-  Kanban,
-  MessagesSquare,
-  Network,
-  ShieldEllipsis,
-  Package,
-  UserPlus2,
-  PieChart,
-  Receipt,
-  UserCheck,
-  Award,
-  Smartphone,
-  Mails,
-  ShieldHalf,
-  Search,
-  HeartHandshake,
+import React, { useState, useEffect } from 'react';
+import UserAvatar from '../UI/UserAvatar';
+import { 
+  LayoutGrid, Wand2, Kanban, Network, 
+  MessagesSquare, Mails, UsersRound, 
+  UserPlus2, CalendarRange, Target, 
+  Award, UserCheck, ShieldAlert, 
+  HeartHandshake, Landmark, Receipt, 
+  Package, Smartphone, PieChart, 
+  ShieldEllipsis, Settings, ShieldHalf,
+  ChevronRight, Layers, ChevronDown,
+  LogOut, Building2
 } from 'lucide-react';
-import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
-import solo from '../../../public/solo.png';
 import { usePermissions } from '../../hooks/usePermissions';
+import { motion, AnimatePresence } from 'framer-motion';
 
-// Grouping structure
 const menuGroups = [
   {
-    title: "Overview",
+    id: 'hustle-hub',
+    title: "Hustle Hub",
+    icon: LayoutGrid,
     items: [
-      { id: 'dashboard', label: 'Dashboard', icon: LayoutGrid, path: '/dashboard', permission: 'dashboard' },
-      { id: 'ai-assistant', label: 'AI Assistant', icon: Wand2, path: '/ai-assistant', permission: 'ai-assistant' },
+      { id: 'dashboard', label: 'Command Center', icon: LayoutGrid, path: '/dashboard', permission: 'dashboard' },
+      { id: 'ai-assistant', label: 'Zira Intelligence', icon: Wand2, path: '/ai-assistant', permission: 'ai-assistant' },
     ]
   },
   {
-    title: "Workspace",
+    id: 'staff-records',
+    title: "Staff & Records",
+    icon: UsersRound,
     items: [
-      { id: 'task-manager', label: 'Task Manager', icon: Kanban, path: '/tasks', permission: 'task-manager' },
-      { id: 'teams', label: 'Teams', icon: Network, path: '/teams', permission: 'teams' },
-      { id: 'messages', label: 'SMS Center', icon: MessagesSquare, path: '/sms', permission: 'sms' },
-      { id: 'email-portal', label: 'Email Portal', icon: Mails, path: '/email-portal', permission: 'email-portal' },
+      { id: 'employees', label: 'Wafanyakazi Records', icon: UsersRound, path: '/employees', permission: 'employees' },
+      { id: 'recruitment', label: 'Talent Sourcing', icon: UserPlus2, path: '/recruitment', permission: 'recruitment' },
+      { id: 'staffcheck', label: 'Disciplinary Logs', icon: ShieldAlert, path: '/staffcheck', permission: 'staffcheck' },
+      { id: 'hr-lifecycle-dashboard', label: 'Employee Journey', icon: HeartHandshake, path: '/hr-lifecycle', permission: 'hr-lifecycle' },
     ]
   },
   {
-    title: "Team",
+    id: 'time-attendance',
+    title: "Time & Attendance",
+    icon: CalendarRange,
     items: [
-      { id: 'employees', label: 'Employees', icon: UsersRound, path: '/employees', permission: 'employees' },
-      { id: 'recruitment', label: 'Recruitment', icon: UserPlus2, path: '/recruitment', permission: 'recruitment' },
-      { id: 'leaves', label: 'Time Off', icon: CalendarRange, path: '/leaves', permission: 'leaves' },
-      { id: 'performance', label: 'Performance', icon: Target, path: '/performance', permission: 'performance' },
-      { id: 'training', label: 'Training', icon: Award, path: '/training', permission: 'training' },
-      { id: 'assign-managers', label: 'Assign Managers', icon: UserCheck, path: '/assign-managers', permission: 'assign-managers' },
-      { id: 'staffcheck', label: 'Disciplinary', icon: ShieldAlert, path: '/staffcheck', permission: 'staffcheck' },
-      { id: 'hr-lifecycle', label: 'HR Lifecycle', icon: HeartHandshake, path: '/hr-lifecycle', permission: 'hr-lifecycle' },
+      { id: 'leaves', label: 'Leave Management', icon: CalendarRange, path: '/leaves', permission: 'leaves' },
+      { id: 'task-manager', label: 'Duty Rosters', icon: Kanban, path: '/tasks', permission: 'task-manager' },
+      { id: 'teams', label: 'Operations Teams', icon: Network, path: '/teams', permission: 'teams' },
     ]
   },
   {
-    title: "Finance",
+    id: 'pay-statutory',
+    title: "Pay & Statutory",
+    icon: Landmark,
     items: [
-      { id: 'payroll', label: 'Payroll', icon: Landmark, path: '/payroll', permission: 'payroll' },
-      { id: 'expense', label: 'Expenses', icon: Receipt, path: '/expenses', permission: 'expenses' },
-      { id: 'advanced', label: 'Salary Advance', icon: Landmark, path: '/salaryadmin', permission: 'salaryadmin' },
-      { id: 'asset', label: 'Assets', icon: Package, path: '/asset', permission: 'asset' },
-      { id: 'mpesa-zap', label: 'Mpesa Zap', icon: Smartphone, path: '/mpesa-zap', permission: 'mpesa-zap' },
+      { id: 'payroll', label: 'Payroll & NSSF/NHIF', icon: Landmark, path: '/payroll', permission: 'payroll' },
+      { id: 'mpesa-zap', label: 'M-Pesa Zap Hub', icon: Smartphone, path: '/mpesa-zap', permission: 'mpesa-zap' },
+      { id: 'advanced', label: 'Salary Advances', icon: Landmark, path: '/salaryadmin', permission: 'salaryadmin' },
+      { id: 'expense', label: 'Claims & Expenses', icon: Receipt, path: '/expenses', permission: 'expenses' },
+      { id: 'asset', label: 'Company Assets', icon: Package, path: '/asset', permission: 'asset' },
     ]
   },
   {
-    title: "System",
+    id: 'talent-growth',
+    title: "Talent & Growth",
+    icon: Target,
     items: [
-      { id: 'reports', label: 'Reports', icon: PieChart, path: '/reports', permission: 'reports' },
-      { id: 'email admin', label: 'Email Admin', icon: ShieldEllipsis, path: '/adminconfirm', permission: 'adminconfirm' },
-      { id: 'incident-reports', label: 'Incidents', icon: ShieldAlert, path: '/incident-reports', permission: 'incident-reports' },
-      { id: 'settings', label: 'Settings', icon: Settings, path: '/settings', permission: 'settings' },
-      { id: 'role-permissions', label: 'Role Permissions', icon: ShieldHalf, path: '/role-permissions', permission: 'role-permissions' },
+      { id: 'performance', label: 'KPI Reviews', icon: Target, path: '/performance', permission: 'performance' },
+      { id: 'training', label: 'Staff Upskilling', icon: Award, path: '/training', permission: 'training' },
+      { id: 'assign-managers', label: 'Leadership Grid', icon: UserCheck, path: '/assign-managers', permission: 'assign-managers' },
+    ]
+  },
+  {
+    id: 'comm-center',
+    title: "Comm Center",
+    icon: MessagesSquare,
+    items: [
+      { id: 'messages', label: 'SMS Broadcast', icon: MessagesSquare, path: '/sms', permission: 'sms' },
+      { id: 'email-portal', label: 'Corporate Mail', icon: Mails, path: '/email-portal', permission: 'email-portal' },
+    ]
+  },
+  {
+    id: 'system-config',
+    title: "System Config",
+    icon: Settings,
+    items: [
+      { id: 'org-setup', label: 'Organization Setup', icon: Building2, path: '/organization-setup', permission: 'settings' },
+      { id: 'reports', label: 'Audit Reports', icon: PieChart, path: '/reports', permission: 'reports' },
+      { id: 'settings', label: 'Hub Settings', icon: Settings, path: '/settings', permission: 'settings' },
+      { id: 'role-permissions', label: 'Security Access', icon: ShieldHalf, path: '/role-permissions', permission: 'role-permissions' },
+      { id: 'email-admin', label: 'Domain Admin', icon: ShieldEllipsis, path: '/adminconfirm', permission: 'adminconfirm' },
     ]
   }
 ];
-
 
 interface SidebarProps {
   user?: { email: string; role: string } | null;
   isCollapsed: boolean;
   onToggle: (collapsed: boolean) => void;
+  onLogout?: () => void;
 }
 
-export default function Sidebar({ user, isCollapsed, onToggle }: SidebarProps) {
+export default function Sidebar({ user, isCollapsed, onToggle, onLogout }: SidebarProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
-  const [isHovered, setIsHovered] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-
-  // Use permissions hook for dynamic access control
   const { hasPermission, loading: permissionsLoading } = usePermissions();
+  const [openGroups, setOpenGroups] = useState<string[]>([]);
+  const [isLightMode, setIsLightMode] = useState(document.body.classList.contains('light'));
 
-  const sidebarVariants: Variants = {
-    expanded: {
-      width: 280,
-      transition: { type: "spring", stiffness: 400, damping: 30 }
-    },
-    collapsed: {
-      width: 88,
-      transition: { type: "spring", stiffness: 400, damping: 30 }
+  // Theme detection for logo
+  useEffect(() => {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          setIsLightMode(document.body.classList.contains('light'));
+        }
+      });
+    });
+
+    observer.observe(document.body, { attributes: true });
+    return () => observer.disconnect();
+  }, []);
+
+  // Automatically open the group containing the active path
+  useEffect(() => {
+    const activeGroup = menuGroups.find(group => 
+      group.items.some(item => currentPath.startsWith(item.path))
+    );
+    if (activeGroup && !openGroups.includes(activeGroup.id)) {
+      setOpenGroups(prev => [...prev, activeGroup.id]);
     }
+  }, [currentPath]);
+
+  const toggleGroup = (groupId: string) => {
+    setOpenGroups(prev => 
+      prev.includes(groupId) 
+        ? prev.filter(id => id !== groupId) 
+        : [...prev, groupId]
+    );
   };
 
-  const isExpanded = isHovered || !isCollapsed;
-  const userRole = user?.role || 'Admin';
-  const userInitial = user?.email?.[0]?.toUpperCase() || 'A';
-
   return (
-    <div className="fixed left-0 top-0 h-screen z-50 flex flex-col select-none">
-      <motion.div
-        initial="expanded"
-        animate={isExpanded ? "expanded" : "collapsed"}
-        variants={sidebarVariants}
-        className="relative flex flex-col h-full border-r border-white/5 shadow-2xl overflow-hidden bg-[#1C0770] font-lexend"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        {/* Brand Section */}
-        {/* Brand Section */}
-        <div className={`relative z-10 px-5 pt-4 pb-6 flex items-center transition-all duration-300 ${isExpanded ? 'justify-between' : 'flex-col justify-center gap-6'}`}>
-          <div className="flex items-center gap-3">
-            <motion.div
-              layout
-              className="relative flex items-center justify-center group cursor-pointer"
-              whileHover={{ rotate: 5, scale: 1.05 }}
-              onClick={() => !isExpanded && onToggle(false)}
-            >
-              <img src={solo} alt="Logo" className="relative w-10 h-10 object-contain brightness-0 invert drop-shadow-md" />
-            </motion.div>
+    <div className={`fixed left-0 top-0 h-screen bg-[var(--sidebar)] border-r border-[var(--p-line)] flex flex-col transition-all duration-300 z-50 ${isCollapsed ? 'w-[88px]' : 'w-[220px]'}`}>
+      {/* sb-logo */}
+      <div className={`flex items-center gap-[10px] border-b border-[var(--p-line)] transition-all ${isCollapsed ? 'p-5 justify-center' : 'p-[22px_12px_18px]'}`}>
+        <img 
+          src={isLightMode ? "/zira-dark.png" : "/ZIRA.png"} 
+          alt="ZiraHR" 
+          className={`transition-all object-contain duration-300 ${isCollapsed ? 'h-8 w-8' : 'h-12 w-auto'}`}
+        />
+      </div>
 
-            <AnimatePresence>
-              {isExpanded && (
-                <motion.div
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10 }}
-                  className="flex flex-col"
-                >
-                  <h1 className="font-lexend font-bold text-xl text-white tracking-tight flex items-center">
-                    Zira<span className="text-white font-light ml-0.5">Pro</span>
-                  </h1>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+      {/* nav */}
+      <div className="flex-1 py-4 overflow-y-auto scrollbar-hide px-0">
+        {menuGroups.map((group) => {
+          const isGroupOpen = openGroups.includes(group.id);
+          const hasActiveChild = group.items.some(item => currentPath.startsWith(item.path));
+          
+          // Filter items based on permissions
+          const accessibleItems = group.items.filter(item => !permissionsLoading && (!item.permission || hasPermission(item.permission)));
+          if (accessibleItems.length === 0) return null;
 
-          {/* Hamburger Toggle */}
-          <motion.button
-            onClick={() => onToggle(!isCollapsed)}
-            className={`p-2 rounded-xl hover:bg-white/10 transition-all duration-300 group border border-transparent hover:border-white/10 hover:shadow-sm ${!isExpanded ? 'bg-white/5' : ''}`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Menu className={`w-4 h-4 transition-colors ${isExpanded ? 'text-slate-400 group-hover:text-[#03c04a]' : 'text-[#03c04a]'}`} />
-          </motion.button>
-        </div>
-
-        {/* Search Bar */}
-        <AnimatePresence>
-          {isExpanded && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="px-5 mb-4 overflow-hidden"
-            >
-              <div className="relative group">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-purple-300/70 group-focus-within:text-lime-400 transition-colors" />
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-white/10 border border-white/10 rounded-xl py-2 pl-9 pr-3 text-xs text-white placeholder-purple-300/50 focus:outline-none focus:ring-1 focus:ring-lime-400 focus:border-lime-400/50 transition-all"
-                />
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Scrollable Navigation */}
-        <motion.div
-          className="relative z-10 flex-1 overflow-y-auto px-3 pb-4 sidebar-scroll hover:overflow-y-auto overflow-hidden"
-          initial="hidden"
-          animate="visible"
-          variants={{
-            visible: { transition: { staggerChildren: 0.05 } }
-          }}
-        >
-          <div className="space-y-6">
-            {menuGroups.map((group) => (
-              <motion.div
-                key={group.title}
-                variants={{
-                  hidden: { opacity: 0, y: 10 },
-                  visible: { opacity: 1, y: 0 }
-                }}
+          return (
+            <div key={group.id} className="mb-1">
+              {/* Group Toggle */}
+              <button
+                onClick={() => isCollapsed ? onToggle(false) : toggleGroup(group.id)}
+                className={`w-full flex items-center gap-3 py-2.5 transition-all duration-200 group px-6 relative
+                  ${hasActiveChild && !isGroupOpen
+                    ? 'text-[#C8A84B] font-bold'
+                    : 'text-[var(--t3)]'}
+                  hover:bg-[#C8A84B]/10 hover:text-[#C8A84B]`}
               >
-                {/* Section Header */}
-                <AnimatePresence>
-                  {isExpanded && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="px-3 mb-2"
-                    >
-                      <span className="text-[10px] font-normal text-cyan-400 tracking-wider font-lexend pl-1">
-                        {group.title}
-                      </span>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {/* Left accent bar - shown on hover only via opacity, no layout shift */}
+                <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-[#C8A84B] opacity-0 group-hover:opacity-60 transition-opacity duration-200" />
+                
+                <group.icon className={`w-4 h-4 shrink-0 transition-colors duration-200 ${hasActiveChild ? 'text-[#C8A84B]' : 'text-[var(--t3)] group-hover:text-[#C8A84B]'}`} />
+                {!isCollapsed && (
+                  <>
+                    <span className="text-[11.5px] font-semibold flex-1 text-left tracking-tight">{group.title}</span>
+                    <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${isGroupOpen ? 'rotate-180' : ''} ${hasActiveChild ? 'text-[#C8A84B]' : ''}`} />
+                  </>
+                )}
+                {hasActiveChild && !isGroupOpen && (
+                  <div className="w-1 h-1 rounded-full bg-[#C8A84B] animate-pulse" />
+                )}
+              </button>
 
-                {/* Items */}
-                <div className="space-y-1">
-                  {group.items.filter(item =>
-                    item.label.toLowerCase().includes(searchQuery.toLowerCase())
-                  ).map((item) => {
-                    const isActive = currentPath.startsWith(item.path);
-
-                    // While permissions are loading, show all items (avoid blank sidebar flash)
-                    // Once loaded, hide items the user doesn't have access to
-                    if (!permissionsLoading && item.permission && !hasPermission(item.permission)) return null;
-
-                    return (
-                      <motion.button
-                        key={item.id}
-                        onClick={() => navigate(item.path)}
-                        className={`relative w-full flex items-center px-3 py-2.5 rounded-xl transition-all duration-300 group overflow-hidden ${!isExpanded && 'justify-center px-0'
-                          } ${isActive
-                            ? 'bg-[#03c04a] text-white border border-white/20 ring-1 ring-white/10'
-                            : 'text-white/80 hover:bg-white/5 hover:text-[#03c04a]'}`}
-                        whileTap={{ scale: 0.98 }}
-                      >
-
-                        {/* Icon */}
-                        <div className="relative z-10 flex items-center justify-center">
-                          <item.icon
-                            className={`w-4 h-4 transition-all duration-300 ${isActive
-                              ? 'text-white'
-                              : 'text-white/80 group-hover:text-[#03c04a] group-hover:scale-110'
-                              }`}
-                            strokeWidth={isActive ? 2.5 : 2}
-                          />
-                        </div>
-
-                        {/* Label */}
-                        <AnimatePresence>
-                          {isExpanded && (
-                            <motion.span
-                              initial={{ opacity: 0, x: -10 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              exit={{ opacity: 0, x: -10 }}
-                              className={`ml-3 text-xs truncate font-lexend relative z-10 tracking-wide font-normal ${isActive ? 'text-white' : 'text-white/80'}`}
-                            >
-                              {item.label}
-                            </motion.span>
-                          )}
-                        </AnimatePresence>
-
-                        {/* Tooltip (Collapsed) */}
-                        {!isExpanded && !isHovered && (
-                          <div className="absolute left-full ml-5 px-2.5 py-1.5 bg-slate-800 text-white text-[10px] font-semibold rounded-md opacity-0 group-hover:opacity-100 pointer-events-none transition-all z-50 whitespace-nowrap shadow-xl translate-x-2 group-hover:translate-x-0">
-                            {item.label}
-                            <div className="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 w-2 h-2 bg-slate-800 rotate-45" />
-                          </div>
-                        )}
-                      </motion.button>
-                    );
-                  })}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* User Profile */}
-        <div className="relative z-10 p-3 mt-auto border-t border-white/10">
-          <div
-            className={`
-              relative overflow-hidden rounded-xl bg-white/5
-              hover:bg-white/10 border border-white/10
-              transition-all duration-300 cursor-pointer group p-2.5 backdrop-blur-sm
-            `}
-          >
-            <div className="flex items-center gap-3 relative z-10">
-              <div className="relative">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-100 to-green-100 flex items-center justify-center shadow-inner ring-1 ring-white">
-                  <span className="font-bold text-primary text-xs">{userInitial}</span>
-                </div>
-              </div>
-
+              {/* Sub Items */}
               <AnimatePresence>
-                {isExpanded && (
+                {isGroupOpen && !isCollapsed && (
                   <motion.div
-                    initial={{ opacity: 0, width: 0 }}
-                    animate={{ opacity: 1, width: 'auto' }}
-                    exit={{ opacity: 0, width: 0 }}
-                    className="flex-1 overflow-hidden"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.12, ease: "easeOut" }}
+                    className="overflow-hidden relative mt-0.5"
                   >
-                    <p className="text-xs font-bold text-slate-200 truncate font-lexend capitalize">
-                      {userRole.toLowerCase()}
-                    </p>
-                    <p className="text-[10px] text-slate-400 truncate">Admin Workspace</p>
+                    {/* Elegant Thin Line - Positioned for full width */}
+                    <div className="absolute left-[26px] top-0 bottom-3 w-[1px] bg-[var(--p-line)]" />
+                    
+                    <div className="flex flex-col">
+                      {accessibleItems.map((item) => {
+                        const isActive = currentPath.startsWith(item.path);
+                        return (
+                          <button
+                            key={item.id}
+                            onClick={() => navigate(item.path)}
+                            className={`flex items-center gap-3 py-2 transition-all duration-200 relative group px-6
+                              ${isActive 
+                                ? 'bg-[#C8A84B]/10 text-[#C8A84B] font-bold' 
+                                : 'text-[var(--t3)] hover:bg-[#C8A84B]/10 hover:text-[var(--t2)]'}`}
+                          >
+                            {/* Left accent bar via absolute — no layout jump */}
+                            <div className={`absolute left-0 top-0 bottom-0 w-[2px] bg-[#C8A84B] transition-opacity duration-200
+                              ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-40'}`} />
+                            {/* Elegant Dot */}
+                            <div className={`absolute left-[22.5px] w-[8px] h-[8px] rounded-full border-2 border-[var(--sidebar)] transition-all z-10
+                              ${isActive ? 'bg-[#C8A84B] scale-110 shadow-[0_0_8px_var(--p-glow)]' : 'bg-[var(--p-line)] group-hover:bg-[var(--t4)]'}`} 
+                            />
+                            
+                            <div className="flex items-center gap-3 ml-5">
+                              <item.icon className={`w-3 h-3 shrink-0 ${isActive ? 'text-[#C8A84B]' : 'text-[var(--t4)] group-hover:text-[var(--t2)]'}`} />
+                              <span className="text-[10.5px] truncate tracking-tight">{item.label}</span>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
-
-              {/* Settings Icon */}
-              {isExpanded && (
-                <Settings className="w-3.5 h-3.5 text-slate-400 group-hover:text-primary transition-colors" />
-              )}
             </div>
+          );
+        })}
+      </div>
+
+      {/* sb-foot */}
+      <div className="mt-auto p-4 border-t border-[var(--p-line)] bg-[var(--sidebar)]">
+        <div className="flex flex-col gap-3">
+          {/* User Profile & Logout */}
+          <div className={`flex items-center gap-3 p-2 rounded-2xl bg-[var(--glass)] border border-[var(--p-line)] transition-all ${isCollapsed ? 'justify-center p-1.5' : ''}`}>
+            <UserAvatar name={user?.email || 'Admin'} size={isCollapsed ? 28 : 32} />
+            {!isCollapsed && (
+              <div className="flex-1 min-w-0">
+                <p className="text-[11px] font-semibold text-[var(--t1)] truncate">{user?.email?.split('@')[0] || 'Operator'}</p>
+                <p className="text-[9px] text-[var(--t4)] font-medium truncate">{user?.role || 'Staff'}</p>
+              </div>
+            )}
+            {!isCollapsed && onLogout && (
+              <button 
+                onClick={onLogout}
+                className="p-2 text-[var(--t4)] hover:text-[var(--red)] transition-all rounded-lg hover:bg-[var(--red-d)]"
+                title="Logout"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            )}
           </div>
+
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

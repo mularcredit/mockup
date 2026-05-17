@@ -1,679 +1,374 @@
-import { useState, useEffect, useMemo, useRef } from 'react'
-import { queryDeepSeek } from '../../services/deepseek'
+import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../../lib/supabase'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Send, User, Cpu, Database, Users, Activity, Sparkles, Bot, BarChart2, MapPin } from 'lucide-react'
+import { Send, User, Database, Users, Activity, Sparkles, BarChart2, ChevronRight, CheckCircle2, Loader2, Wrench } from 'lucide-react'
 import { TownProps } from '../../types/supabase'
+import { runMCPQuery, MCPMessage } from '../../services/mcpClient'
 
-interface AreaTownMapping {
-  [area: string]: string[];
-}
+// ─────────────────────────────────────────────
+// FORMAT AI RESPONSE (Markdown → HTML)
+// ─────────────────────────────────────────────
+const formatAIResponse = (content: string) =>
+  content
+    .replace(/^### (.*$)/gim, '<h3 class="text-sm font-semibold text-[var(--t1)] mt-4 mb-2">$1</h3>')
+    .replace(/^## (.*$)/gim, '<h2 class="text-base font-semibold text-[var(--t1)] mt-5 mb-3 border-b border-[var(--p-line)] pb-2">$1</h2>')
+    .replace(/^# (.*$)/gim, '<h1 class="text-lg font-semibold text-[var(--t1)] mt-6 mb-4">$1</h1>')
+    .replace(/\*\*(.*?)\*\*/gim, '<strong class="font-semibold text-[var(--p)]">$1</strong>')
+    .replace(/\*(.*?)\*/gim, '<em class="italic text-[var(--t3)]">$1</em>')
+    .replace(/^[*-] (.*$)/gim, '<li class="flex items-start mb-1.5"><span class="text-[var(--p)] mr-2 mt-0.5 shrink-0">•</span><span>$1</span></li>')
+    .replace(/`(.*?)`/gim, '<code class="bg-[var(--p-dim)] text-[var(--p)] px-1.5 py-0.5 rounded text-[11px] font-mono border border-[var(--p-line)]">$1</code>')
+    .replace(/\n\n/g, '<br/><br/>');
 
-interface BranchAreaMapping {
-  [branch: string]: string;
-}
-
-// Add this function to format AI responses with beautiful styling
-const formatAIResponse = (content: string) => {
-  // Convert markdown-like syntax to beautiful HTML
-  return content
-    // Headers
-    .replace(/^### (.*$)/gim, '<h3 class="text-lg font-bold text-gray-800 mt-4 mb-2">$1</h3>')
-    .replace(/^## (.*$)/gim, '<h2 class="text-xl font-bold text-gray-900 mt-6 mb-3 border-b pb-2">$1</h2>')
-    .replace(/^# (.*$)/gim, '<h1 class="text-2xl font-bold text-gray-900 mt-6 mb-4">$1</h1>')
-    
-    // Bold and Italic
-    .replace(/\*\*(.*?)\*\*/gim, '<strong class="font-semibold text-gray-900">$1</strong>')
-    .replace(/\*(.*?)\*/gim, '<em class="italic text-gray-700">$1</em>')
-    
-    // Lists
-    .replace(/^\* (.*$)/gim, '<li class="flex items-start mb-1"><span class="text-blue-500 mr-2 mt-1">•</span><span>$1</span></li>')
-    .replace(/^- (.*$)/gim, '<li class="flex items-start mb-1"><span class="text-blue-500 mr-2 mt-1">-</span><span>$1</span></li>')
-    .replace(/(<li.*?<\/li>)/gims, '<ul class="space-y-2 my-3">$1</ul>')
-    
-    // Code blocks
-    .replace(/`(.*?)`/gim, '<code class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm font-mono border">$1</code>')
-    
-    // Line breaks
-    .replace(/\n/g, '<br>')
-    
-    // Sections with cards
-    .replace(/\[card\](.*?)\[\/card\]/gims, '<div class="bg-blue-50 border border-blue-200 rounded-xl p-4 my-3">$1</div>')
-    
-    // Highlights
-    .replace(/\[highlight\](.*?)\[\/highlight\]/gims, '<div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 my-2">$1</div>');
+// Tool display names
+const TOOL_LABELS: Record<string, string> = {
+  get_employee_count: 'Querying employee count',
+  search_employees: 'Searching employee records',
+  get_department_breakdown: 'Analyzing department breakdown',
+  get_payroll_summary: 'Fetching payroll summary',
+  get_hr_alerts: 'Checking HR alerts',
+  get_gender_distribution: 'Computing gender distribution',
+  get_recent_hires: 'Loading recent hires',
 };
 
+const TOOL_ICONS: Record<string, any> = {
+  get_employee_count: Users,
+  search_employees: Users,
+  get_department_breakdown: BarChart2,
+  get_payroll_summary: BarChart2,
+  get_hr_alerts: Activity,
+  get_gender_distribution: Users,
+  get_recent_hires: Users,
+};
+
+// Suggested prompts
+const SUGGESTED_PROMPTS = [
+  'How many employees are in Bamburi branch?',
+  'What is the gender distribution across all branches?',
+  'Show me recent hires in the last 30 days',
+  'Give me a department breakdown',
+  'Are there any pending HR alerts?',
+  'What was the payroll total for this month?',
+];
+
+// ─────────────────────────────────────────────
+// TOOL CALL INDICATOR COMPONENT
+// ─────────────────────────────────────────────
+interface ToolCallIndicatorProps {
+  toolName: string;
+  status: 'calling' | 'done';
+  result?: any;
+}
+
+const ToolCallIndicator = ({ toolName, status, result }: ToolCallIndicatorProps) => {
+  const Icon = TOOL_ICONS[toolName] || Database;
+  const label = TOOL_LABELS[toolName] || toolName;
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 4 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex items-center gap-2.5 px-3.5 py-2 rounded-lg bg-[var(--p-dim)] border border-[var(--p-line)] w-fit text-[11px] font-medium"
+    >
+      {status === 'calling' ? (
+        <Loader2 className="w-3.5 h-3.5 text-[var(--p)] animate-spin shrink-0" />
+      ) : (
+        <CheckCircle2 className="w-3.5 h-3.5 text-[var(--green)] shrink-0" />
+      )}
+      <Icon className="w-3.5 h-3.5 text-[var(--p)] shrink-0" />
+      <span className={status === 'done' ? 'text-[var(--t2)] line-through opacity-60' : 'text-[var(--p)]'}>{label}</span>
+      {status === 'done' && result !== undefined && (
+        <span className="text-[var(--green)] no-underline" style={{ textDecoration: 'none' }}>
+          ✓
+        </span>
+      )}
+    </motion.div>
+  );
+};
+
+// ─────────────────────────────────────────────
+// MAIN COMPONENT
+// ─────────────────────────────────────────────
+interface ConvMessage {
+  id: string;
+  role: 'user' | 'assistant' | 'tool-stream';
+  content: string;
+  toolCalls?: Array<{ tool: string; status: 'calling' | 'done'; result?: any }>;
+}
+
 export const AIAssistantPage = ({ selectedTown, onTownChange }: TownProps) => {
-  const [message, setMessage] = useState('')
-  const [conversation, setConversation] = useState<Array<{role: string, content: string, id: string}>>([])
-  const [loading, setLoading] = useState(false)
-  const [allEmployees, setAllEmployees] = useState<any[]>([]) // Store ALL employees
-  const [error, setError] = useState<string | null>(null)
-  
-  // Area/Town mapping state
-  const [areaTownMapping, setAreaTownMapping] = useState<AreaTownMapping>({});
-  const [branchAreaMapping, setBranchAreaMapping] = useState<BranchAreaMapping>({});
-  const [isArea, setIsArea] = useState<boolean>(false);
-  const [townsInArea, setTownsInArea] = useState<string[]>([]);
-  const [currentTown, setCurrentTown] = useState<string>(selectedTown || '');
+  const [message, setMessage] = useState('');
+  const [conversation, setConversation] = useState<ConvMessage[]>([]);
+  const [mcpHistory, setMcpHistory] = useState<MCPMessage[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [employeeCount, setEmployeeCount] = useState(0);
+  const [activeCount, setActiveCount] = useState(0);
+  const [currentTown] = useState(selectedTown || 'ADMIN_ALL');
 
-  // Auto-scroll ref
   const scrollRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-scroll to bottom function
-  const scrollToBottom = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTo({
-        top: scrollRef.current.scrollHeight,
-        behavior: 'smooth'
-      });
-    }
-  };
-
-  // Scroll to bottom when conversation updates or loading state changes
+  // Auto-scroll
   useEffect(() => {
-    scrollToBottom();
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
+    }
   }, [conversation, loading]);
 
-  // Load area-town mapping and set current town
+  // Load basic stats for the header
   useEffect(() => {
-    const loadMappings = async () => {
-      try {
-        // Fetch the area-town mapping from the database
-        const { data: employeesData, error: employeesError } = await supabase
-          .from('employees')
-          .select('Branch, Town');
-        
-        if (employeesError) {
-          console.error("Error loading area-town mapping:", employeesError);
-          return;
-        }
-        
-        // Convert the data to a mapping object
-        const mapping: AreaTownMapping = {};
-        employeesData?.forEach(item => {
-          if (item.Branch && item.Town) {
-            if (!mapping[item.Branch]) {
-              mapping[item.Branch] = [];
-            }
-            if (!mapping[item.Branch].includes(item.Town)) {
-              mapping[item.Branch].push(item.Town);
-            }
-          }
-        });
-        
-        setAreaTownMapping(mapping);
-        
-        // Fetch branch-area mapping from kenya_branches
-        const { data: branchesData, error: branchesError } = await supabase
-          .from('kenya_branches')
-          .select('"Branch Office", "Area"');
-        
-        if (branchesError) {
-          console.error("Error loading branch-area mapping:", branchesError);
-          return;
-        }
-        
-        // Convert the data to a mapping object
-        const branchMapping: BranchAreaMapping = {};
-        branchesData?.forEach(item => {
-          if (item['Branch Office'] && item['Area']) {
-            branchMapping[item['Branch Office']] = item['Area'];
-          }
-        });
-        
-        setBranchAreaMapping(branchMapping);
-        
-        // Set current town from props or localStorage
-        const savedTown = localStorage.getItem('selectedTown');
-        if (savedTown && (!selectedTown || selectedTown === 'ADMIN_ALL')) {
-          setCurrentTown(savedTown);
-          if (onTownChange) {
-            onTownChange(savedTown);
-          }
-        } else if (selectedTown) {
-          setCurrentTown(selectedTown);
-          localStorage.setItem('selectedTown', selectedTown);
-        }
-      } catch (error) {
-        console.error("Error in loadMappings:", error);
-      }
+    const loadStats = async () => {
+      const { count } = await supabase.from('employees').select('id', { count: 'exact', head: true });
+      const { count: activeC } = await supabase.from('employees').select('id', { count: 'exact', head: true }).eq('status', 'active');
+      setEmployeeCount(count || 0);
+      setActiveCount(activeC || 0);
     };
+    loadStats();
+  }, []);
 
-    loadMappings();
-  }, [selectedTown, onTownChange]);
-
-  // Check if current selection is an area and get its towns
+  // Welcome message
   useEffect(() => {
-    if (currentTown && areaTownMapping[currentTown]) {
-      setIsArea(true);
-      setTownsInArea(areaTownMapping[currentTown]);
-    } else {
-      setIsArea(false);
-      setTownsInArea([]);
-    }
-  }, [currentTown, areaTownMapping]);
-
-  // Fetch ALL employees once on component mount
-  useEffect(() => {
-    const fetchAllEmployees = async () => {
-      try {
-        console.log('Fetching ALL employees...');
-        
-        const { data, error } = await supabase
-          .from('employees')
-          .select('*')
-        
-        if (error) {
-          console.error('Supabase error:', error);
-          throw error;
-        }
-        
-        console.log('Fetched total employees:', data?.length);
-        setAllEmployees(data || []);
-        
-      } catch (err) {
-        setError('Failed to load employee data')
-        console.error(err)
-      }
-    }
-    
-    fetchAllEmployees()
-  }, []) // Only run once on mount
-
-  // Filter employees based on selected town using useMemo for performance
-  const filteredEmployees = useMemo(() => {
-    if (!currentTown || currentTown === 'ADMIN_ALL') {
-      return allEmployees;
-    }
-    
-    console.log('Filtering employees for:', currentTown, 'isArea:', isArea);
-    console.log('Total employees before filter:', allEmployees.length);
-    
-    const filtered = allEmployees.filter(employee => {
-      if (isArea && townsInArea.length > 0) {
-        // Filter by all towns in the area
-        return townsInArea.includes(employee.Town || '');
-      } else {
-        // Filter by specific town
-        return employee.Town === currentTown;
-      }
-    });
-    
-    console.log('Filtered employees count:', filtered.length);
-    return filtered;
-  }, [allEmployees, currentTown, isArea, townsInArea]);
-
-  // Update conversation when filtered data changes
-  useEffect(() => {
-    const townContext = getTownContext();
-    
     setConversation([{
-      role: 'system',
-      content: `There are ${filteredEmployees.length} employees in the system ${townContext}.`,
-      id: 'system-init'
-    }, {
+      id: 'welcome',
       role: 'assistant',
-      content: `Hello! I'm your HR AI Assistant. I can help you analyze data for ${filteredEmployees.length} employees ${townContext}. What would you like to know?`,
-      id: 'welcome-message'
-    }])
-  }, [filteredEmployees, currentTown, isArea, townsInArea])
+      content: `Hello! I'm **Zira**, your MCP-powered HR intelligence assistant.\n\nI can access live data from your HR database using structured tools. Ask me anything about your workforce — employees, payroll, departments, alerts, and more.`,
+    }]);
+  }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!message.trim() || loading) return
-    
-    setLoading(true)
-    setError(null)
-    const userMessage = { 
-      role: 'user', 
-      content: message,
-      id: Date.now().toString() 
-    }
-    setConversation(prev => [...prev, userMessage])
-    
+  const handleSubmit = async (e?: React.FormEvent, overrideMsg?: string) => {
+    e?.preventDefault();
+    const query = overrideMsg || message;
+    if (!query.trim() || loading) return;
+
+    setLoading(true);
+    setError(null);
+    setMessage('');
+
+    const userMsgId = Date.now().toString();
+    const streamMsgId = `stream-${Date.now()}`;
+
+    // Add user message
+    setConversation(prev => [...prev, { id: userMsgId, role: 'user', content: query }]);
+
+    // Add a "tool-stream" placeholder for live tool call indicators
+    setConversation(prev => [...prev, { id: streamMsgId, role: 'tool-stream', content: '', toolCalls: [] }]);
+
     try {
-      // Calculate real data statistics for AI context
-      const realDataStats = calculateRealDataStats(filteredEmployees);
+      const context = `Organization with ${employeeCount} total employees. Current filter: ${currentTown === 'ADMIN_ALL' ? 'All locations' : currentTown}.`;
 
-      const enhancedContext = `
-        DATABASE SCHEMA: employees table with columns as previously described.
+      const result = await runMCPQuery(
+        query,
+        mcpHistory,
+        context,
+        // onToolCall — add indicator as "calling"
+        (toolName, args) => {
+          setConversation(prev => prev.map(msg =>
+            msg.id === streamMsgId
+              ? { ...msg, toolCalls: [...(msg.toolCalls || []), { tool: toolName, status: 'calling' as const, args }] }
+              : msg
+          ));
+        },
+        // onToolResult — mark indicator as "done"
+        (toolName, result) => {
+          setConversation(prev => prev.map(msg =>
+            msg.id === streamMsgId
+              ? {
+                  ...msg,
+                  toolCalls: (msg.toolCalls || []).map(tc =>
+                    tc.tool === toolName && tc.status === 'calling'
+                      ? { ...tc, status: 'done' as const, result }
+                      : tc
+                  )
+                }
+              : msg
+          ));
+        },
+      );
 
-        ACTUAL DATA ANALYSIS CONTEXT:
-        - Total employees: ${filteredEmployees.length}
-        - Location: ${getTownContext()}
-        
-        REAL DATA STATISTICS:
-        ${realDataStats}
+      // Replace the stream placeholder with the final AI response (keep tool calls)
+      setConversation(prev => prev.map(msg =>
+        msg.id === streamMsgId
+          ? { ...msg, role: 'assistant' as const, content: result.content }
+          : msg
+      ));
 
-        ANALYTICAL CAPABILITIES:
-        - You have access to ${filteredEmployees.length} actual employee records
-        - Analyze real distributions by Gender, Job Title, Branch, Town, etc.
-        - Calculate actual salary statistics using Basic Salary field
-        - Perform geographic analysis using actual Town and Branch data
-        - Analyze employment types and demographics from real data
-        
-        RESPONSE GUIDELINES:
-        - Analyze the ACTUAL ${filteredEmployees.length} employee records
-        - Provide specific counts, percentages, and insights from real data
-        - Reference actual data fields and values from the schema
-        - Be factual and data-driven using the real employee data
-        - If data is missing for certain fields, note that in your analysis
-
-        RESPONSE FORMATTING GUIDELINES:
-        - Use **bold** for key metrics and important numbers
-        - Use *italic* for emphasis and insights
-        - Use ### Headers for sections
-        - Use * Bullet points for lists
-        - Use \`code\` for specific data points or technical terms
-        - Structure responses with clear sections
-        - Start with key insights, then provide details
-        - Use [highlight]...[/highlight] for important takeaways
-        - Use [card]...[/card] for summary sections
-      `;
-      
-      const result = await queryDeepSeek(message, enhancedContext)
-      
-      setConversation(prev => [
+      // Update MCP history for context continuity
+      setMcpHistory(prev => [
         ...prev,
-        { 
-          role: 'assistant', 
-          content: result.response,
-          id: `ai-${Date.now()}`
-        }
-      ])
-      setMessage('')
-    } catch (error) {
-      setError('Failed to get AI response')
-      console.error(error)
+        { role: 'user', content: query },
+        { role: 'assistant', content: result.content },
+      ]);
+    } catch (err: any) {
+      setConversation(prev => prev.filter(msg => msg.id !== streamMsgId));
+      setError(err.message || 'Failed to connect to intelligence service.');
     } finally {
-      setLoading(false)
+      setLoading(false);
+      inputRef.current?.focus();
     }
-  }
-
-  // Helper function to calculate real data statistics
-  const calculateRealDataStats = (employees: any[]) => {
-    if (employees.length === 0) return 'No employee data available for analysis.';
-    
-    // Gender distribution
-    const genderCounts = employees.reduce((acc, emp) => {
-      const gender = emp.Gender || 'Unknown';
-      acc[gender] = (acc[gender] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-    
-    // Job Title distribution (top 5)
-    const jobTitleCounts = employees.reduce((acc, emp) => {
-      const title = emp['Job Title'] || 'Unknown';
-      acc[title] = (acc[title] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-    const topJobTitles = Object.entries(jobTitleCounts)
-      .sort(([,a], [,b]) => b - a)
-      .slice(0, 5);
-    
-    // Branch distribution
-    const branchCounts = employees.reduce((acc, emp) => {
-      const branch = emp.Branch || 'Unknown';
-      acc[branch] = (acc[branch] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-    
-    // Salary statistics (if available)
-    const salaries = employees.map(emp => emp['Basic Salary']).filter(Boolean);
-    const salaryStats = salaries.length > 0 ? {
-      min: Math.min(...salaries),
-      max: Math.max(...salaries),
-      avg: salaries.reduce((a, b) => a + b, 0) / salaries.length
-    } : null;
-    
-    return `
-      - Gender Distribution: ${Object.entries(genderCounts).map(([gender, count]) => `${gender}: ${count}`).join(', ')}
-      - Top Job Titles: ${topJobTitles.map(([title, count]) => `${title}: ${count}`).join(', ')}
-      - Branch Distribution: ${Object.entries(branchCounts).map(([branch, count]) => `${branch}: ${count}`).join(', ')}
-      ${salaryStats ? `- Salary Range: KES ${salaryStats.min.toLocaleString()} - KES ${salaryStats.max.toLocaleString()} (Avg: KES ${Math.round(salaryStats.avg).toLocaleString()})` : ''}
-      - Employee Types: ${[...new Set(employees.map(emp => emp['Employee Type']).filter(Boolean))].join(', ')}
-    `;
-  };
-
-  // Helper function to get town context
-  const getTownContext = () => {
-    if (!currentTown || currentTown === 'ADMIN_ALL') {
-      return 'across all towns';
-    }
-    
-    if (isArea) {
-      return `for ${currentTown} area (${townsInArea.length} towns)`;
-    }
-    
-    return `for ${currentTown} town`;
-  };
-
-  // Calculate HR metrics using filtered data
-  const activeEmployees = filteredEmployees.filter((e: any) => e.status === 'active').length
-  const avgTenure = filteredEmployees.length > 0 
-    ? filteredEmployees.reduce((acc: number, e: any) => {
-        const startDate = new Date(e.start_date)
-        const tenure = (Date.now() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 365)
-        return acc + tenure
-      }, 0) / filteredEmployees.length
-    : 0
-
-  // Get town display name
-  const getTownDisplayName = () => {
-    if (!currentTown) return "All Towns";
-    if (currentTown === 'ADMIN_ALL') return "All Towns";
-    
-    if (isArea) {
-      return `${currentTown} Area (${townsInArea.length} towns)`;
-    }
-    
-    return currentTown;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 p-4 md:p-8">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-[var(--page)] p-4 md:p-8 animate-pgIn">
+      <div className="max-w-5xl mx-auto flex flex-col gap-6">
+
         {/* Header */}
-        <motion.header 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4"
-        >
+        <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-4xl font-bold text-gray-800 flex items-center gap-4">
-              <div className="p-3  rounded-xl text-blue-600 border border-blue-200">
-                <img
-                  src="/avatars.png"
-                  alt="Avatar"
-                  className="w-10 h-10 object-cover rounded-full"
-                />
+            <div className="flex items-center gap-3 mb-1">
+              <div className="p-1.5 glass-card rounded-xl text-[var(--p)] !border-[var(--p-line)]">
+                <img src="/avatars.png" alt="Zira" className="w-9 h-9 rounded-full object-cover" />
               </div>
-              <span className="text-lg bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
-                HR AI Assistant
-              </span>
-            </h1>
-            <p className="text-gray-600 mt-2 max-w-lg text-xs">
-              AI-powered workforce analytics and insights for{" "}
-              <span className="font-medium text-blue-600 flex items-center mt-1">
-                <MapPin className="w-4 h-4 mr-1" />
-                {getTownDisplayName()}
-              </span>
-            </p>
+              <div>
+                <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[var(--p)] to-[#9f8ef1]">
+                  Zira Intelligence <span className="text-[10px] bg-[var(--p-dim)] text-[var(--p)] border border-[var(--p-line)] rounded-full px-2 py-0.5 font-semibold tracking-wider ml-1">MCP</span>
+                </h1>
+                <p className="text-[11px] text-[var(--t4)] font-medium">Model Context Protocol · Live data access</p>
+              </div>
+            </div>
           </div>
-          
-          <motion.div 
-            whileHover={{ scale: 1.02 }}
-            className="flex items-center gap-2 bg-blue-50 border border-blue-100 rounded-full px-4 py-2"
-          >
-            <Sparkles className="w-5 h-5 text-blue-500" />
-            <span className="text-xs font-medium text-blue-700">AI Assistant</span>
-          </motion.div>
-        </motion.header>
-
-        {/* HR Summary Cards */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
-        >
-          <motion.div 
-            whileHover={{ y: -5 }}
-            className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
-                <Users className="w-6 h-6" />
-              </div>
-              <h6 className="font-medium text-gray-700">Total Employees</h6>
-            </div>
-            <p className="text-4xl font-bold text-gray-900">
-              {filteredEmployees.length}
-              <span className="text-xs font-normal ml-2 text-gray-500">
-                {getTownContext()}
-              </span>
-            </p>
-          </motion.div>
-
-          <motion.div 
-            whileHover={{ y: -5 }}
-            className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-green-100 rounded-lg text-green-600">
-                <Activity className="w-6 h-6" />
-              </div>
-              <h6 className="font-medium text-gray-700">Active Employees</h6>
-            </div>
-            <p className="text-4xl font-bold text-gray-900">
-              {activeEmployees}
-              <span className="text-xs font-normal ml-2 text-gray-500">active</span>
-            </p>
-          </motion.div>
-
-          <motion.div 
-            whileHover={{ y: -5 }}
-            className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-purple-100 rounded-lg text-purple-600">
-                <BarChart2 className="w-6 h-6" />
-              </div>
-              <h6 className="font-medium text-gray-700">Avg. Tenure</h6>
-            </div>
-            <p className="text-4xl font-bold text-gray-900">
-              {avgTenure ? avgTenure.toFixed(1) : '--'}
-              <span className="text-xs font-normal ml-2 text-gray-500">years</span>
-            </p>
-          </motion.div>
+          <div className="flex items-center gap-2">
+            <span className="flex items-center gap-1.5 text-[11px] font-semibold text-[var(--p)] bg-[var(--p-dim)] border border-[var(--p-line)] rounded-full px-3 py-1.5">
+              <span className="w-1.5 h-1.5 bg-[var(--green)] rounded-full animate-pulse" />
+              MCP Connected
+            </span>
+          </div>
         </motion.div>
 
-        {/* Chat Interface */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-lg"
-        >
+        {/* Stats Strip */}
+        <div className="grid grid-cols-3 gap-4">
+          {[
+            { label: 'Total Employees', value: employeeCount.toLocaleString(), icon: Users, color: 'var(--p)' },
+            { label: 'Active Staff', value: activeCount.toLocaleString(), icon: Activity, color: 'var(--green)' },
+            { label: 'MCP Tools', value: '7', icon: Wrench, color: '#9f8ef1' },
+          ].map((stat) => (
+            <motion.div key={stat.label} whileHover={{ y: -3 }} className="glass-card rounded-xl p-4 flex items-center gap-3">
+              <div className="p-2 rounded-lg" style={{ background: `color-mix(in srgb, ${stat.color} 12%, transparent)`, border: `1px solid color-mix(in srgb, ${stat.color} 25%, transparent)` }}>
+                <stat.icon className="w-4 h-4" style={{ color: stat.color }} />
+              </div>
+              <div>
+                <p className="text-[18px] font-bold text-[var(--t1)]">{stat.value}</p>
+                <p className="text-[10px] text-[var(--t4)] font-medium">{stat.label}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Chat Area */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-card rounded-2xl overflow-hidden flex flex-col" style={{ height: '520px' }}>
           {/* Messages */}
-          <div 
-            ref={scrollRef}
-            className="h-[500px] overflow-y-auto p-6 space-y-6 custom-scrollbar"
-          >
+          <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-5 thin-scrollbar bg-[var(--sidebar)]/20">
             <AnimatePresence>
-              {conversation
-                .filter(m => m.role !== 'system')
-                .map((msg) => (
-                  <motion.div
-                    key={msg.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <div className={`max-w-[80%] rounded-2xl p-5 ${msg.role === 'user' 
-                      ? 'bg-gradient-to-br from-blue-600 to-blue-500 text-white rounded-br-none' 
-                      : 'bg-gray-100 text-gray-800 rounded-bl-none border border-gray-200'}`}
-                    >
-                      <div className="flex items-center gap-3 mb-2">
-                        {msg.role === 'user' ? (
-                          <div className="p-1.5 bg-white/30 rounded-full">
-                            <User className="w-4 h-4" />
+              {conversation.map((msg) => (
+                <motion.div
+                  key={msg.id}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  {/* Tool-stream / assistant messages */}
+                  {(msg.role === 'assistant' || msg.role === 'tool-stream') && (
+                    <div className="flex flex-col gap-2 max-w-[85%]">
+                      {/* Tool Call Indicators */}
+                      {msg.toolCalls && msg.toolCalls.length > 0 && (
+                        <div className="flex flex-col gap-1.5">
+                          {msg.toolCalls.map((tc, i) => (
+                            <ToolCallIndicator key={i} toolName={tc.tool} status={tc.status} result={tc.result} />
+                          ))}
+                        </div>
+                      )}
+                      {/* Content */}
+                      {msg.content && (
+                        <div className="bg-[var(--glass)] border border-[var(--p-line)] rounded-2xl rounded-tl-none p-5 text-[var(--t2)] text-[13px] leading-relaxed">
+                          <div className="flex items-center gap-2 mb-3 opacity-70">
+                            <img src="/avatars.png" alt="Zira" className="w-5 h-5 rounded-full" />
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--p)]">Zira · MCP</span>
                           </div>
-                        ) : (
-                          <div className="p-1.5 bg-blue-500/20 rounded-full">
-                            <img
-                              src="/avatars.png"
-                              alt="Avatar"
-                              className="w-10 h-10 object-cover rounded-full"
-                            />
-                          </div>
-                        )}
-                        <span className="text-xs font-medium">
-                          {msg.role === 'user' ? 'You' : 'HR Assistant'}
-                        </span>
-                      </div>
-                      {/* Updated message content with beautiful formatting */}
-                      {msg.role === 'user' ? (
-                        <p className="whitespace-pre-wrap text-xs/relaxed">{msg.content}</p>
-                      ) : (
-                        <div 
-                          className="whitespace-pre-wrap text-xs/relaxed ai-response-content"
-                          dangerouslySetInnerHTML={{ __html: formatAIResponse(msg.content) }}
-                        />
+                          <div className="ai-response-content" dangerouslySetInnerHTML={{ __html: formatAIResponse(msg.content) }} />
+                        </div>
                       )}
                     </div>
-                  </motion.div>
-                ))}
-              
-              {loading && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="flex justify-start"
-                >
-                  <div className="bg-gray-100 text-gray-800 rounded-2xl rounded-bl-none p-5 max-w-[80%] border border-gray-200">
-                    <div className="flex items-center gap-3">
-                      <div className="p-1.5 bg-blue-500/20 rounded-full">
-                       <img
-                  src="/avatars.png"
-                  alt="Avatar"
-                  className="w-10 h-10 object-cover rounded-full"
-                />
+                  )}
+                  {/* User messages */}
+                  {msg.role === 'user' && (
+                    <div className="max-w-[75%] bg-[var(--p)] text-[var(--sidebar)] rounded-2xl rounded-br-none px-5 py-3.5 text-[13px] font-medium">
+                      <div className="flex items-center gap-2 mb-2 opacity-70">
+                        <User className="w-3 h-3" />
+                        <span className="text-[9px] font-bold uppercase tracking-wider">You</span>
                       </div>
-                      <span className="text-xs font-medium">HR Assistant</span>
+                      {msg.content}
                     </div>
-                    <div className="mt-3 flex space-x-2">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0ms' }} />
-                      <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '200ms' }} />
-                      <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '400ms' }} />
-                    </div>
+                  )}
+                </motion.div>
+              ))}
+
+              {/* Loading indicator */}
+              {loading && conversation[conversation.length - 1]?.role !== 'tool-stream' && (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
+                  <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-[var(--glass)] border border-[var(--p-line)] text-[11px] text-[var(--t3)]">
+                    <Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--p)]" />
+                    Connecting to MCP tools...
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
-          {/* Input Area */}
-          <div className="border-t border-gray-200 p-5 bg-gray-50">
+          {/* Suggested Prompts (show when empty) */}
+          {conversation.length <= 1 && (
+            <div className="px-6 pb-2">
+              <p className="text-[10px] text-[var(--t4)] font-semibold uppercase tracking-wider mb-2">Suggested</p>
+              <div className="flex flex-wrap gap-2">
+                {SUGGESTED_PROMPTS.slice(0, 3).map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => handleSubmit(undefined, p)}
+                    className="flex items-center gap-1.5 text-[11px] text-[var(--t2)] bg-[var(--glass)] border border-[var(--p-line)] rounded-full px-3 py-1.5 hover:border-[var(--p)] hover:text-[var(--p)] transition-all"
+                  >
+                    <ChevronRight className="w-3 h-3" />
+                    {p}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Input */}
+          <div className="p-4 border-t border-[var(--p-line)] bg-[var(--sidebar)]/50">
             {error && (
-              <motion.div 
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-4 bg-red-100 text-red-700 p-3 rounded-lg text-xs border border-red-200"
-              >
+              <div className="mb-3 bg-[var(--red-d)] text-[var(--red)] px-4 py-2.5 rounded-lg text-[11px] font-semibold border border-[var(--red-glow)]">
                 {error}
-              </motion.div>
+              </div>
             )}
             <form onSubmit={handleSubmit} className="flex gap-3">
               <input
+                ref={inputRef}
                 type="text"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="flex-1 bg-white border border-gray-300 rounded-xl px-5 py-3.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 placeholder-gray-400 text-xs"
-                placeholder="Ask about your HR data (e.g. 'Show turnover trends')"
+                className="flex-1 bg-[var(--glass)] border border-[var(--p-line)] rounded-xl px-5 py-3 text-[13px] text-[var(--t1)] placeholder-[var(--t4)] focus:outline-none focus:border-[var(--p)] transition-all"
+                placeholder="Ask Zira anything about your workforce..."
                 disabled={loading}
               />
-              <motion.button
+              <button
                 type="submit"
                 disabled={loading || !message.trim()}
-                whileTap={{ scale: 0.95 }}
-                whileHover={{ scale: 1.05 }}
-                className="p-3.5 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-400 hover:to-blue-500 disabled:opacity-50 transition-all flex items-center justify-center shadow-md shadow-blue-500/30"
+                className="px-6 bg-[var(--p)] text-[var(--sidebar)] rounded-xl font-semibold text-[13px] hover:shadow-[0_0_20px_var(--p-dim)] transition-all disabled:opacity-30 flex items-center gap-2"
               >
-                <Send className="w-5 h-5" />
-              </motion.button>
+                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+              </button>
             </form>
-            <p className="text-xs text-gray-500 mt-3 text-center">
-              AI assistant may produce inaccurate information about people or policies
-            </p>
           </div>
         </motion.div>
+
       </div>
 
-      <style jsx>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(0, 0, 0, 0.1);
-          border-radius: 3px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(0, 0, 0, 0.2);
-        }
-
-        /* Beautiful AI Response Styling */
-        .ai-response-content h1 {
-          font-size: 1.5rem;
-          font-weight: bold;
-          color: #1f2937;
-          margin-top: 1.5rem;
-          margin-bottom: 1rem;
-        }
-        
-        .ai-response-content h2 {
-          font-size: 1.25rem;
-          font-weight: bold;
-          color: #111827;
-          margin-top: 1.5rem;
-          margin-bottom: 0.75rem;
-          padding-bottom: 0.5rem;
-          border-bottom: 2px solid #e5e7eb;
-        }
-        
-        .ai-response-content h3 {
-          font-size: 1.125rem;
-          font-weight: bold;
-          color: #374151;
-          margin-top: 1rem;
-          margin-bottom: 0.5rem;
-        }
-        
-        .ai-response-content ul {
-          margin: 0.75rem 0;
-          padding-left: 1rem;
-          space-y: 0.5rem;
-        }
-        
-        .ai-response-content li {
-          display: flex;
-          align-items: flex-start;
-          margin-bottom: 0.25rem;
-        }
-        
-        .ai-response-content strong {
-          font-weight: 600;
-          color: #111827;
-        }
-        
-        .ai-response-content em {
-          font-style: italic;
-          color: #374151;
-        }
-        
-        .ai-response-content code {
-          background-color: #f3f4f6;
-          color: #1f2937;
-          padding: 0.25rem 0.5rem;
-          border-radius: 0.375rem;
-          font-size: 0.75rem;
-          font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-          border: 1px solid #e5e7eb;
-        }
-        
-        .ai-response-content br {
-          margin-bottom: 0.5rem;
-          display: block;
-          content: "";
-        }
+      <style>{`
+        .ai-response-content h1, .ai-response-content h2, .ai-response-content h3 { margin: 0.75rem 0 0.4rem; }
+        .ai-response-content ul { margin: 0.5rem 0; padding: 0; }
+        .ai-response-content li { margin-bottom: 0.4rem; }
+        .ai-response-content strong { color: var(--p); font-weight: 600; }
+        .ai-response-content code { font-family: monospace; }
+        .ai-response-content br { display: block; margin: 0.4rem 0; content: ''; }
       `}</style>
     </div>
-  )
-}
+  );
+};

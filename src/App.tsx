@@ -53,7 +53,7 @@ import MpesaZapPortal from './components/Settings/MpesaZapPortal';
 import RolePermissions from './components/Settings/RolePermissions';
 import EmailPortal from './components/Email/EmailPortal';
 import HRLifecycleDashboard from './components/HR/HRLifecycleDashboard';
-
+import OrganizationSetup from './components/OrganizationSetup/OrganizationSetup';
 interface User {
   email: string;
   role: string;
@@ -75,7 +75,7 @@ const Loader = () => {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: 'var(--page)',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -85,10 +85,11 @@ const Loader = () => {
   const spinnerStyle: CSSProperties = {
     width: '50px',
     height: '50px',
-    border: '5px solid rgba(16, 185, 129, 0.2)',
-    borderTop: '5px solid #10b981',
+    border: '2px solid var(--p-dim)',
+    borderTop: '2px solid var(--p)',
     borderRadius: '50%',
     animation: 'spin 1s linear infinite',
+    boxShadow: '0 0 10px var(--p-glow)',
   };
 
   return (
@@ -100,6 +101,9 @@ const Loader = () => {
         }
       `}</style>
       <div style={spinnerStyle}></div>
+      <div style={{ position: 'absolute', marginTop: '80px', color: 'var(--p)', fontSize: '10px', fontFamily: 'monospace', letterSpacing: '2px', animation: 'blink 1.5s infinite' }}>
+        decrypting_packets...
+      </div>
     </div>
   );
 };
@@ -124,19 +128,32 @@ class ErrorBoundaryClass extends React.Component<
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Something went wrong</h1>
-            <p className="text-gray-600 mb-4">Please refresh the page to continue</p>
-            <button
-              onClick={() => {
-                this.setState({ hasError: false, error: null });
-                window.location.reload();
-              }}
-              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-            >
-              Refresh Page
-            </button>
+        <div className="min-h-screen flex items-center justify-center bg-[var(--page)] p-4 animate-fade-in">
+          <div className="glass-card p-8 rounded-3xl max-w-sm w-full mx-auto relative overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.1)]">
+            <div className="flex flex-col items-center text-center">
+              <div className="w-12 h-12 rounded-full bg-[var(--amber-d)] flex items-center justify-center mb-5">
+                <svg className="w-6 h-6 text-[var(--amber)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <h1 className="text-lg font-semibold text-[var(--t1)] mb-2 tracking-tight">An unexpected error occurred</h1>
+              <p className="text-[var(--t3)] mb-8 text-[13px] leading-relaxed">
+                We encountered a problem while trying to display this page.
+                <br />
+                <span className="font-mono text-[10px] mt-2 block opacity-70 bg-[var(--glass)] p-2 rounded-lg">
+                  {this.state.error?.message || 'A critical rendering error occurred.'}
+                </span>
+              </p>
+              <button
+                onClick={() => {
+                  this.setState({ hasError: false, error: null });
+                  window.location.reload();
+                }}
+                className="f-btn w-full justify-center py-2.5"
+              >
+                Refresh page
+              </button>
+            </div>
           </div>
         </div>
       );
@@ -166,6 +183,19 @@ function App() {
   const [filteredTowns, setFilteredTowns] = useState<string[]>([]);
   const [isFetchingBranches, setIsFetchingBranches] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    return (localStorage.getItem('theme') as 'light' | 'dark') || 'dark';
+  });
+
+  // Apply theme to body
+  useEffect(() => {
+    if (theme === 'light') {
+      document.body.classList.add('light');
+    } else {
+      document.body.classList.remove('light');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   // Inactivity timer refs (using refs instead of state for timers)
   const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -898,7 +928,7 @@ function App() {
   return (
     <UserProvider>
       <ErrorBoundary>
-        <div className="min-h-screen bg-white overflow-x-hidden">
+        <div className="min-h-screen bg-[var(--page)] text-[var(--t1)] overflow-x-hidden transition-colors duration-300">
           <UpdateNotification />
           <Routes>
             <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
@@ -924,17 +954,17 @@ function App() {
                 ) : user.role === 'STAFF' ? (
                   <StaffPortalLanding />
                 ) : (
-                  <div className="flex flex-col min-h-screen bg-gray-50/50">
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-200/40 via-purple-100/20 to-transparent pointer-events-none"></div>
+                  <div className="flex flex-col min-h-screen bg-[var(--page)] transition-colors duration-300">
                     <div className="relative flex flex-1 w-full overflow-x-hidden">
                       <Sidebar
                         user={user}
                         isCollapsed={isSidebarCollapsed}
                         onToggle={setIsSidebarCollapsed}
+                        onLogout={handleLogout}
                       />
-                      <div className={`flex-1 min-w-0 flex flex-col transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${isSidebarCollapsed ? 'ml-[88px]' : 'ml-[280px]'}`}>
+                      <div className={`flex-1 min-w-0 flex flex-col transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${isSidebarCollapsed ? 'ml-[88px]' : 'ml-[220px]'}`}>
                         <Header
-                          user={user}
+                          user={user || undefined}
                           onLogout={handleLogout}
                           selectedTown={selectedTown}
                           onTownChange={handleTownChange}
@@ -943,8 +973,10 @@ function App() {
                           towns={filteredTowns}
                           regions={regions}
                           allTowns={branches}
+                          theme={theme}
+                          onThemeToggle={() => setTheme(prev => prev === 'light' ? 'dark' : 'light')}
                         />
-                        <main className="flex-1 overflow-x-hidden p-4">
+                        <main className="flex-1 overflow-x-hidden pt-[22px] px-[26px] pb-[52px]">
                           <AnimatePresence mode="wait">
                             <motion.div
                               key={location.pathname}
@@ -1019,6 +1051,14 @@ function App() {
                                 />} />
                                 <Route path="/teams" element={<ChatLayout />} />
                                 <Route path="/staffcheck" element={<WarningModule />} />
+                                <Route
+                                  path="/organization-setup"
+                                  element={
+                                    <AuthRoute allowedRoles={['ADMIN', 'MANAGER', 'HR', 'CHECKER']}>
+                                      <OrganizationSetup />
+                                    </AuthRoute>
+                                  }
+                                />
                                 <Route
                                   path="/payroll"
                                   element={
@@ -1109,7 +1149,6 @@ function App() {
                             </motion.div>
                           </AnimatePresence>
                         </main>
-                        <Footer />
                       </div>
                     </div>
                   </div>

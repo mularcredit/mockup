@@ -260,7 +260,7 @@ export default function BirthdaySMS() {
   }, []);
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 p-6">
+    <div className="bg-[var(--card)] rounded-xl border border-slate-200 p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">

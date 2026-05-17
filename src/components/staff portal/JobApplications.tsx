@@ -474,7 +474,7 @@ const JobApplications = () => {
             {/* Application Modal */}
             <AnimatePresence>
                 {showApplicationModal && selectedJob && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
@@ -542,7 +542,7 @@ const JobApplications = () => {
                                         setAdditionalInfo('');
                                     }}
                                     disabled={isSubmitting}
-                                    className="px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+                                    className="px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-[var(--glass-h)] transition-colors disabled:opacity-50"
                                 >
                                     Cancel
                                 </button>
@@ -572,7 +572,7 @@ const JobApplications = () => {
             {/* Job Details Modal */}
             <AnimatePresence>
                 {selectedJob && !showApplicationModal && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
@@ -652,7 +652,7 @@ const JobApplications = () => {
                             <div className="p-6 border-t border-gray-200 bg-gray-50 flex justify-end space-x-3">
                                 <button
                                     onClick={() => setSelectedJob(null)}
-                                    className="px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                                    className="px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-[var(--glass-h)] transition-colors"
                                 >
                                     Close
                                 </button>

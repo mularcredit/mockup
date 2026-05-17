@@ -137,7 +137,7 @@ export const ApplicationsTable = ({ applications, setSelectedApplication }: Appl
   return (
     <>
       {/* Main Table Container - Responsive height based on screen size */}
-      <div className="flex flex-col bg-white rounded-xl shadow-sm border border-gray-200">
+      <div className="flex flex-col bg-[var(--card)] rounded-xl shadow-sm border border-gray-200">
         {/* Header - Fixed height */}
         <div className="flex-shrink-0 p-3 sm:p-4 md:p-6 border-b border-gray-200">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
@@ -271,7 +271,7 @@ export const ApplicationsTable = ({ applications, setSelectedApplication }: Appl
 
         {/* Pagination - Fixed at bottom */}
         {applications.length > 0 && (
-          <div className="flex-shrink-0 border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+          <div className="flex-shrink-0 border-t border-gray-200 bg-[var(--card)] px-4 py-3 sm:px-6">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
               <div className="text-xs text-gray-700">
                 Showing <span className="font-medium">{startIndex + 1}</span> to{' '}
@@ -327,8 +327,8 @@ export const ApplicationsTable = ({ applications, setSelectedApplication }: Appl
 
       {/* Schedule Interview Modal - Fully responsive */}
       {showScheduleModal && selectedApplicationForSchedule && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start sm:items-center justify-center p-2 sm:p-4 z-50 overflow-y-auto">
-          <div className="bg-white rounded-xl shadow-lg w-full max-w-md mx-auto my-4 sm:my-0 max-h-[95vh] sm:max-h-[90vh] flex flex-col">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-start sm:items-center justify-center p-2 sm:p-4 z-50 overflow-y-auto">
+          <div className="bg-[var(--card)] rounded-xl shadow-lg w-full max-w-md mx-auto my-4 sm:my-0 max-h-[95vh] sm:max-h-[90vh] flex flex-col">
             {/* Modal Header - Fixed */}
             <div className="flex-shrink-0 p-4 sm:p-6 border-b border-gray-100">
               <div className="flex justify-between items-center">
@@ -481,7 +481,7 @@ export const ApplicationsTable = ({ applications, setSelectedApplication }: Appl
                   <button
                     type="button"
                     onClick={() => setShowScheduleModal(false)}
-                    className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-md shadow-sm text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#47d475] transition-colors"
+                    className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-md shadow-sm text-xs font-medium text-gray-700 bg-[var(--card)] hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#47d475] transition-colors"
                   >
                     Cancel
                   </button>

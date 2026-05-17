@@ -19,7 +19,8 @@ import {
     ShieldCheck,
     X,
     CheckCircle,
-    Zap
+    Zap,
+    RefreshCw
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import toast from 'react-hot-toast';
@@ -216,7 +217,7 @@ const PhoneNumberApprovals = () => {
             await supabase.from('notifications').insert({
                 employee_number: employeeNumber,
                 type: `phone_change_${status}`,
-                title: `Phone Number Change ${status.toUpperCase()}`,
+                title: `Phone number change ${status}`,
                 message,
                 priority: 'high',
                 is_read: false,
@@ -246,24 +247,24 @@ const PhoneNumberApprovals = () => {
                 >
                     <div className="relative z-10 space-y-6">
                         <div className="space-y-1">
-                            <h2 className="text-2xl font-black tracking-tight italic uppercase">Identity Node</h2>
-                            <p className="text-indigo-100 text-[10px] font-black uppercase tracking-[0.2em] opacity-80">Phone Authentication Registry</p>
+                            <h2 className="text-2xl font-semibold tracking-tight">Identity node</h2>
+                            <p className="text-indigo-100 text-[10px] font-semibold opacity-80">Phone authentication registry</p>
                         </div>
 
                         <div className="flex items-center gap-3">
                             <div className="p-3 bg-white/10 rounded-2xl backdrop-blur-md">
                                 <ShieldCheck className="w-5 h-5 text-indigo-300" />
                             </div>
-                            <span className="text-[10px] font-black uppercase tracking-widest text-indigo-100">Auth Gatekeeper</span>
+                            <span className="text-[10px] font-semibold text-indigo-100">Auth gatekeeper</span>
                         </div>
 
                         <div className="flex flex-col gap-2 pt-4">
-                            <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest border-b border-white/10 pb-2">
-                                <span>Pending Requests</span>
+                            <div className="flex items-center justify-between text-[10px] font-semibold border-b border-white/10 pb-2">
+                                <span>Pending requests</span>
                                 <span className="text-emerald-400">{requests.filter(r => r.status === 'pending').length}</span>
                             </div>
-                            <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-white/50 pt-2">
-                                <span>Total Audits</span>
+                            <div className="flex items-center justify-between text-[10px] font-semibold text-white/50 pt-2">
+                                <span>Total audits</span>
                                 <span>{requests.length}</span>
                             </div>
                         </div>
@@ -272,17 +273,17 @@ const PhoneNumberApprovals = () => {
                 </motion.div>
 
                 {/* Sub Header Content */}
-                <div className="lg:col-span-3 bg-white rounded-[2.5rem] border border-gray-100 shadow-sm p-8 flex flex-col justify-center">
+                <div className="lg:col-span-3 bg-[var(--card)] rounded-[2.5rem] border border-gray-100 shadow-sm p-8 flex flex-col justify-center">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
                         <div className="space-y-4 max-w-xl">
                             <div className="flex items-center gap-3">
                                 <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
                                     <Zap className="w-4 h-4" />
                                 </div>
-                                <h3 className="text-lg font-black text-gray-900 uppercase italic">Verification Protocol</h3>
+                                <h3 className="text-lg font-semibold text-gray-900 italic">Verification protocol</h3>
                             </div>
-                            <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest leading-loose">
-                                Ensure all phone number changes are verified against physical employee records. Approved changes will immediately update the M-Pesa disbursement endpoint for the target node.
+                            <p className="text-[11px] font-semibold text-gray-400 leading-loose">
+                                Ensure all phone number changes are verified against physical employee records. Approved changes will immediately update the M-Pesa disbursement endpoint.
                             </p>
                         </div>
 
@@ -291,7 +292,7 @@ const PhoneNumberApprovals = () => {
                                 <button
                                     key={f}
                                     onClick={() => setStatusFilter(f)}
-                                    className={`px-5 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${statusFilter === f ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' : 'text-gray-400 hover:text-indigo-600'
+                                    className={`px-5 py-2.5 rounded-xl text-[9px] font-semibold capitalize transition-all ${statusFilter === f ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' : 'text-gray-400 hover:text-indigo-600'
                                         }`}
                                 >
                                     {f}
@@ -303,20 +304,20 @@ const PhoneNumberApprovals = () => {
             </div>
 
             {/* Main Content Section */}
-            <div className="bg-white rounded-[3rem] border border-gray-100 shadow-sm overflow-hidden min-h-[500px]">
-                <div className="p-8 border-b border-gray-50 flex items-center justify-between bg-gray-50/50">
+            <div className="bg-[var(--card)] rounded-[3rem] border border-gray-100 shadow-sm overflow-hidden min-h-[500px]">
+                <div className="p-8 border-b border-gray-50 flex items-center justify-between bg-[var(--glass)]">
                     <div className="relative flex-1 max-w-md">
                         <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                         <input
                             type="text"
-                            placeholder="SEARCH BY NODE PK..."
+                            placeholder="Search by employee name or number..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-14 pr-6 py-4 bg-white border border-gray-100 rounded-[2rem] text-[10px] font-black uppercase tracking-widest focus:ring-4 focus:ring-indigo-100 transition-all font-mono shadow-sm"
+                            className="w-full pl-14 pr-6 py-4 bg-[var(--card)] border border-gray-100 rounded-[2rem] text-[11px] font-semibold focus:ring-4 focus:ring-[var(--p-dim)] transition-all font-mono shadow-sm"
                         />
                     </div>
 
-                    <button onClick={fetchRequests} className="p-4 bg-white border border-gray-100 rounded-2xl text-gray-400 hover:text-indigo-600 transition-all shadow-sm">
+                    <button onClick={fetchRequests} className="p-4 bg-[var(--card)] border border-gray-100 rounded-2xl text-gray-400 hover:text-indigo-600 transition-all shadow-sm">
                         <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
                     </button>
                 </div>
@@ -325,10 +326,10 @@ const PhoneNumberApprovals = () => {
                     <table className="w-full">
                         <thead>
                             <tr className="bg-gray-50/80 text-left">
-                                <th className="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-widest">Employee Context</th>
-                                <th className="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">Protocol Delta</th>
-                                <th className="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-widest">Request Status</th>
-                                <th className="px-10 py-6 text-[10px] font-black text-gray-400 uppercase tracking-widest text-right">Audit Action</th>
+                                <th className="px-10 py-6 text-[10px] font-semibold text-gray-400">Employee context</th>
+                                <th className="px-10 py-6 text-[10px] font-semibold text-gray-400 text-center">Protocol delta</th>
+                                <th className="px-10 py-6 text-[10px] font-semibold text-gray-400">Request status</th>
+                                <th className="px-10 py-6 text-[10px] font-semibold text-gray-400 text-right">Audit action</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-50">
@@ -336,14 +337,14 @@ const PhoneNumberApprovals = () => {
                                 <tr key={request.id} className="hover:bg-indigo-50/30 transition-all group">
                                     <td className="px-10 py-8">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-black shadow-lg shadow-indigo-100">
+                                            <div className="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-semibold shadow-lg shadow-indigo-100">
                                                 {request.employee_name?.split(' ').map(n => n[0]).join('')}
                                             </div>
                                             <div className="flex flex-col">
-                                                <span className="text-sm font-black text-gray-900 uppercase tracking-widest group-hover:text-indigo-600 transition-colors">
+                                                <span className="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
                                                     {request.employee_name}
                                                 </span>
-                                                <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                                                <div className="flex items-center gap-2 text-[10px] font-semibold text-gray-400">
                                                     <span className="bg-gray-100 px-1.5 py-0.5 rounded text-gray-600 font-mono">{request.employee_number}</span>
                                                     <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {request.branch}</span>
                                                 </div>
@@ -351,19 +352,19 @@ const PhoneNumberApprovals = () => {
                                         </div>
                                     </td>
                                     <td className="px-10 py-8">
-                                        <div className="flex items-center justify-center gap-4 text-xs font-black">
-                                            <span className="text-gray-400 line-through font-mono uppercase tracking-widest">{request.current_phone || 'NULL_NODE'}</span>
+                                        <div className="flex items-center justify-center gap-4 text-xs font-semibold">
+                                            <span className="text-gray-400 line-through font-mono">{request.current_phone || 'None'}</span>
                                             <ArrowUpRight className="w-4 h-4 text-indigo-400" />
-                                            <span className="text-emerald-600 font-mono uppercase tracking-widest">{request.requested_phone}</span>
+                                            <span className="text-emerald-600 font-mono">{request.requested_phone}</span>
                                         </div>
                                     </td>
                                     <td className="px-10 py-8">
                                         <div className="flex flex-col items-start gap-2">
-                                            <span className={`inline-flex px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest border border-transparent shadow-sm ${getStatusStyles(request.status)}`}>
+                                            <span className={`inline-flex px-4 py-2 rounded-xl text-[9px] font-semibold capitalize border border-transparent shadow-sm ${getStatusStyles(request.status)}`}>
                                                 {request.status}
                                             </span>
-                                            <p className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">
-                                                {new Date(request.requested_at).toLocaleDateString()} NODE_INTAKE
+                                            <p className="text-[9px] font-semibold text-gray-400">
+                                                {new Date(request.requested_at).toLocaleDateString()} intake
                                             </p>
                                         </div>
                                     </td>
@@ -373,14 +374,14 @@ const PhoneNumberApprovals = () => {
                                                 whileHover={{ scale: 1.05 }}
                                                 whileTap={{ scale: 0.95 }}
                                                 onClick={() => setSelectedRequest(request)}
-                                                className="px-6 py-3 bg-indigo-600 text-white rounded-xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-indigo-100 transition-all"
+                                                className="px-6 py-3 bg-indigo-600 text-white rounded-xl text-[10px] font-semibold shadow-xl shadow-indigo-100 transition-all"
                                             >
-                                                Audit Req
+                                                Audit request
                                             </motion.button>
                                         ) : (
                                             <div className="flex flex-col items-end opacity-50">
-                                                <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Reviewed By</span>
-                                                <span className="text-[10px] font-black text-gray-900 uppercase">{request.reviewed_by || 'SYSTEM_NODE'}</span>
+                                                <span className="text-[9px] font-semibold text-gray-400">Reviewed by</span>
+                                                <span className="text-[10px] font-semibold text-gray-900">{request.reviewed_by || 'System node'}</span>
                                             </div>
                                         )}
                                     </td>
@@ -393,7 +394,7 @@ const PhoneNumberApprovals = () => {
                             <div className="w-20 h-20 bg-gray-50 rounded-[2rem] flex items-center justify-center border border-gray-100">
                                 <ShieldCheck className="w-10 h-10 text-gray-300" />
                             </div>
-                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Registry Clear. No pending identities.</p>
+                            <p className="text-[10px] font-semibold text-gray-400">Registry clear. No pending identities.</p>
                         </div>
                     )}
                 </div>
@@ -409,14 +410,14 @@ const PhoneNumberApprovals = () => {
                             initial={{ scale: 0.9, opacity: 0, y: 20 }}
                             animate={{ scale: 1, opacity: 1, y: 0 }}
                             exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                            className="bg-white rounded-[3rem] shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col relative z-10 border border-white/20"
+                            className="bg-[var(--card)] rounded-[3rem] shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col relative z-10 border border-white/20"
                         >
-                            <div className="p-10 border-b border-gray-50 flex items-center justify-between bg-gray-50/50">
+                            <div className="p-10 border-b border-gray-50 flex items-center justify-between bg-[var(--glass)]">
                                 <div className="space-y-1">
-                                    <h3 className="text-2xl font-black text-gray-900 tracking-tight uppercase italic">Audit Identities</h3>
-                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Manual Identity Verification</p>
+                                    <h3 className="text-2xl font-semibold text-gray-900 tracking-tight italic">Audit identities</h3>
+                                    <p className="text-[10px] font-semibold text-gray-400">Manual identity verification</p>
                                 </div>
-                                <motion.button whileHover={{ rotate: 90 }} onClick={() => setSelectedRequest(null)} className="p-4 bg-white text-gray-400 hover:text-red-500 rounded-2xl shadow-sm border border-gray-100 transition-colors">
+                                <motion.button whileHover={{ rotate: 90 }} onClick={() => setSelectedRequest(null)} className="p-4 bg-[var(--card)] text-gray-400 hover:text-red-500 rounded-2xl shadow-sm border border-gray-100 transition-colors">
                                     <X className="w-6 h-6" />
                                 </motion.button>
                             </div>
@@ -424,30 +425,30 @@ const PhoneNumberApprovals = () => {
                             <div className="p-10 space-y-8">
                                 <div className="grid grid-cols-2 gap-6">
                                     <div className="p-6 bg-gray-50 rounded-[2rem] border border-gray-100">
-                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Origin Node</p>
-                                        <p className="text-sm font-black text-gray-900 uppercase font-mono">{selectedRequest.current_phone || 'NULL_NODE'}</p>
+                                        <p className="text-[10px] font-semibold text-gray-400 mb-3">Origin node</p>
+                                        <p className="text-sm font-semibold text-gray-900 font-mono">{selectedRequest.current_phone || 'None'}</p>
                                     </div>
                                     <div className="p-6 bg-emerald-50 rounded-[2rem] border border-emerald-100">
-                                        <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-3">Target Node</p>
-                                        <p className="text-sm font-black text-emerald-700 uppercase font-mono">{selectedRequest.requested_phone}</p>
+                                        <p className="text-[10px] font-semibold text-emerald-600 mb-3">Target node</p>
+                                        <p className="text-sm font-semibold text-emerald-700 font-mono">{selectedRequest.requested_phone}</p>
                                     </div>
                                 </div>
 
                                 <div className="space-y-4">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Applicant Justification</label>
-                                    <div className="p-8 bg-gray-900 rounded-[2.5rem] text-indigo-100 text-[11px] font-bold uppercase tracking-widest leading-loose">
-                                        {selectedRequest.reason || 'NO_JUSTIFICATION_PROVIDED'}
+                                    <label className="text-[10px] font-semibold text-gray-400 ml-1">Applicant justification</label>
+                                    <div className="p-8 bg-gray-900 rounded-[2.5rem] text-indigo-100 text-[11px] font-semibold leading-loose">
+                                        {selectedRequest.reason || 'No justification provided'}
                                     </div>
                                 </div>
 
                                 <div className="space-y-4">
-                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Admin Auditor Remarks</label>
+                                    <label className="text-[10px] font-semibold text-gray-400 ml-1">Admin auditor remarks</label>
                                     <textarea
                                         value={adminNotes}
                                         onChange={(e) => setAdminNotes(e.target.value)}
                                         rows={3}
-                                        className="w-full p-8 bg-gray-50 border-none rounded-[2.5rem] text-sm font-bold tracking-tight focus:ring-4 focus:ring-indigo-100 transition-all resize-none shadow-inner"
-                                        placeholder="PROVIDE AUDIT RATIONALE..."
+                                        className="w-full p-8 bg-gray-50 border-none rounded-[2.5rem] text-sm font-semibold tracking-tight focus:ring-4 focus:ring-[var(--p-dim)] transition-all resize-none shadow-inner"
+                                        placeholder="Provide audit rationale..."
                                     />
                                 </div>
                             </div>
@@ -456,7 +457,7 @@ const PhoneNumberApprovals = () => {
                                 <button
                                     onClick={() => rejectRequest(selectedRequest.id)}
                                     disabled={isProcessing}
-                                    className="flex-1 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-red-500 hover:text-red-700 bg-white border border-red-100 rounded-[2rem] transition-all flex items-center justify-center gap-2"
+                                    className="flex-1 py-5 text-[10px] font-semibold text-red-500 hover:text-red-700 bg-[var(--card)] border border-red-100 rounded-[2rem] transition-all flex items-center justify-center gap-2"
                                 >
                                     {isProcessing ? <RefreshCw className="w-4 h-4 animate-spin" /> : <XCircle className="w-4 h-4" />}
                                     Revoke
@@ -464,10 +465,10 @@ const PhoneNumberApprovals = () => {
                                 <button
                                     onClick={() => approveRequest(selectedRequest.id)}
                                     disabled={isProcessing}
-                                    className="flex-[2] py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-[2rem] text-[10px] font-black uppercase tracking-[0.2em] shadow-xl shadow-indigo-100 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                                    className="flex-[2] py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-[2rem] text-[10px] font-semibold shadow-xl shadow-indigo-100 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
                                 >
                                     {isProcessing ? <RefreshCw className="w-4 h-4 animate-spin" /> : <ShieldCheck className="w-5 h-5" />}
-                                    Validate Node
+                                    Validate node
                                 </button>
                             </div>
                         </motion.div>

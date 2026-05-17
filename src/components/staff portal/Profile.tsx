@@ -450,7 +450,7 @@ const Profile = () => {
         <div className="mt-6 flex justify-end space-x-3">
           <button
             onClick={() => setIsEditing(false)}
-            className="px-4 py-2 border border-gray-300 text-xs font-medium rounded hover:bg-gray-50"
+            className="px-4 py-2 border border-gray-300 text-xs font-medium rounded hover:bg-[var(--glass-h)]"
           >
             Cancel
           </button>

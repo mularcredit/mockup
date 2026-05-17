@@ -228,7 +228,7 @@ const AdvanceApplicationManager = ({ onStatusChange }: AdvanceApplicationManager
   const scheduleStatus = getScheduleStatus();
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <div className="bg-[var(--card)] border border-[var(--p-line)] rounded-xl p-6">
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="text-lg font-semibold text-gray-800">Salary Advance Management</h3>
@@ -236,12 +236,12 @@ const AdvanceApplicationManager = ({ onStatusChange }: AdvanceApplicationManager
         </div>
         <div className="flex items-center space-x-2">
           {scheduleStatus && (
-            <div className="flex items-center space-x-2 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
+            <div className="flex items-center space-x-2 px-3 py-1 bg-[var(--p-dim)] text-[var(--p)] border border-[var(--p-line)] rounded-full text-xs">
               <Clock className="h-3 w-3" />
               <span>{scheduleStatus}</span>
             </div>
           )}
-          <div className={`flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-medium ${isOpen ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+          <div className={`flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-medium border ${isOpen ? 'bg-[var(--green-d)] text-[var(--green)] border-[var(--green-glow)]' : 'bg-[var(--red-d)] text-[var(--red)] border-[var(--red-glow)]'
             }`}>
             {isOpen ? (
               <>
@@ -260,19 +260,19 @@ const AdvanceApplicationManager = ({ onStatusChange }: AdvanceApplicationManager
 
       <div className="space-y-4">
         {/* Current Status */}
-        <div className="bg-gray-50 p-4 rounded-lg">
+        <div className="bg-[var(--glass)] border border-[var(--p-line)] p-4 rounded-xl">
           <div className="flex items-start space-x-3">
-            <AlertCircle className="h-5 w-5 text-blue-500 mt-0.5" />
+            <AlertCircle className="h-5 w-5 text-[var(--p)] mt-0.5" />
             <div className="flex-1">
-              <h4 className="text-sm font-medium text-gray-900">Current Status</h4>
-              <p className="text-xs text-gray-600 mt-1">
+              <h4 className="text-sm font-medium text-[var(--t1)]">Current Status</h4>
+              <p className="text-xs text-[var(--t3)] mt-1">
                 {isOpen
                   ? 'Salary advance applications are currently being accepted from staff members.'
                   : 'Salary advance applications are temporarily suspended until the next calendar month.'
                 }
               </p>
               {currentSettings?.closed_until && !isOpen && (
-                <p className="text-xs text-orange-600 mt-1">
+                <p className="text-xs text-[var(--amber)] mt-1">
                   <strong>Reopening:</strong> {new Date(currentSettings.closed_until).toLocaleDateString()}
                 </p>
               )}
@@ -286,7 +286,7 @@ const AdvanceApplicationManager = ({ onStatusChange }: AdvanceApplicationManager
             <button
               onClick={closeAdvanceApplications}
               disabled={isClosing}
-              className="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              className="flex-1 bg-[var(--red-d)] text-[var(--red)] border border-[var(--red-glow)] py-2 px-4 rounded-xl text-sm font-bold hover:bg-[var(--red)] hover:text-[var(--card)] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
               {isClosing ? (
                 <>
@@ -307,7 +307,7 @@ const AdvanceApplicationManager = ({ onStatusChange }: AdvanceApplicationManager
             <button
               onClick={reopenAdvanceApplications}
               disabled={isClosing}
-              className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              className="flex-1 bg-[var(--green-d)] text-[var(--green)] border border-[var(--green-glow)] py-2 px-4 rounded-xl text-sm font-bold hover:bg-[var(--green)] hover:text-[var(--card)] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
               {isClosing ? (
                 <>
@@ -328,7 +328,7 @@ const AdvanceApplicationManager = ({ onStatusChange }: AdvanceApplicationManager
 
           <button
             onClick={() => setShowSchedulePanel(!showSchedulePanel)}
-            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 flex items-center"
+            className="px-4 py-2 bg-[var(--card)] border border-[var(--p-line)] text-[var(--t2)] rounded-xl text-sm font-medium hover:bg-[var(--glass-h)] hover:text-[var(--t1)] transition-colors flex items-center"
           >
             <Settings className="h-4 w-4 mr-2" />
             Schedule
@@ -340,10 +340,10 @@ const AdvanceApplicationManager = ({ onStatusChange }: AdvanceApplicationManager
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            className="bg-blue-50 border border-blue-200 rounded-lg p-4"
+            className="bg-[var(--p-dim)] border border-[var(--p-line)] rounded-xl p-4"
           >
-            <h4 className="text-sm font-medium text-gray-900 mb-3 flex items-center">
-              <Schedule className="h-4 w-4 mr-2" />
+            <h4 className="text-sm font-medium text-[var(--t1)] mb-3 flex items-center">
+              <Schedule className="h-4 w-4 mr-2 text-[var(--p)]" />
               Schedule Settings
             </h4>
 
@@ -438,7 +438,7 @@ const AdvanceApplicationManager = ({ onStatusChange }: AdvanceApplicationManager
                 </button>
                 <button
                   onClick={() => setShowSchedulePanel(false)}
-                  className="px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50"
+                  className="px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-[var(--glass-h)]"
                 >
                   Cancel
                 </button>

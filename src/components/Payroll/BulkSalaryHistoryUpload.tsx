@@ -180,7 +180,7 @@ const BulkSalaryHistoryUpload: React.FC<BulkSalaryHistoryUploadProps> = ({ onClo
                         </GlowButton>
                     </div>
 
-                    <div className="border-2 border-dashed border-gray-300 bg-gray-50 rounded-xl p-8 text-center relative hover:border-indigo-500 hover:bg-indigo-50/50 transition-all group">
+                    <div className="border-2 border-dashed border-gray-300 bg-gray-50 rounded-xl p-8 text-center relative hover:border-indigo-500 hover:bg-[var(--p-dim)] transition-all group">
                         <input
                             type="file"
                             accept=".xlsx,.xls,.csv"

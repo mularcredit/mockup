@@ -27,7 +27,7 @@ export default function GlowButton({
 
   const variantClasses = {
     primary: 'bg-green-600 text-white hover:bg-green-700 border-green-500 hover:border-green-600 transition-all duration-300',
-    secondary: 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all duration-300',
+    secondary: 'bg-[var(--card)] border-gray-200 text-gray-700 hover:bg-[var(--glass-h)] hover:border-gray-300 transition-all duration-300',
     danger: 'bg-red-600 text-white hover:bg-red-700 border-red-500 hover:border-red-600 transition-all duration-300'
   };
 

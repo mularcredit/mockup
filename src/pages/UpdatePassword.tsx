@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { Check, X, ArrowLeft, Loader2, CheckCircle2 } from 'lucide-react';
+import { Check, X, ArrowLeft, Loader2, CheckCircle2, ShieldCheck, Lock } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const UpdatePasswordPage = () => {
   const [password, setPassword] = useState('');
@@ -76,57 +77,63 @@ const UpdatePasswordPage = () => {
     });
   };
 
-  const bgStyle = { background: 'linear-gradient(135deg, #022c22 0%, #065f46 50%, #4ade80 100%)' };
-
   if (isSuccess) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6" style={bgStyle}>
-        <div className="bg-white rounded-2xl shadow-2xl p-10 max-w-md w-full text-center border border-white/10">
+      <div className="min-h-screen bg-[var(--page)] flex items-center justify-center p-6">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="glass-card p-10 max-w-md w-full text-center border border-[var(--p-line)]"
+        >
           <div className="flex justify-center mb-6">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
-              <CheckCircle2 className="h-10 w-10 text-green-600" />
+            <div className="w-20 h-20 bg-[var(--green-d)] rounded-2xl flex items-center justify-center border border-[var(--green-glow)]">
+              <CheckCircle2 className="h-10 w-10 text-[var(--green)]" />
             </div>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Password Updated!</h1>
-          <p className="text-sm text-gray-500 mb-8">Your password has been successfully updated. You can now sign in with your new credentials.</p>
+          <h1 className="text-2xl font-bold text-[var(--t1)] mb-2 uppercase tracking-tight">Access <span className="text-[var(--p)]">Restored</span></h1>
+          <p className="text-xs text-[var(--t3)] mb-8 font-mono uppercase tracking-widest">SECURITY_PROTOCOL_COMPLETE_SIGN_IN_PROCEED</p>
           <button
             onClick={() => navigate('/login')}
-            className="w-full py-3 bg-green-600 text-white rounded-xl text-sm font-semibold hover:bg-green-700 transition-all shadow-lg shadow-green-100"
+            className="f-btn w-full !bg-[var(--p)] !text-[var(--sidebar)] shadow-[0_4px_15px_var(--p-glow)]"
           >
-            Sign In Now
+            AUTHORIZE_LOGIN
           </button>
-        </div>
+        </motion.div>
       </div>
     );
   }
 
   if (isValidating) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center" style={bgStyle}>
-        <Loader2 className="animate-spin h-10 w-10 text-white mb-4" />
-        <p className="text-sm font-semibold text-white/70 uppercase tracking-widest">Securing Session...</p>
+      <div className="min-h-screen bg-[var(--page)] flex flex-col items-center justify-center">
+        <Loader2 className="animate-spin h-10 w-10 text-[var(--p)] mb-4 shadow-[0_0_15px_var(--p-glow)]" />
+        <p className="text-[10px] font-bold text-[var(--t3)] uppercase tracking-[0.3em] animate-blink">VALIDATING_ENCRYPTION_KEY...</p>
       </div>
     );
   }
 
   if (!isValidSession) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6" style={bgStyle}>
-        <div className="bg-white rounded-2xl shadow-2xl p-10 max-w-md w-full text-center border border-white/10">
+      <div className="min-h-screen bg-[var(--page)] flex items-center justify-center p-6">
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="glass-card p-10 max-w-md w-full text-center border border-[var(--p-line)]"
+        >
           <div className="flex justify-center mb-6">
-            <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center">
-              <X className="h-10 w-10 text-red-500" />
+            <div className="w-20 h-20 bg-[var(--red-d)] rounded-2xl flex items-center justify-center border border-[var(--red-glow)]">
+              <X className="h-10 w-10 text-[var(--red)]" />
             </div>
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Link Expired</h2>
-          <p className="text-sm text-gray-500 mb-8">Your security link may have expired or was already used. Please request a new one from the login page.</p>
+          <h2 className="text-xl font-bold text-[var(--t1)] mb-2 uppercase tracking-tight">Segment <span className="text-[var(--red)]">Fault</span></h2>
+          <p className="text-xs text-[var(--t4)] mb-8 font-mono uppercase tracking-widest">SECURITY_LINK_EXPIRED_OR_REVOKED</p>
           <button
             onClick={() => navigate('/login')}
-            className="flex items-center justify-center gap-2 mx-auto text-sm text-green-600 font-semibold hover:text-green-700 transition-colors"
+            className="flex items-center justify-center gap-2 mx-auto text-[11px] font-bold text-[var(--p)] uppercase tracking-widest hover:text-[var(--green)] transition-all"
           >
-            <ArrowLeft size={16} /> Back to Login
+            <ArrowLeft size={16} /> RETURN_TO_ENTRY
           </button>
-        </div>
+        </motion.div>
       </div>
     );
   }
@@ -135,27 +142,34 @@ const UpdatePasswordPage = () => {
   const passwordsMatch = confirmPassword.length > 0 && password === confirmPassword;
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6" style={bgStyle}>
-      <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full border border-white/10">
+    <div className="min-h-screen bg-[var(--page)] flex items-center justify-center p-6">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="glass-card p-8 max-w-md w-full border border-[var(--p-line)] shadow-2xl"
+      >
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <div className="p-3 rounded-full" style={{ background: 'linear-gradient(135deg, #022c22 0%, #4ade80 100%)' }}>
-              <img src="/logo.png" alt="Logo" className="h-10 w-10 object-contain" />
+          <div className="flex justify-center mb-6">
+            <div className="w-16 h-16 rounded-2xl bg-[var(--p-dim)] flex items-center justify-center border border-[var(--p-line)] relative group">
+              <Lock className="h-7 w-7 text-[var(--p)] transition-transform group-hover:scale-110" />
+              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-[var(--sidebar)] border border-[var(--p-line)] rounded-lg flex items-center justify-center">
+                <ShieldCheck className="w-3 h-3 text-[var(--green)]" />
+              </div>
             </div>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900">Set New Password</h2>
-          <p className="text-sm text-gray-500 mt-1">Create a strong, secure password for your account</p>
+          <h2 className="text-2xl font-bold text-[var(--t1)] tracking-tight uppercase">Rotate <span className="text-[var(--p)]">Keys</span></h2>
+          <p className="text-[10px] text-[var(--t4)] font-mono uppercase tracking-widest mt-1.5">OVERWRITE_SECURITY_LAYER</p>
         </div>
 
-        <form onSubmit={handlePasswordUpdate} className="space-y-4">
+        <form onSubmit={handlePasswordUpdate} className="space-y-6">
           {/* New Password */}
           <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1.5">New password</label>
+            <label className="block text-[10px] font-bold text-[var(--t4)] uppercase tracking-[0.2em] mb-2 pl-1">New Cyber-Key</label>
             <input
               type="password"
-              placeholder="Enter new password"
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm transition-all bg-gray-50 focus:bg-white"
+              placeholder="ENCRYPT_NEW_PASSWORD..."
+              className="w-full px-4 py-3 bg-[var(--glass)] border border-[var(--p-line)] rounded-xl text-sm text-[var(--t1)] focus:border-[var(--p)] outline-none transition-all placeholder-[var(--t4)] font-mono"
               value={password}
               autoFocus
               onChange={(e) => { setPassword(e.target.value); validate(e.target.value); }}
@@ -165,37 +179,41 @@ const UpdatePasswordPage = () => {
 
           {/* Strength checker */}
           {password.length > 0 && (
-            <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 space-y-1.5">
-              <p className="text-xs font-semibold text-gray-600 mb-2">Password requirements:</p>
-              <CheckRow met={passwordStrength.minLength} label="At least 8 characters" />
-              <CheckRow met={passwordStrength.hasUppercase} label="One uppercase letter (A–Z)" />
-              <CheckRow met={passwordStrength.hasLowercase} label="One lowercase letter (a–z)" />
-              <CheckRow met={passwordStrength.hasNumber} label="At least one number" />
-              <CheckRow met={passwordStrength.hasSpecial} label="One special character (!@#...)" />
-            </div>
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              className="p-4 bg-[var(--sidebar)]/50 rounded-xl border border-[var(--p-line)] space-y-2.5"
+            >
+              <p className="text-[9px] font-bold text-[var(--t4)] uppercase tracking-widest mb-1 opacity-60">Validation Metrics:</p>
+              <CheckRow met={passwordStrength.minLength} label="Length >= 0x08" />
+              <CheckRow met={passwordStrength.hasUppercase} label="Bitmask Uppercase [A-Z]" />
+              <CheckRow met={passwordStrength.hasLowercase} label="Bitmask Lowercase [a-z]" />
+              <CheckRow met={passwordStrength.hasNumber} label="Bitmask Numeric [0-9]" />
+              <CheckRow met={passwordStrength.hasSpecial} label="Entropy Symbol [!@#...]" />
+            </motion.div>
           )}
 
           {/* Confirm Password */}
           <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1.5">Confirm password</label>
+            <label className="block text-[10px] font-bold text-[var(--t4)] uppercase tracking-[0.2em] mb-2 pl-1">Verify Key-Match</label>
             <input
               type="password"
-              placeholder="Re-enter your new password"
-              className={`w-full px-4 py-3 border rounded-xl focus:ring-2 outline-none text-sm transition-all bg-gray-50 focus:bg-white ${
+              placeholder="CONFIRM_ENCRYPTION..."
+              className={`w-full px-4 py-3 bg-[var(--glass)] border rounded-xl text-sm text-[var(--t1)] outline-none transition-all placeholder-[var(--t4)] font-mono ${
                 passwordsMatch
-                  ? 'border-green-400 focus:ring-green-500 focus:border-green-500'
+                  ? 'border-[var(--green)] focus:ring-[var(--green-glow)]'
                   : confirmPassword && !passwordsMatch
-                  ? 'border-red-300 focus:ring-red-400 focus:border-red-400'
-                  : 'border-gray-200 focus:ring-green-500 focus:border-green-500'
+                  ? 'border-[var(--red)] focus:ring-[var(--red-glow)]'
+                  : 'border-[var(--p-line)] focus:border-[var(--p)]'
               }`}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
             {confirmPassword.length > 0 && (
-              <p className={`text-xs mt-1.5 flex items-center gap-1 font-medium ${passwordsMatch ? 'text-green-600' : 'text-red-500'}`}>
-                {passwordsMatch ? <Check size={12} /> : <X size={12} />}
-                {passwordsMatch ? 'Passwords match' : 'Passwords do not match'}
+              <p className={`text-[9px] font-bold uppercase tracking-widest mt-2 flex items-center gap-1.5 ${passwordsMatch ? 'text-[var(--green)]' : 'text-[var(--red)]'}`}>
+                {passwordsMatch ? <CheckCircle2 size={12} /> : <AlertCircle size={12} />}
+                {passwordsMatch ? 'Keys Synchronized' : 'Bit-Mismatch Detected'}
               </p>
             )}
           </div>
@@ -203,21 +221,21 @@ const UpdatePasswordPage = () => {
           <button
             type="submit"
             disabled={loading || !allMet || !passwordsMatch}
-            className="w-full py-3 bg-green-600 text-white rounded-xl text-sm font-semibold hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-green-100 mt-2"
+            className="f-btn w-full !bg-[var(--p)] !text-[var(--sidebar)] shadow-[0_4px_15px_var(--p-glow)] disabled:opacity-20 disabled:grayscale transition-all mt-2"
           >
-            {loading ? 'Updating...' : 'Update Password'}
+            {loading ? 'WRITING_TO_CORE...' : 'COMMIT_NEW_KEY'}
           </button>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 };
 
 const CheckRow = ({ met, label }: { met: boolean; label: string }) => (
-  <div className={`flex items-center gap-2.5 text-xs font-medium ${met ? 'text-green-600' : 'text-gray-400'}`}>
+  <div className={`flex items-center gap-3 text-[10px] font-bold uppercase tracking-wider ${met ? 'text-[var(--green)]' : 'text-[var(--t4)] opacity-40'}`}>
     {met
-      ? <Check size={13} className="text-green-500 flex-shrink-0" />
-      : <div className="w-3.5 h-3.5 rounded-full border-2 border-gray-300 flex-shrink-0" />}
+      ? <div className="w-3.5 h-3.5 rounded-md bg-[var(--green-d)] flex items-center justify-center border border-[var(--green-glow)]"><Check size={10} className="text-[var(--green)]" /></div>
+      : <div className="w-3.5 h-3.5 rounded-md border border-[var(--p-line)] flex-shrink-0" />}
     {label}
   </div>
 );

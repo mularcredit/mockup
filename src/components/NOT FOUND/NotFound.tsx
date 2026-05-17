@@ -30,7 +30,7 @@ export default function Unauthorized() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50 relative overflow-hidden">
+    <div className="min-h-screen bg-[var(--page)] relative overflow-hidden">
       {/* Floating background elements */}
       {floatingElements.map((el) => (
         <div

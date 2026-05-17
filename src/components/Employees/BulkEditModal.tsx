@@ -89,10 +89,10 @@ const BulkEditModal: React.FC<BulkEditModalProps> = ({
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-100"
+                    className="bg-[var(--card)] rounded-xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-100"
                 >
                     {/* Header */}
-                    <div className="px-6 py-4 flex items-center justify-between border-b border-gray-100 bg-gray-50/50">
+                    <div className="px-6 py-4 flex items-center justify-between border-b border-gray-100 bg-[var(--glass)]">
                         <div className="flex items-center gap-2">
                             <div className="p-2 bg-emerald-100 text-emerald-600 rounded-lg">
                                 <Building2 size={20} />
@@ -194,10 +194,10 @@ const BulkEditModal: React.FC<BulkEditModalProps> = ({
                     </div>
 
                     {/* Footer */}
-                    <div className="p-4 border-t border-gray-100 bg-gray-50/50 flex gap-3 justify-end">
+                    <div className="p-4 border-t border-gray-100 bg-[var(--glass)] flex gap-3 justify-end">
                         <button
                             onClick={onClose}
-                            className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm"
+                            className="px-4 py-2 bg-[var(--card)] border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors shadow-sm"
                         >
                             Cancel
                         </button>

@@ -768,7 +768,7 @@ const AddEmployeePage = () => {
                   <div className="mt-4 flex flex-col sm:flex-row gap-3">
                     <button
                       onClick={triggerFileInput}
-                      className="flex-1 flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors shadow-sm"
+                      className="flex-1 flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-[var(--glass-h)] transition-colors shadow-sm"
                     >
                       <Upload className="w-4 h-4 mr-2 text-gray-500" />
                       <span className="text-xs">{previewImage ? 'Change' : 'Upload'}</span>
@@ -779,7 +779,7 @@ const AddEmployeePage = () => {
                           setPreviewImage(null);
                           setProfileImage(null);
                         }}
-                        className="flex-1 flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors shadow-sm text-xs text-gray-700"
+                        className="flex-1 flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-[var(--glass-h)] transition-colors shadow-sm text-xs text-gray-700"
                       >
                         <X className="w-4 h-4 mr-2" />
                         Remove

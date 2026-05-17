@@ -43,7 +43,7 @@ const CommunicationDropdown = ({
             className={`w-full text-left px-4 py-2 text-xs flex items-center ${
               activeTab === 'chat'
                 ? 'bg-gray-100 text-gray-900'
-                : 'text-gray-700 hover:bg-gray-100'
+                : 'text-gray-700 hover:bg-[var(--glass-h)]'
             }`}
           >
             <MessageSquare className="h-4 w-4 mr-2" />
@@ -54,7 +54,7 @@ const CommunicationDropdown = ({
             className={`w-full text-left px-4 py-2 text-xs flex items-center ${
               activeTab === 'video'
                 ? 'bg-gray-100 text-gray-900'
-                : 'text-gray-700 hover:bg-gray-100'
+                : 'text-gray-700 hover:bg-[var(--glass-h)]'
             }`}
           >
             <Video className="h-4 w-4 mr-2" />

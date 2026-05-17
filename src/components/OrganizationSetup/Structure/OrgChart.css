@@ -1,0 +1,104 @@
+.org-tree {
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+    padding: 20px;
+}
+
+.org-tree ul {
+    padding-top: 100px; 
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding-left: 0;
+}
+
+.org-tree li {
+    text-align: center;
+    list-style-type: none;
+    position: relative;
+    padding: 100px 32px 0 32px;
+}
+
+/* Parent stem */
+.org-tree ul::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    border-left: 1.5px solid #C8A84B !important;
+    width: 0;
+    height: 50px;
+    transform: translateX(-50%);
+}
+
+/* Branching lines */
+.org-tree li::before, .org-tree li::after {
+    content: '';
+    position: absolute;
+    top: 50px;
+    right: 50%;
+    border-top: 1.5px solid #C8A84B !important;
+    width: 50%;
+    height: 50px;
+}
+
+.org-tree li::after {
+    right: auto;
+    left: 50%;
+    border-left: 1.5px solid #C8A84B !important;
+}
+
+/* THE SWOOP: Massive curves with !important to force the design */
+.org-tree li:first-child::after {
+    border-top-left-radius: 80px !important;
+}
+
+.org-tree li:last-child::before {
+    border-right: 1.5px solid #C8A84B !important;
+    border-top-right-radius: 80px !important;
+}
+
+/* Middle children vertical line */
+.org-tree li:not(:first-child):not(:last-child)::after {
+    border-left: 1.5px solid #C8A84B !important;
+}
+
+/* Clean up */
+.org-tree li:first-child::before, 
+.org-tree li:last-child::after {
+    border: 0 none !important;
+}
+
+/* Single child */
+.org-tree li:only-child::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    border-left: 1.5px solid #C8A84B !important;
+    width: 0;
+    height: 100px;
+    display: block !important;
+}
+
+.org-tree li:only-child::after {
+    display: none !important;
+}
+
+.org-tree .node-container {
+    display: inline-block;
+    position: relative;
+    z-index: 2;
+}
+
+/* Downward line from node */
+.org-tree .has-children::after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    left: 50%;
+    border-left: 1.5px solid #C8A84B !important;
+    height: 100px;
+    transform: translateX(-50%);
+}

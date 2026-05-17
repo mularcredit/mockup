@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import {
   MessageSquare, Send, Upload, FileText, CreditCard,
   CheckCircle, AlertCircle, Info, Package, Receipt,
@@ -582,6 +583,7 @@ export function SMSCenter() {
   const [newTemplate, setNewTemplate] = useState({ name: '', category: 'Business', content: '' });
   const [additionalVariables, setAdditionalVariables] = useState<Record<string, string>>({});
   const [showAdditionalVariablesModal, setShowAdditionalVariablesModal] = useState(false);
+  const [optOutEnabled, setOptOutEnabled] = useState(true);
 
   // Sender ID State
   const [senderIdConfig, setSenderIdConfig] = useState<SenderIDConfig>({
@@ -976,6 +978,10 @@ export function SMSCenter() {
               personalizedMessage = replaceTemplateVariables(message, employee, additionalVariables, personalizationType);
             }
 
+            if (optOutEnabled) {
+              personalizedMessage += ' Reply STOP to 22345 to opt-out.';
+            }
+
             const result = await SMSService.sendSMSWithRetry(
               employee.phone_number,
               personalizedMessage,
@@ -1326,19 +1332,19 @@ export function SMSCenter() {
         <div className="flex items-center gap-4">
           <button
             onClick={testSMS}
-            className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 text-slate-700"
+            className="flex items-center gap-2 px-3 py-2 bg-[var(--card)] border border-slate-200 rounded-lg hover:bg-slate-50 text-slate-700"
           >
             <Smartphone className="w-4 h-4" />
             <span className="text-xs">Test SMS</span>
           </button>
           <button
             onClick={loadSMSStats}
-            className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 text-slate-700"
+            className="flex items-center gap-2 px-3 py-2 bg-[var(--card)] border border-slate-200 rounded-lg hover:bg-slate-50 text-slate-700"
           >
             <RefreshCw className="w-4 h-4" />
             <span className="text-xs">Refresh Balance</span>
           </button>
-          <div className="bg-white rounded-xl border border-slate-200 p-2">
+          <div className="bg-[var(--card)] rounded-xl border border-slate-200 p-2">
             <div className="flex items-center gap-3">
               <CreditCard className="w-4 h-4 text-green-500" />
               <div>
@@ -1352,28 +1358,28 @@ export function SMSCenter() {
 
       {/* Stats Cards without icons */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl border border-slate-200 p-4">
+        <div className="bg-[var(--card)] rounded-xl border border-slate-200 p-4">
           <div>
             <p className="text-xs text-slate-600 mb-1">Sent This Month</p>
             <p className="text-xl font-base text-slate-900">{smsStats.sentThisMonth.toLocaleString()}</p>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-200 p-4">
+        <div className="bg-[var(--card)] rounded-xl border border-slate-200 p-4">
           <div>
             <p className="text-xs text-slate-600 mb-1">Remaining SMS</p>
             <p className="text-xl font-base text-slate-900">{smsStats.remaining.toLocaleString()}</p>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-200 p-4">
+        <div className="bg-[var(--card)] rounded-xl border border-slate-200 p-4">
           <div>
             <p className="text-xs text-slate-600 mb-1">Delivery Rate</p>
             <p className="text-xl font-base text-slate-900">{smsStats.deliveryRate}%</p>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-slate-200 p-4">
+        <div className="bg-[var(--card)] rounded-xl border border-slate-200 p-4">
           <div>
             <p className="text-xs text-slate-600 mb-1">Failed SMS</p>
             <p className="text-xl font-base text-slate-900">{smsStats.failed}</p>
@@ -1381,7 +1387,7 @@ export function SMSCenter() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200">
+      <div className="bg-[var(--card)] rounded-xl border border-slate-200">
         <div className="border-b border-slate-200">
           <nav className="flex space-x-8 px-6" aria-label="Tabs">
             {[
@@ -1410,136 +1416,189 @@ export function SMSCenter() {
         </div>
 
         <div className="p-6">
-          {activeTab === 'compose' && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 space-y-4">
-                  <div className="bg-white rounded-xl border border-slate-200 p-6">
-                    <div className="flex justify-between items-center mb-3">
-                      <label className="block text-xs font-medium text-slate-700">
-                        Compose Message
-                      </label>
-                      <button
-                        onClick={saveCurrentAsTemplate}
-                        className="flex items-center gap-1 px-3 py-1 bg-slate-100 text-slate-700 rounded text-xs hover:bg-slate-200"
-                      >
-                        <Save className="w-3 h-3" />
-                        Save as Template
-                      </button>
-                    </div>
-                    <div className="relative">
-                      <textarea
-                        value={message}
-                        onChange={(e) => {
-                          const newMessage = e.target.value;
-                          setCharacterCount(newMessage.length);
-                          setMessage(newMessage);
-                        }}
-                        rows={6}
-                        className="w-full border border-slate-300 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-xs"
-                        placeholder="Type your message here... (Max 160 characters)"
-                        maxLength={160}
-                      />
-                      <div className={`absolute bottom-2 right-2 text-xs ${characterCount > 160 ? 'text-red-500' : 'text-slate-500'
-                        }`}>
-                        {characterCount}/160
-                      </div>
-                    </div>
+          {activeTab === 'compose' && (() => {
+            const optOutFooter = ' Reply STOP to 22345 to opt-out.';
+            const totalChars = characterCount + (optOutEnabled ? optOutFooter.length : 0);
+            const totalParts = totalChars === 0 ? 0 : totalChars <= 160 ? 1 : Math.ceil(totalChars / 153);
+            const currentHour = new Date().getHours();
+            const isOutsideCakWindow = currentHour < 7 || currentHour >= 19;
 
-                    <div className="mt-4">
-                      <label className="block text-xs font-medium text-slate-700 mb-2">
-                        Quick Templates
-                      </label>
-                      <select
-                        value={selectedTemplate}
-                        onChange={(e) => handleTemplateSelect(e.target.value)}
-                        className="w-full border border-slate-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs"
-                      >
-                        <option value="">Select a template...</option>
-                        {templates.map(template => (
-                          <option key={template.id} value={template.id}>
-                            {template.name} ({template.category}) - {template.variables.length} variables
-                          </option>
-                        ))}
-                      </select>
+            return (
+              <div className="space-y-6">
+                {/* CAK Time Warning Alert */}
+                {isOutsideCakWindow && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-4 bg-[rgba(200,168,75,0.06)] border border-[rgba(200,168,75,0.2)] rounded-xl flex items-start gap-3"
+                  >
+                    <Clock className="w-5 h-5 text-[var(--gold)] shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="text-xs font-bold text-[var(--t1)]">CAK Regulatory Time Advisory</h4>
+                      <p className="text-[11px] text-[var(--t3)] mt-1">
+                        Communications Authority of Kenya (CAK) guidelines restrict promotional & bulk dispatches to daylight hours (<strong>7:00 AM – 7:00 PM</strong>).
+                        Dispatches triggered now may experience transit delays or carrier throttling. Consider using the <strong>Schedule</strong> tool below.
+                      </p>
                     </div>
+                  </motion.div>
+                )}
 
-                    {selectedTemplate && (
-                      <div className="mt-4 p-3 bg-slate-50 rounded-lg">
-                        <p className="text-xs font-medium text-slate-700 mb-2">Template Variables:</p>
-                        <div className="flex flex-wrap gap-1">
-                          {templates.find(t => t.id === selectedTemplate)?.variables.map(variable => (
-                            <span key={variable} className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">
-                              {variable}
-                            </span>
-                          ))}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Left Column - Compose Message */}
+                  <div className="lg:col-span-2 space-y-4">
+                    <div className="glass-card p-6 space-y-4">
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-2">
+                          <MessageSquare className="w-4 h-4 text-[var(--gold)]" />
+                          <label className="block text-xs font-bold text-[var(--t1)] uppercase tracking-wider">
+                            Compose Broadcast Message
+                          </label>
                         </div>
-                        <p className="text-xs text-slate-600 mt-2">
-                          Variables like <strong>name</strong>, <strong>department</strong>, <strong>town</strong> will be automatically filled from employee data.
-                          {getAdditionalVariablesNeeded(templates.find(t => t.id === selectedTemplate)!).length > 0 && (
-                            <span className="text-orange-600"> Some variables need additional input.</span>
-                          )}
-                        </p>
+                        <button
+                          onClick={saveCurrentAsTemplate}
+                          className="flex items-center gap-1.5 px-3 py-1 bg-[var(--p-dim)] text-[var(--t1)] border border-[var(--p-line)] rounded-md text-[10px] font-bold hover:bg-[var(--glass-h)] transition-all"
+                        >
+                          <Save className="w-3.5 h-3.5 text-[var(--gold)]" />
+                          Save as Preset
+                        </button>
                       </div>
-                    )}
-                  </div>
-                </div>
 
-                <div className="space-y-4">
-                  <div className="bg-white rounded-xl border border-slate-200 p-6">
-                    <div className="flex justify-between items-center mb-4">
-                      <label className="block text-xs font-medium text-slate-700">
-                        Select Recipients ({filteredEmployees.length} of {employees.length} with valid phones)
-                      </label>
-                      <span className="text-xs text-slate-500">
-                        {selectedEmployees.length} selected
-                      </span>
-                    </div>
-
-                    <div className="space-y-3 mb-4">
+                      {/* Character & Part Counter Estimator */}
                       <div className="relative">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
-                        <input
-                          type="text"
-                          placeholder="Search employees by name, ID, department, or town..."
-                          value={searchTerm}
-                          onChange={(e) => setSearchTerm(e.target.value)}
-                          className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs"
+                        <textarea
+                          value={message}
+                          onChange={(e) => {
+                            const newMessage = e.target.value;
+                            setCharacterCount(newMessage.length);
+                            setMessage(newMessage);
+                          }}
+                          rows={6}
+                          className="w-full bg-[var(--bg)] border border-[var(--p-line)] rounded-xl p-4 focus:outline-none focus:border-[var(--gold)] resize-none text-xs text-[var(--t1)]"
+                          placeholder="Type corporate broadcast contents here..."
                         />
+                        <div className="absolute bottom-3 right-3 flex items-center gap-3 text-[10px] font-bold tracking-wide">
+                          <span className={`${totalChars > 160 ? 'text-[var(--gold)]' : 'text-[var(--t4)]'}`}>
+                            {totalChars} Chars
+                          </span>
+                          <span className="w-1.5 h-1.5 rounded-full bg-[var(--p-line)]" />
+                          <span className="text-[var(--gold)]">
+                            {totalParts} Part{totalParts !== 1 ? 's' : ''} (Est. KES {(totalParts * 1).toFixed(2)}/SMS)
+                          </span>
+                        </div>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-3">
-                        <select
-                          value={selectedDepartment}
-                          onChange={(e) => setSelectedDepartment(e.target.value)}
-                          className="w-full border border-slate-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs"
+                      {/* CAK Opt-Out Toggle Widget */}
+                      <div className="p-4 bg-[var(--p-dim)] rounded-xl border border-[var(--p-line)] flex items-center justify-between">
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <Shield className="w-4 h-4 text-[var(--gold)]" />
+                            <h4 className="text-[11px] font-bold text-[var(--t1)]">CAK Regulatory Unsubscribe Footer</h4>
+                          </div>
+                          <p className="text-[10px] text-[var(--t3)] mt-0.5">Auto-appends opt-out text to remain fully compliant with bulk SMS laws.</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setOptOutEnabled(!optOutEnabled)}
+                          className={`w-10 h-5 flex items-center rounded-full p-1 transition-all duration-300 ${optOutEnabled ? 'bg-[var(--gold)]' : 'bg-[var(--p-line)]'}`}
                         >
-                          {departments.map(dept => (
-                            <option key={dept} value={dept}>
-                              {dept === 'all' ? 'All Departments' : dept}
+                          <div className={`w-3.5 h-3.5 rounded-full bg-[var(--bg)] shadow-md transform transition-all duration-300 ${optOutEnabled ? 'translate-x-5' : 'translate-x-0'}`} />
+                        </button>
+                      </div>
+
+                      {/* Template Selector */}
+                      <div className="space-y-1.5">
+                        <label className="block text-[10px] font-bold text-[var(--t3)] uppercase tracking-wider ml-1">
+                          Quick Presets & Compliance Templates
+                        </label>
+                        <select
+                          value={selectedTemplate}
+                          onChange={(e) => handleTemplateSelect(e.target.value)}
+                          className="w-full bg-[var(--bg)] border border-[var(--p-line)] rounded-xl p-3 focus:outline-none focus:border-[var(--gold)] text-xs text-[var(--t1)]"
+                        >
+                          <option value="">Choose standard compliance template...</option>
+                          {templates.map(template => (
+                            <option key={template.id} value={template.id}>
+                              {template.name} ({template.category}) - {template.variables.length} parameters
                             </option>
                           ))}
                         </select>
-
-                        <select
-                          value={selectedTown}
-                          onChange={(e) => setSelectedTown(e.target.value)}
-                          className="w-full border border-slate-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs"
-                        >
-                          {towns.map(town => (
-                            <option key={town} value={town}>
-                              {town === 'all' ? 'All Towns' : town}
-                            </option>
-                          ))}
-                        </select>
                       </div>
 
-                      {/* Job Title Filter */}
-                      <div className="mt-3">
+                      {selectedTemplate && (
+                        <div className="p-4 bg-[var(--p-dim)] rounded-xl border border-[var(--p-line)] space-y-2">
+                          <p className="text-[10px] font-bold text-[var(--t1)] uppercase tracking-wider">Dynamic Template Variables:</p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {templates.find(t => t.id === selectedTemplate)?.variables.map(variable => (
+                              <span key={variable} className="px-2.5 py-0.5 bg-[var(--bg)] border border-[var(--p-line)] text-[var(--gold)] rounded text-[10px] font-bold">
+                                {'{'}{variable}{'}'}
+                              </span>
+                            ))}
+                          </div>
+                          <p className="text-[10px] text-[var(--t3)] leading-relaxed mt-1">
+                            Parameters like <strong>name</strong>, <strong>department</strong>, and <strong>town</strong> auto-populate dynamically using corresponding employee files.
+                            {getAdditionalVariablesNeeded(templates.find(t => t.id === selectedTemplate)!).length > 0 && (
+                              <span className="text-[var(--gold)] font-semibold"> Dynamic prompts will trigger on dispatch.</span>
+                            )}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Right Column - Select Recipients */}
+                  <div className="space-y-4">
+                    <div className="glass-card p-6 space-y-4 flex flex-col">
+                      <div className="flex justify-between items-center">
+                        <label className="block text-xs font-bold text-[var(--t1)] uppercase tracking-wider">
+                          Select Recipients
+                        </label>
+                        <span className="text-[10px] text-[var(--gold)] font-bold bg-[rgba(200,168,75,0.06)] border border-[rgba(200,168,75,0.15)] px-2.5 py-0.5 rounded-full">
+                          {selectedEmployees.length} Selected
+                        </span>
+                      </div>
+
+                      <div className="space-y-3">
+                        <div className="relative">
+                          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--t4)] w-4 h-4" />
+                          <input
+                            type="text"
+                            placeholder="Search by name, ID, department..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full pl-10 pr-4 py-2.5 bg-[var(--bg)] border border-[var(--p-line)] rounded-xl focus:outline-none focus:border-[var(--gold)] text-xs text-[var(--t1)] placeholder-[var(--t4)]"
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2">
+                          <select
+                            value={selectedDepartment}
+                            onChange={(e) => setSelectedDepartment(e.target.value)}
+                            className="w-full bg-[var(--bg)] border border-[var(--p-line)] rounded-xl p-2 text-xs text-[var(--t1)] outline-none focus:border-[var(--gold)]"
+                          >
+                            {departments.map(dept => (
+                              <option key={dept} value={dept}>
+                                {dept === 'all' ? 'All Departments' : dept}
+                              </option>
+                            ))}
+                          </select>
+
+                          <select
+                            value={selectedTown}
+                            onChange={(e) => setSelectedTown(e.target.value)}
+                            className="w-full bg-[var(--bg)] border border-[var(--p-line)] rounded-xl p-2 text-xs text-[var(--t1)] outline-none focus:border-[var(--gold)]"
+                          >
+                            {towns.map(town => (
+                              <option key={town} value={town}>
+                                {town === 'all' ? 'All Towns' : town}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
                         <select
                           value={selectedJobTitle}
                           onChange={(e) => setSelectedJobTitle(e.target.value)}
-                          className="w-full border border-slate-300 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs"
+                          className="w-full bg-[var(--bg)] border border-[var(--p-line)] rounded-xl p-2 text-xs text-[var(--t1)] outline-none focus:border-[var(--gold)]"
                         >
                           {jobTitles.map(title => (
                             <option key={title} value={title}>
@@ -1547,202 +1606,186 @@ export function SMSCenter() {
                             </option>
                           ))}
                         </select>
+
+                        {/* Personalization Options */}
+                        <div className="bg-[var(--p-dim)] rounded-xl border border-[var(--p-line)] p-4 space-y-2.5">
+                          <label className="block text-[10px] font-bold text-[var(--t1)] uppercase tracking-wider">
+                            Message Personalization
+                          </label>
+                          <div className="space-y-2">
+                            <label className="flex items-center cursor-pointer text-xs text-[var(--t3)] hover:text-[var(--t1)]">
+                              <input
+                                type="radio"
+                                name="personalization"
+                                value="none"
+                                checked={personalizationType === 'none'}
+                                onChange={(e) => setPersonalizationType(e.target.value as any)}
+                                className="mr-2.5 accent-[var(--gold)]"
+                              />
+                              No personalization
+                            </label>
+                            <label className="flex items-center cursor-pointer text-xs text-[var(--t3)] hover:text-[var(--t1)]">
+                              <input
+                                type="radio"
+                                name="personalization"
+                                value="firstname"
+                                checked={personalizationType === 'firstname'}
+                                onChange={(e) => setPersonalizationType(e.target.value as any)}
+                                className="mr-2.5 accent-[var(--gold)]"
+                              />
+                              First name only <span className="text-[var(--t4)] ml-1">(e.g., "Hi John")</span>
+                            </label>
+                            <label className="flex items-center cursor-pointer text-xs text-[var(--t3)] hover:text-[var(--t1)]">
+                              <input
+                                type="radio"
+                                name="personalization"
+                                value="fullname"
+                                checked={personalizationType === 'fullname'}
+                                onChange={(e) => setPersonalizationType(e.target.value as any)}
+                                className="mr-2.5 accent-[var(--gold)]"
+                              />
+                              Full name <span className="text-[var(--t4)] ml-1">(e.g., "Hi John Doe")</span>
+                            </label>
+                          </div>
+                        </div>
                       </div>
 
-                      {/* Personalization Options */}
-                      <div className="mt-3 bg-slate-50 rounded-lg p-3">
-                        <label className="block text-xs font-medium text-slate-700 mb-2">
-                          Message Personalization
-                        </label>
-                        <div className="space-y-2">
-                          <label className="flex items-center cursor-pointer">
-                            <input
-                              type="radio"
-                              name="personalization"
-                              value="none"
-                              checked={personalizationType === 'none'}
-                              onChange={(e) => setPersonalizationType(e.target.value as any)}
-                              className="mr-2"
-                            />
-                            <span className="text-xs text-slate-700">No personalization</span>
-                          </label>
-                          <label className="flex items-center cursor-pointer">
-                            <input
-                              type="radio"
-                              name="personalization"
-                              value="firstname"
-                              checked={personalizationType === 'firstname'}
-                              onChange={(e) => setPersonalizationType(e.target.value as any)}
-                              className="mr-2"
-                            />
-                            <span className="text-xs text-slate-700">
-                              First name only <span className="text-slate-500">(e.g., "Hi John")</span>
-                            </span>
-                          </label>
-                          <label className="flex items-center cursor-pointer">
-                            <input
-                              type="radio"
-                              name="personalization"
-                              value="fullname"
-                              checked={personalizationType === 'fullname'}
-                              onChange={(e) => setPersonalizationType(e.target.value as any)}
-                              className="mr-2"
-                            />
-                            <span className="text-xs text-slate-700">
-                              Full name <span className="text-slate-500">(e.g., "Hi John Doe")</span>
-                            </span>
-                          </label>
-                        </div>
-                        {personalizationType !== 'none' && (
-                          <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-xs text-green-800">
-                            💡 Use <code className="bg-green-100 px-1 rounded">{'{name}'}</code> in your message
+                      {/* Recipient Box Container */}
+                      <div className="border border-[var(--p-line)] rounded-xl overflow-hidden max-h-56 mt-2">
+                        {isLoadingEmployees ? (
+                          <div className="flex items-center justify-center p-8 bg-[var(--p-dim)]">
+                            <Loader className="w-5 h-5 animate-spin text-[var(--gold)] mr-2" />
+                            <span className="text-xs text-[var(--t3)]">Loading contacts...</span>
+                          </div>
+                        ) : filteredEmployees.length === 0 ? (
+                          <div className="p-6 text-center text-[var(--t3)] text-xs bg-[var(--p-dim)]">
+                            No employees found with valid phones.
+                          </div>
+                        ) : (
+                          <div className="p-1 divide-y divide-[var(--p-line)] bg-[var(--p-dim)]">
+                            <div className="flex items-center p-2.5">
+                              <input
+                                type="checkbox"
+                                checked={selectedEmployees.length === filteredEmployees.length && filteredEmployees.length > 0}
+                                onChange={handleSelectAll}
+                                className="mr-3 rounded border-[var(--p-line)] bg-[var(--bg)] text-[var(--gold)] focus:ring-[var(--gold)]"
+                              />
+                              <span className="text-xs font-bold text-[var(--t1)]">Select All Group ({filteredEmployees.length})</span>
+                            </div>
+                            <div className="max-h-40 overflow-y-auto divide-y divide-[var(--p-line)]">
+                              {filteredEmployees.map(employee => (
+                                <div
+                                  key={employee.id}
+                                  className="flex items-center p-2.5 hover:bg-[var(--glass-h)] transition-colors"
+                                >
+                                  <input
+                                    type="checkbox"
+                                    checked={selectedEmployees.includes(employee.id)}
+                                    onChange={() => handleEmployeeSelect(employee.id)}
+                                    className="mr-3 rounded border-[var(--p-line)] bg-[var(--bg)] text-[var(--gold)] focus:ring-[var(--gold)]"
+                                  />
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-xs font-bold text-[var(--t1)] truncate">
+                                      {employee.employee_name}
+                                    </p>
+                                    <p className="text-[10px] text-[var(--t3)] truncate mt-0.5">
+                                      {employee.department} • {employee.town} • {employee.phone_number}
+                                    </p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
                           </div>
                         )}
                       </div>
+                    </div>
 
-                      {/* Recipient Count */}
-                      <div className="mt-3 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    {isSending && sendingProgress.total > 0 && (
+                      <div className="p-4 bg-[var(--p-dim)] border border-[var(--p-line)] rounded-xl space-y-2">
                         <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-xs font-medium text-blue-900">
-                              {filteredEmployees.length} Recipients Filtered
-                            </p>
-                            <p className="text-xs text-blue-700">
-                              {selectedEmployees.length} selected
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-sm font-bold text-blue-900">
-                              KES {(selectedEmployees.length * 1).toFixed(2)}
-                            </p>
-                            <p className="text-xs text-blue-700">Est. cost</p>
-                          </div>
+                          <span className="text-xs font-bold text-[var(--t1)]">Broadcasting Queue</span>
+                          <span className="text-xs text-[var(--gold)] font-bold">
+                            {sendingProgress.current} / {sendingProgress.total}
+                          </span>
                         </div>
+                        <div className="w-full bg-[var(--bg)] rounded-full h-1.5 overflow-hidden border border-[var(--p-line)]">
+                          <div
+                            className="bg-[var(--gold)] h-1.5 rounded-full transition-all duration-300 shadow-[0_0_8px_var(--gold-glow)]"
+                            style={{
+                              width: `${(sendingProgress.current / sendingProgress.total) * 100}%`
+                            }}
+                          />
+                        </div>
+                        <p className="text-[10px] text-[var(--t3)]">
+                          Dispatching compliant SMS payloads to carrier gateways...
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Schedule Picker */}
+                    <div className="grid grid-cols-2 gap-3 p-4 bg-[var(--p-dim)] rounded-xl border border-[var(--p-line)]">
+                      <div>
+                        <label className="block text-[10px] font-bold text-[var(--t3)] uppercase tracking-wider mb-1.5 ml-1">
+                          Schedule Date
+                        </label>
+                        <input
+                          type="date"
+                          value={scheduleDate}
+                          onChange={(e) => setScheduleDate(e.target.value)}
+                          min={new Date().toISOString().split('T')[0]}
+                          className="w-full bg-[var(--bg)] border border-[var(--p-line)] rounded-lg p-2 text-xs text-[var(--t1)] outline-none focus:border-[var(--gold)]"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold text-[var(--t3)] uppercase tracking-wider mb-1.5 ml-1">
+                          Schedule Time
+                        </label>
+                        <input
+                          type="time"
+                          value={scheduleTime}
+                          onChange={(e) => setScheduleTime(e.target.value)}
+                          className="w-full bg-[var(--bg)] border border-[var(--p-line)] rounded-lg p-2 text-xs text-[var(--t1)] outline-none focus:border-[var(--gold)]"
+                        />
                       </div>
                     </div>
 
-                    <div className="border border-slate-200 rounded-lg max-h-80 overflow-y-auto">
-                      {isLoadingEmployees ? (
-                        <div className="flex items-center justify-center p-8">
-                          <Loader className="w-4 h-4 animate-spin text-blue-500" />
-                          <span className="ml-2 text-xs text-slate-600">Loading employees...</span>
-                        </div>
-                      ) : filteredEmployees.length === 0 ? (
-                        <div className="p-4 text-center text-slate-500 text-xs">
-                          No employees found with valid phone numbers
-                        </div>
-                      ) : (
-                        <div className="p-2">
-                          <div className="flex items-center p-2 border-b border-slate-100">
-                            <input
-                              type="checkbox"
-                              checked={selectedEmployees.length === filteredEmployees.length && filteredEmployees.length > 0}
-                              onChange={handleSelectAll}
-                              className="mr-3 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
-                            />
-                            <span className="text-xs font-medium text-slate-700">Select All</span>
-                          </div>
-                          {filteredEmployees.map(employee => (
-                            <div
-                              key={employee.id}
-                              className="flex items-center p-3 hover:bg-slate-50 rounded-lg transition-colors"
-                            >
-                              <input
-                                type="checkbox"
-                                checked={selectedEmployees.includes(employee.id)}
-                                onChange={() => handleEmployeeSelect(employee.id)}
-                                className="mr-3 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
-                              />
-                              <div className="flex-1 min-w-0">
-                                <p className="text-xs font-medium text-slate-900 truncate">
-                                  {employee.employee_name}
-                                </p>
-                                <p className="text-xs text-slate-500 truncate">
-                                  {employee.department} • {employee.town} • {employee.phone_number}
-                                </p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                    {/* Dispatch Actions */}
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => handleSendSMS(true)}
+                        disabled={!message.trim() || selectedEmployees.length === 0 || isSending}
+                        className={`flex-1 py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2
+                          ${!message.trim() || selectedEmployees.length === 0 || isSending
+                            ? 'bg-[var(--p-line)] text-[var(--t4)] cursor-not-allowed'
+                            : 'bg-[var(--gold)] text-[var(--bg)] hover:shadow-[0_0_12px_var(--gold-glow)]'
+                          }`}
+                      >
+                        {isSending ? (
+                          <Loader className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Send className="w-4 h-4" />
+                        )}
+                        {isSending ? 'Sending Broadcast...' : 'Broadcast Now'}
+                      </button>
 
-                  {isSending && sendingProgress.total > 0 && (
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-medium text-blue-800">Sending Progress</span>
-                        <span className="text-xs text-blue-600">
-                          {sendingProgress.current} / {sendingProgress.total}
-                        </span>
-                      </div>
-                      <div className="w-full bg-blue-200 rounded-full h-2">
-                        <div
-                          className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                          style={{
-                            width: `${(sendingProgress.current / sendingProgress.total) * 100}%`
-                          }}
-                        ></div>
-                      </div>
-                      <p className="text-xs text-blue-600 mt-2">
-                        Sending personalized messages to each employee...
-                      </p>
-                    </div>
-                  )}
-
-                  <div className="flex gap-3">
-                    <button
-                      onClick={() => handleSendSMS(true)}
-                      disabled={!message.trim() || selectedEmployees.length === 0 || isSending}
-                      className="flex-1 text-xs bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white py-3 px-4 rounded-lg font-medium transition-all flex items-center justify-center gap-2"
-                    >
-                      {isSending ? (
-                        <Loader className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <Send className="w-4 h-4" />
-                      )}
-                      {isSending ? 'Sending...' : 'Send Now'}
-                    </button>
-
-                    <button
-                      onClick={() => handleSendSMS(false)}
-                      disabled={!message.trim() || selectedEmployees.length === 0 || isSending}
-                      className="flex-1 text-xs bg-green-600 hover:bg-green-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white py-3 px-4 rounded-lg font-medium transition-all flex items-center justify-center gap-2"
-                    >
-                      <Clock className="w-4 h-4" />
-                      Schedule
-                    </button>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3 p-4 bg-slate-50 rounded-lg border border-slate-200">
-                    <div>
-                      <label className="block text-xs font-medium text-slate-700 mb-1">
-                        Date
-                      </label>
-                      <input
-                        type="date"
-                        value={scheduleDate}
-                        onChange={(e) => setScheduleDate(e.target.value)}
-                        min={new Date().toISOString().split('T')[0]}
-                        className="w-full border border-slate-300 rounded-lg p-2 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-slate-700 mb-1">
-                        Time
-                      </label>
-                      <input
-                        type="time"
-                        value={scheduleTime}
-                        onChange={(e) => setScheduleTime(e.target.value)}
-                        className="w-full border border-slate-300 rounded-lg p-2 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                      />
+                      <button
+                        onClick={() => handleSendSMS(false)}
+                        disabled={!message.trim() || selectedEmployees.length === 0 || isSending || !scheduleDate || !scheduleTime}
+                        className={`flex-1 py-3 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2
+                          ${!message.trim() || selectedEmployees.length === 0 || isSending || !scheduleDate || !scheduleTime
+                            ? 'bg-[var(--p-line)] text-[var(--t4)] cursor-not-allowed'
+                            : 'bg-[var(--bg)] border border-[var(--p-line)] text-[var(--t1)] hover:bg-[var(--glass-h)]'
+                          }`}
+                      >
+                        <Clock className="w-4 h-4 text-[var(--gold)]" />
+                        Schedule Dispatch
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           {activeTab === 'templates' && (
             <div className="space-y-6">
@@ -1759,7 +1802,7 @@ export function SMSCenter() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {templates.map(template => (
-                  <div key={template.id} className="bg-white border border-slate-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div key={template.id} className="bg-[var(--card)] border border-slate-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                     <div className="flex justify-between items-start mb-3">
                       <div>
                         <h4 className="text-sm font-medium text-slate-900">{template.name}</h4>
@@ -1817,7 +1860,7 @@ export function SMSCenter() {
               ) : (
                 <div className="space-y-4">
                   {scheduledMessages.map(sms => (
-                    <div key={sms.id} className="bg-white border border-slate-200 rounded-lg p-4">
+                    <div key={sms.id} className="bg-[var(--card)] border border-slate-200 rounded-lg p-4">
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
@@ -1933,7 +1976,7 @@ export function SMSCenter() {
                     {smsPackages.map(pkg => (
                       <div
                         key={pkg.id}
-                        className={`bg-white border rounded-lg p-4 cursor-pointer transition-all ${selectedPackage === pkg.id
+                        className={`bg-[var(--card)] border rounded-lg p-4 cursor-pointer transition-all ${selectedPackage === pkg.id
                           ? 'border-blue-500 ring-2 ring-blue-100'
                           : 'border-slate-200 hover:border-slate-300'
                           } ${pkg.popular ? 'relative' : ''}`}
@@ -2176,8 +2219,8 @@ export function SMSCenter() {
 
       {/* Additional Variables Modal */}
       {showAdditionalVariablesModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-[var(--card)] rounded-xl p-6 max-w-md w-full mx-4">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-slate-900">Additional Information Needed</h3>
               <button
@@ -2232,8 +2275,8 @@ export function SMSCenter() {
 
       {/* New Template Modal */}
       {showNewTemplateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-[var(--card)] rounded-xl p-6 max-w-md w-full mx-4">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-slate-900">Create New Template</h3>
               <button
@@ -2301,8 +2344,8 @@ export function SMSCenter() {
       )}
 
       {showPackageModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-[var(--card)] rounded-xl p-6 max-w-md w-full mx-4">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-slate-900">Purchase SMS Package</h3>
               <button

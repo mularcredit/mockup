@@ -14,7 +14,7 @@ export const TabsNavigation = ({
   branchesCount,
 }: TabsNavigationProps) => {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <div className="bg-[var(--card)] rounded-xl shadow-sm border border-gray-200 overflow-hidden">
       <div className="border-b border-gray-200">
         <nav className="flex -mb-px">
           <button

@@ -116,7 +116,7 @@ export default function HRLifecycleDashboard() {
     ];
 
     return (
-        <div className="min-h-screen bg-gray-50/50 p-4 md:p-6">
+        <div className="min-h-screen bg-[var(--glass)] p-4 md:p-6">
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                 <div>
@@ -130,7 +130,7 @@ export default function HRLifecycleDashboard() {
                 </div>
                 <button
                     onClick={fetchDashboardStats}
-                    className="flex items-center gap-2 px-3 py-2 text-xs bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-gray-600"
+                    className="flex items-center gap-2 px-3 py-2 text-xs bg-[var(--card)] border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-gray-600"
                 >
                     <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
                     Refresh
@@ -138,7 +138,7 @@ export default function HRLifecycleDashboard() {
             </div>
 
             {/* Tab Navigation */}
-            <div className="bg-white border border-gray-200 rounded-xl shadow-sm mb-6 overflow-x-auto">
+            <div className="bg-[var(--card)] border border-gray-200 rounded-xl shadow-sm mb-6 overflow-x-auto">
                 <div className="flex min-w-max">
                     {tabs.map((tab) => {
                         const Icon = tab.icon;
@@ -188,7 +188,7 @@ export default function HRLifecycleDashboard() {
                                     </div>
                                     <div className="space-y-2">
                                         {hrNotifications.map(n => (
-                                            <div key={n.id} className="flex items-center justify-between bg-white border border-amber-100 rounded-lg px-3 py-2">
+                                            <div key={n.id} className="flex items-center justify-between bg-[var(--card)] border border-amber-100 rounded-lg px-3 py-2">
                                                 <div className="flex items-center gap-2">
                                                     <Clock className="w-3.5 h-3.5 text-amber-500 flex-shrink-0" />
                                                     <div>
@@ -225,7 +225,7 @@ export default function HRLifecycleDashboard() {
                                             onClick={() => setActiveTab(card.tab)}
                                             whileHover={{ y: -2, scale: 1.02 }}
                                             whileTap={{ scale: 0.98 }}
-                                            className="bg-white rounded-xl border border-gray-200 p-4 text-left shadow-sm hover:shadow-md transition-all group cursor-pointer"
+                                            className="bg-[var(--card)] rounded-xl border border-gray-200 p-4 text-left shadow-sm hover:shadow-md transition-all group cursor-pointer"
                                         >
                                             <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${card.color} flex items-center justify-center mb-3`}>
                                                 <Icon className="w-4.5 h-4.5 text-white" />
@@ -243,7 +243,7 @@ export default function HRLifecycleDashboard() {
                             </div>
 
                             {/* Quick Action Cards */}
-                            <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+                            <div className="bg-[var(--card)] border border-gray-200 rounded-xl p-5 shadow-sm">
                                 <h3 className="text-sm font-semibold text-gray-800 mb-4">Quick Actions</h3>
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                     {[

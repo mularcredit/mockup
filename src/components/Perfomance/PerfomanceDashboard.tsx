@@ -203,7 +203,7 @@ const SummaryCard: React.FC<{
       purple: 'bg-purple-100 text-purple-600'
     };
     return (
-      <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+      <div className="bg-[var(--card)] rounded-xl border border-gray-200 p-4 shadow-sm">
         <div className="flex items-center justify-between mb-3">
           <div className={`p-2 rounded-lg ${colorClasses[color as keyof typeof colorClasses]}`}>
             <Icon className="w-5 h-5" />
@@ -1709,7 +1709,7 @@ const PerformanceDashboard: React.FC<TownProps> = ({ selectedTown, onTownChange,
   return (
     <div className="p-2 space-y-3 bg-gray-50 min-h-screen max-w-screen-2xl mx-auto">
       {/* Enhanced Header with Town Display */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <div className="bg-[var(--card)] rounded-xl shadow-sm border border-gray-200 p-6">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 mb-1">Performance Dashboard</h1>
@@ -1741,7 +1741,7 @@ const PerformanceDashboard: React.FC<TownProps> = ({ selectedTown, onTownChange,
       </div>
       {/* Filters Section */}
       {showFilters && (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className="bg-[var(--card)] rounded-xl shadow-sm border border-gray-200 p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Performance Filters</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
@@ -1819,8 +1819,8 @@ const PerformanceDashboard: React.FC<TownProps> = ({ selectedTown, onTownChange,
       )}
       {/* Email Modal */}
       {showEmailModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-[var(--card)] rounded-xl p-6 w-full max-w-md">
             <h2 className="text-lg font-semibold mb-4">Send Performance Report</h2>
 
             <div className="space-y-4">
@@ -1896,8 +1896,8 @@ const PerformanceDashboard: React.FC<TownProps> = ({ selectedTown, onTownChange,
         </div>
       )}
       {/* Tabs Navigation */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="border-b border-gray-200 bg-white">
+      <div className="bg-[var(--card)] rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="border-b border-gray-200 bg-[var(--card)]">
           <div className="flex items-center">
             <nav className="flex overflow-x-auto [&::-webkit-scrollbar]:hidden flex-1">
               {[
@@ -1925,7 +1925,7 @@ const PerformanceDashboard: React.FC<TownProps> = ({ selectedTown, onTownChange,
                   <button
                     onClick={() => setViewMode("summary")}
                     className={`px-4 py-2 rounded-full text-xs font-medium transition-all duration-200 ${viewMode === "summary"
-                      ? "bg-white text-green-600 shadow-sm"
+                      ? "bg-[var(--card)] text-green-600 shadow-sm"
                       : "text-gray-600 hover:text-gray-800"
                       }`}
                   >
@@ -1934,7 +1934,7 @@ const PerformanceDashboard: React.FC<TownProps> = ({ selectedTown, onTownChange,
                   <button
                     onClick={() => setViewMode("detailed")}
                     className={`px-4 py-2 rounded-full text-xs font-medium transition-all duration-200 ${viewMode === "detailed"
-                      ? "bg-white text-green-600 shadow-sm"
+                      ? "bg-[var(--card)] text-green-600 shadow-sm"
                       : "text-gray-600 hover:text-gray-800"
                       }`}
                   >
@@ -1948,7 +1948,7 @@ const PerformanceDashboard: React.FC<TownProps> = ({ selectedTown, onTownChange,
       </div>
       {/* Enhanced Individual Performance View */}
       {selectedTab === 'individual' && (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="bg-[var(--card)] rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="p-4 md:p-6 border-b border-gray-200 flex justify-between items-center">
             <div>
               <h2 className="text-lg font-semibold text-gray-900">Staff Performance Metrics</h2>
@@ -2218,7 +2218,7 @@ const PerformanceDashboard: React.FC<TownProps> = ({ selectedTown, onTownChange,
 
                   return (
                     <div key={employee.id} className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow">
-                      <div className="p-5 bg-white">
+                      <div className="p-5 bg-[var(--card)]">
                         <div className="flex justify-between items-start mb-4">
                           <div>
                             <h3 className="font-semibold text-gray-900">{employee.name}</h3>
@@ -2335,7 +2335,7 @@ const PerformanceDashboard: React.FC<TownProps> = ({ selectedTown, onTownChange,
       {/* Branch Performance View */}
       {selectedTab === 'branch' && (
         <div className="space-y-4">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <div className="bg-[var(--card)] rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex justify-between items-center mb-4">
               <div>
                 <h2 className="text-lg font-semibold text-gray-900">Branch Performance Comparison</h2>
@@ -2421,7 +2421,7 @@ const PerformanceDashboard: React.FC<TownProps> = ({ selectedTown, onTownChange,
               />
             </div>
           </div>
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <div className="bg-[var(--card)] rounded-xl shadow-sm border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Branch Performance Metrics</h2>
             <div className="overflow-x-auto">
               <table className="w-full text-xs">

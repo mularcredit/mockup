@@ -145,7 +145,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         disabled={disabled}
-        className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 focus:border-blue-600 bg-white text-left flex items-center justify-between disabled:bg-gray-100 disabled:cursor-not-allowed"
+        className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 focus:border-blue-600 bg-[var(--card)] text-left flex items-center justify-between disabled:bg-gray-100 disabled:cursor-not-allowed"
       >
         <span className={value ? 'text-gray-900' : 'text-gray-500'}>
           {selectedOption ? selectedOption.label : placeholder}
@@ -154,8 +154,8 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
       </button>
 
       {isOpen && (
-        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded shadow-lg max-h-60 overflow-auto">
-          <div className="sticky top-0 bg-white p-2 border-b border-gray-200">
+        <div className="absolute z-10 w-full mt-1 bg-[var(--card)] border border-gray-300 rounded shadow-lg max-h-60 overflow-auto">
+          <div className="sticky top-0 bg-[var(--card)] p-2 border-b border-gray-200">
             <div className="relative">
               <Search className="w-4 h-4 absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
@@ -838,25 +838,25 @@ const StatutoryDeductionsReport: React.FC<BaseReportProps> = ({
     <>
       {/* Traditional Accounting Summary Cards - No Icons */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3 p-4 bg-gray-50 border-b border-gray-300">
-        <div className="bg-white p-3 rounded border border-gray-300 shadow-sm">
+        <div className="bg-[var(--card)] p-3 rounded border border-gray-300 shadow-sm">
           <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">Total NSSF</p>
           <p className="text-xl font-bold text-gray-900 mt-1">{formatCurrency(totalNSSF)}</p>
           <p className="text-xs text-gray-500 mt-1">Social Security Fund</p>
         </div>
 
-        <div className="bg-white p-3 rounded border border-gray-300 shadow-sm">
+        <div className="bg-[var(--card)] p-3 rounded border border-gray-300 shadow-sm">
           <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">Total NHIF</p>
           <p className="text-xl font-bold text-gray-900 mt-1">{formatCurrency(totalNHIF)}</p>
           <p className="text-xs text-gray-500 mt-1">Health Insurance</p>
         </div>
 
-        <div className="bg-white p-3 rounded border border-gray-300 shadow-sm">
+        <div className="bg-[var(--card)] p-3 rounded border border-gray-300 shadow-sm">
           <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">Total PAYE</p>
           <p className="text-xl font-bold text-gray-900 mt-1">{formatCurrency(totalPAYE)}</p>
           <p className="text-xs text-gray-500 mt-1">Income Tax</p>
         </div>
 
-        <div className="bg-white p-3 rounded border border-gray-300 shadow-sm">
+        <div className="bg-[var(--card)] p-3 rounded border border-gray-300 shadow-sm">
           <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">Total AHL</p>
           <p className="text-xl font-bold text-green-700 mt-1">{formatCurrency(totalAHL)}</p>
           <p className="text-xs text-gray-500 mt-1">Housing Levy</p>
@@ -865,19 +865,19 @@ const StatutoryDeductionsReport: React.FC<BaseReportProps> = ({
 
       {/* Additional Summary Row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-4 bg-gray-50 border-b border-gray-300">
-        <div className="bg-white p-3 rounded border border-gray-300 shadow-sm">
+        <div className="bg-[var(--card)] p-3 rounded border border-gray-300 shadow-sm">
           <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">Total NITA</p>
           <p className="text-xl font-bold text-purple-700 mt-1">{formatCurrency(totalNITA)}</p>
           <p className="text-xs text-gray-500 mt-1">Training Levy</p>
         </div>
 
-        <div className="bg-white p-3 rounded border border-gray-300 shadow-sm">
+        <div className="bg-[var(--card)] p-3 rounded border border-gray-300 shadow-sm">
           <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">Total Employees</p>
           <p className="text-xl font-bold text-gray-900 mt-1">{totalEmployees}</p>
           <p className="text-xs text-gray-500 mt-1">Across all locations</p>
         </div>
 
-        <div className="bg-white p-3 rounded border border-gray-300 shadow-sm">
+        <div className="bg-[var(--card)] p-3 rounded border border-gray-300 shadow-sm">
           <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">Total Deductions</p>
           <p className="text-xl font-bold text-blue-700 mt-1">{totalDeductions}</p>
           <p className="text-xs text-gray-500 mt-1">All deduction records</p>
@@ -903,7 +903,7 @@ const StatutoryDeductionsReport: React.FC<BaseReportProps> = ({
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-300">
+          <tbody className="bg-[var(--card)] divide-y divide-gray-300">
             {employeeData.map((employeeGroup: any) => {
               const { employee, deductions, totalNSSF, totalNHIF, totalPAYE, totalAHL, totalNITA, deductionCount } = employeeGroup;
               const recentDeduction = deductions[0];
@@ -1060,7 +1060,7 @@ const StatutoryDeductionsReport: React.FC<BaseReportProps> = ({
     <div className="p-6 bg-gray-100 min-h-screen">
       <div className="max-w-7xl mx-auto">
         {/* Accounting Report Header */}
-        <div className="mb-6 bg-white rounded-lg border border-gray-300 p-6 shadow-sm">
+        <div className="mb-6 bg-[var(--card)] rounded-lg border border-gray-300 p-6 shadow-sm">
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -1094,7 +1094,7 @@ const StatutoryDeductionsReport: React.FC<BaseReportProps> = ({
         </div>
 
         {/* Action Bar */}
-        <div className="bg-white rounded-lg border border-gray-300 shadow-sm p-4 mb-6">
+        <div className="bg-[var(--card)] rounded-lg border border-gray-300 shadow-sm p-4 mb-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div className="flex flex-wrap gap-2">
               <button
@@ -1202,7 +1202,7 @@ const StatutoryDeductionsReport: React.FC<BaseReportProps> = ({
         </div>
 
         {/* Report Data */}
-        <div className="bg-white rounded-lg border border-gray-300 shadow-sm overflow-hidden">
+        <div className="bg-[var(--card)] rounded-lg border border-gray-300 shadow-sm overflow-hidden">
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />

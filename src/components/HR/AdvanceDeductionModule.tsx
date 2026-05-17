@@ -168,13 +168,13 @@ export default function AdvanceDeductionModule({ onRefresh }: { onRefresh?: () =
     return (
         <div className="space-y-6 pb-12">
             {/* Header Section */}
-            <div className="bg-white border text-gray-900 border-gray-200 rounded-lg p-6 flex flex-col md:flex-row justify-between items-center shadow-sm">
+            <div className="bg-[var(--card)] border text-gray-900 border-gray-200 rounded-lg p-6 flex flex-col md:flex-row justify-between items-center shadow-sm">
                 <div>
                     <h1 className="text-xl font-semibold text-gray-900 font-sans tracking-tight">Advance Ledger</h1>
                     <p className="text-xs text-gray-500 mt-1">Salary Recovery and Disbursement Management</p>
                 </div>
                 <div className="flex items-center gap-4 mt-4 md:mt-0">
-                    <button className="px-3 py-1.5 bg-white border border-gray-200 hover:bg-gray-50 rounded-md text-xs font-medium text-gray-700 transition-colors shadow-sm focus:outline-none flex items-center gap-2">
+                    <button className="px-3 py-1.5 bg-[var(--card)] border border-gray-200 hover:bg-gray-50 rounded-md text-xs font-medium text-gray-700 transition-colors shadow-sm focus:outline-none flex items-center gap-2">
                         <Download className="w-4 h-4 text-gray-500" />
                         Export
                     </button>
@@ -190,7 +190,7 @@ export default function AdvanceDeductionModule({ onRefresh }: { onRefresh?: () =
 
             {/* Stat Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm flex items-center justify-between">
+                <div className="bg-[var(--card)] rounded-lg p-6 border border-gray-200 shadow-sm flex items-center justify-between">
                     <div>
                         <p className="text-xs font-medium text-gray-500">Total Recovered</p>
                         <p className="text-2xl font-semibold text-gray-900 mt-1">{formatKES(stats.recovered)}</p>
@@ -203,7 +203,7 @@ export default function AdvanceDeductionModule({ onRefresh }: { onRefresh?: () =
                     </div>
                 </div>
 
-                <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm flex items-center justify-between">
+                <div className="bg-[var(--card)] rounded-lg p-6 border border-gray-200 shadow-sm flex items-center justify-between">
                     <div>
                         <p className="text-xs font-medium text-gray-500">Current Exposure</p>
                         <p className="text-2xl font-semibold text-gray-900 mt-1">{formatKES(stats.outstanding)}</p>
@@ -216,7 +216,7 @@ export default function AdvanceDeductionModule({ onRefresh }: { onRefresh?: () =
                     </div>
                 </div>
 
-                <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm flex items-center justify-between relative overflow-hidden">
+                <div className="bg-[var(--card)] rounded-lg p-6 border border-gray-200 shadow-sm flex items-center justify-between relative overflow-hidden">
                     <div>
                         <p className="text-xs font-medium text-gray-500">Recovery Progress</p>
                         <p className="text-2xl font-semibold text-gray-900 mt-1">{Math.round((stats.recovered / stats.disbursed) * 100 || 0)}%</p>
@@ -231,7 +231,7 @@ export default function AdvanceDeductionModule({ onRefresh }: { onRefresh?: () =
             </div>
 
             {/* Table Section */}
-            <div className="bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col">
+            <div className="bg-[var(--card)] border border-gray-200 rounded-lg shadow-sm flex flex-col">
                 {/* Search & Toolbar */}
                 <div className="p-5 border-b border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="relative w-full sm:w-80">
@@ -241,7 +241,7 @@ export default function AdvanceDeductionModule({ onRefresh }: { onRefresh?: () =
                             placeholder="Search employee..."
                             value={search}
                             onChange={e => setSearch(e.target.value)}
-                            className="w-full pl-9 pr-3 py-2 bg-white border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                            className="w-full pl-9 pr-3 py-2 bg-[var(--card)] border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                         />
                     </div>
 
@@ -252,7 +252,7 @@ export default function AdvanceDeductionModule({ onRefresh }: { onRefresh?: () =
                                     key={f}
                                     onClick={() => setFilter(f)}
                                     className={`flex-1 sm:flex-none px-4 py-1.5 rounded text-xs font-medium capitalize transition-colors ${filter === f
-                                        ? 'bg-white text-gray-900 shadow-sm border border-gray-200/50'
+                                        ? 'bg-[var(--card)] text-gray-900 shadow-sm border border-gray-200/50'
                                         : 'text-gray-500 hover:text-gray-900'
                                         }`}
                                 >
@@ -260,7 +260,7 @@ export default function AdvanceDeductionModule({ onRefresh }: { onRefresh?: () =
                                 </button>
                             ))}
                         </div>
-                        <button onClick={fetchData} className="p-2 border border-gray-300 rounded-md text-gray-500 hover:bg-gray-50 transition-colors bg-white shadow-sm flex-shrink-0">
+                        <button onClick={fetchData} className="p-2 border border-gray-300 rounded-md text-gray-500 hover:bg-gray-50 transition-colors bg-[var(--card)] shadow-sm flex-shrink-0">
                             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
                         </button>
                     </div>
@@ -277,7 +277,7 @@ export default function AdvanceDeductionModule({ onRefresh }: { onRefresh?: () =
                                 <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-200 bg-white">
+                        <tbody className="divide-y divide-[var(--p-line)] bg-[var(--card)]">
                             {currentItems.length === 0 ? (
                                 <tr>
                                     <td colSpan={4} className="px-6 py-12 text-center text-gray-500 text-sm">
@@ -355,12 +355,12 @@ export default function AdvanceDeductionModule({ onRefresh }: { onRefresh?: () =
                 </div>
 
                 {/* Pagination */}
-                <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between bg-white rounded-b-lg">
+                <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between bg-[var(--card)] rounded-b-lg">
                     <p className="text-xs text-gray-500">
                         Showing <span className="font-medium text-gray-900">{((currentPage - 1) * itemsPerPage) + 1}</span> to <span className="font-medium text-gray-900">{Math.min(currentPage * itemsPerPage, filtered.length)}</span> of <span className="font-medium text-gray-900">{filtered.length}</span> records
                     </p>
                     <div className="flex items-center gap-1">
-                        <button disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)} className="p-2 border border-gray-300 rounded-md bg-white text-gray-500 disabled:opacity-50 hover:bg-gray-50 transition-colors">
+                        <button disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)} className="p-2 border border-gray-300 rounded-md bg-[var(--card)] text-gray-500 disabled:opacity-50 hover:bg-gray-50 transition-colors">
                             <ChevronLeft className="w-4 h-4" />
                         </button>
                         <div className="flex items-center gap-1 mx-2">
@@ -370,7 +370,7 @@ export default function AdvanceDeductionModule({ onRefresh }: { onRefresh?: () =
                                 </button>
                             ))}
                         </div>
-                        <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => p + 1)} className="p-2 border border-gray-300 rounded-md bg-white text-gray-500 disabled:opacity-50 hover:bg-gray-50 transition-colors">
+                        <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => p + 1)} className="p-2 border border-gray-300 rounded-md bg-[var(--card)] text-gray-500 disabled:opacity-50 hover:bg-gray-50 transition-colors">
                             <ChevronRight className="w-4 h-4" />
                         </button>
                     </div>
@@ -385,9 +385,9 @@ export default function AdvanceDeductionModule({ onRefresh }: { onRefresh?: () =
                             initial={{ scale: 0.95, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.95, opacity: 0 }}
-                            className="bg-white rounded-lg shadow-xl w-full max-w-lg overflow-hidden flex flex-col relative z-10"
+                            className="bg-[var(--card)] rounded-lg shadow-xl w-full max-w-lg overflow-hidden flex flex-col relative z-10"
                         >
-                            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-white">
+                            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-[var(--card)]">
                                 <div>
                                     <h3 className="text-lg font-semibold text-gray-900">Record New Advance</h3>
                                     <p className="text-sm text-gray-500 mt-1">Provide disbursement and recovery details</p>
@@ -405,7 +405,7 @@ export default function AdvanceDeductionModule({ onRefresh }: { onRefresh?: () =
                                         <select
                                             value={form.employeeNumber}
                                             onChange={e => setForm(f => ({ ...f, employeeNumber: e.target.value }))}
-                                            className="w-full pl-9 pr-8 py-2 bg-white border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors appearance-none"
+                                            className="w-full pl-9 pr-8 py-2 bg-[var(--card)] border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors appearance-none"
                                         >
                                             <option value="">Select Employee...</option>
                                             {employees.map(e => (
@@ -424,7 +424,7 @@ export default function AdvanceDeductionModule({ onRefresh }: { onRefresh?: () =
                                             type="date"
                                             value={form.advance_date}
                                             onChange={e => setForm(f => ({ ...f, advance_date: e.target.value }))}
-                                            className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                                            className="w-full px-3 py-2 bg-[var(--card)] border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                                         />
                                     </div>
                                     <div>
@@ -433,7 +433,7 @@ export default function AdvanceDeductionModule({ onRefresh }: { onRefresh?: () =
                                             type="number"
                                             value={form.advance_amount || ''}
                                             onChange={e => setForm(f => ({ ...f, advance_amount: Number(e.target.value) }))}
-                                            className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                                            className="w-full px-3 py-2 bg-[var(--card)] border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                                             placeholder="0"
                                         />
                                     </div>
@@ -445,7 +445,7 @@ export default function AdvanceDeductionModule({ onRefresh }: { onRefresh?: () =
                                         type="number"
                                         value={form.monthly_deduction || ''}
                                         onChange={e => setForm(f => ({ ...f, monthly_deduction: Number(e.target.value) }))}
-                                        className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                                        className="w-full px-3 py-2 bg-[var(--card)] border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                                         placeholder="0"
                                     />
                                 </div>
@@ -456,7 +456,7 @@ export default function AdvanceDeductionModule({ onRefresh }: { onRefresh?: () =
                                         rows={3}
                                         value={form.notes}
                                         onChange={e => setForm(f => ({ ...f, notes: e.target.value }))}
-                                        className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors resize-none"
+                                        className="w-full px-3 py-2 bg-[var(--card)] border border-gray-300 rounded-md text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-colors resize-none"
                                         placeholder="Add any additional details..."
                                     />
                                 </div>
@@ -465,7 +465,7 @@ export default function AdvanceDeductionModule({ onRefresh }: { onRefresh?: () =
                             <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex gap-3 justify-end">
                                 <button
                                     onClick={() => setShowModal(false)}
-                                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-[var(--card)] border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
                                 >
                                     Cancel
                                 </button>

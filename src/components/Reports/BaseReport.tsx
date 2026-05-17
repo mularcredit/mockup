@@ -225,8 +225,8 @@ const TransactionDetailsModal: React.FC<TransactionDetailsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden transform transition-all duration-300 scale-100">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-[var(--card)] rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden transform transition-all duration-300 scale-100">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6">
           <div className="flex justify-between items-start">
@@ -258,7 +258,7 @@ const TransactionDetailsModal: React.FC<TransactionDetailsModalProps> = ({
         {/* Summary Cards */}
         <div className="p-6 bg-gradient-to-b from-gray-50 to-white">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div className="bg-[var(--card)] rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-center justify-between mb-2">
                 <div className="p-2 bg-blue-50 rounded-lg">
                   <Receipt className="w-5 h-5 text-blue-600" />
@@ -268,7 +268,7 @@ const TransactionDetailsModal: React.FC<TransactionDetailsModalProps> = ({
               <p className="text-2xl font-bold text-gray-900">{totalTransactions}</p>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div className="bg-[var(--card)] rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-center justify-between mb-2">
                 <div className="p-2 bg-green-50 rounded-lg">
                   <DollarSign className="w-5 h-5 text-green-600" />
@@ -280,7 +280,7 @@ const TransactionDetailsModal: React.FC<TransactionDetailsModalProps> = ({
               </p>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div className="bg-[var(--card)] rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-center justify-between mb-2">
                 <div className="p-2 bg-purple-50 rounded-lg">
                   <Clock className="w-5 h-5 text-purple-600" />
@@ -331,7 +331,7 @@ const TransactionDetailsModal: React.FC<TransactionDetailsModalProps> = ({
 
         {/* Transaction Table */}
         <div className="px-6 pb-6 overflow-auto max-h-[50vh]">
-          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+          <div className="bg-[var(--card)] rounded-xl border border-gray-200 overflow-hidden">
             <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
               <h3 className="font-medium text-gray-900 flex items-center gap-2">
                 <FileText className="w-4 h-4" />
@@ -360,7 +360,7 @@ const TransactionDetailsModal: React.FC<TransactionDetailsModalProps> = ({
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="divide-y divide-[var(--p-line)]">
                   {transactions.map((transaction, index) => (
                     <tr key={transaction.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-4 py-3">
@@ -451,7 +451,7 @@ const TransactionDetailsModal: React.FC<TransactionDetailsModalProps> = ({
             <div className="flex gap-3">
               <button
                 onClick={onClose}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-[var(--card)] border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 Close
               </button>
@@ -502,8 +502,8 @@ const BulkDownloadModal: React.FC<BulkDownloadModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-300 scale-100">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-[var(--card)] rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-300 scale-100">
         {/* Header */}
         <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-6 rounded-t-2xl">
           <div className="flex justify-between items-center">
@@ -617,7 +617,7 @@ const BulkDownloadModal: React.FC<BulkDownloadModalProps> = ({
             </span>
             <button
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-[var(--card)] border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             >
               Cancel
             </button>
@@ -672,7 +672,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         disabled={disabled}
-        className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 focus:border-blue-600 bg-white text-left flex items-center justify-between disabled:bg-gray-100 disabled:cursor-not-allowed"
+        className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 focus:border-blue-600 bg-[var(--card)] text-left flex items-center justify-between disabled:bg-gray-100 disabled:cursor-not-allowed"
       >
         <span className={value ? 'text-gray-900' : 'text-gray-500'}>
           {selectedOption ? selectedOption.label : placeholder}
@@ -681,8 +681,8 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
       </button>
 
       {isOpen && (
-        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded shadow-lg max-h-60 overflow-auto">
-          <div className="sticky top-0 bg-white p-2 border-b border-gray-200">
+        <div className="absolute z-10 w-full mt-1 bg-[var(--card)] border border-gray-300 rounded shadow-lg max-h-60 overflow-auto">
+          <div className="sticky top-0 bg-[var(--card)] p-2 border-b border-gray-200">
             <div className="relative">
               <Search className="w-4 h-4 absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
@@ -1418,25 +1418,25 @@ const BaseReport: React.FC<BaseReportProps> = ({
     <>
       {/* Accounting Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3 p-4 bg-gray-50 border-b border-gray-300">
-        <div className="bg-white p-3 rounded border border-gray-300 shadow-sm">
+        <div className="bg-[var(--card)] p-3 rounded border border-gray-300 shadow-sm">
           <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">Total Employees</p>
           <p className="text-xl font-bold text-gray-900 mt-1">{totalEmployees}</p>
           <p className="text-xs text-gray-500 mt-1">Across all locations</p>
         </div>
 
-        <div className="bg-white p-3 rounded border border-gray-300 shadow-sm">
+        <div className="bg-[var(--card)] p-3 rounded border border-gray-300 shadow-sm">
           <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">Total Advances</p>
           <p className="text-xl font-bold text-gray-900 mt-1">{totalAdvances}</p>
           <p className="text-xs text-gray-500 mt-1">All applications</p>
         </div>
 
-        <div className="bg-white p-3 rounded border border-gray-300 shadow-sm">
+        <div className="bg-[var(--card)] p-3 rounded border border-gray-300 shadow-sm">
           <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">Total Requested</p>
           <p className="text-xl font-bold text-gray-900 mt-1">{formatCurrency(totalApplied)}</p>
           <p className="text-xs text-gray-500 mt-1">Amount requested</p>
         </div>
 
-        <div className="bg-white p-3 rounded border border-gray-300 shadow-sm">
+        <div className="bg-[var(--card)] p-3 rounded border border-gray-300 shadow-sm">
           <p className="text-xs font-medium text-gray-600 uppercase tracking-wide">Total Disbursed</p>
           <p className="text-xl font-bold text-green-700 mt-1">{formatCurrency(totalDisbursed)}</p>
           <p className="text-xs text-gray-500 mt-1">Amount paid out</p>
@@ -1457,7 +1457,7 @@ const BaseReport: React.FC<BaseReportProps> = ({
           <div className="flex gap-2">
             <button
               onClick={() => setSelectedEmployees(new Set())}
-              className="px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+              className="px-3 py-1.5 text-xs font-medium text-gray-700 bg-[var(--card)] border border-gray-300 rounded-lg hover:bg-gray-50"
             >
               Clear Selection
             </button>
@@ -1509,7 +1509,7 @@ const BaseReport: React.FC<BaseReportProps> = ({
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-300">
+          <tbody className="bg-[var(--card)] divide-y divide-gray-300">
             {employeeData.map((employeeGroup: any) => {
               const { employee, advances, totalApplied, totalDisbursed, advanceCount } = employeeGroup;
               const recentAdvance = advances[0];
@@ -1706,7 +1706,7 @@ const BaseReport: React.FC<BaseReportProps> = ({
     <div className="p-6 bg-gray-100 min-h-screen">
       <div className="max-w-7xl mx-auto">
         {/* Accounting Report Header */}
-        <div className="mb-6 bg-white rounded-lg border border-gray-300 p-6 shadow-sm">
+        <div className="mb-6 bg-[var(--card)] rounded-lg border border-gray-300 p-6 shadow-sm">
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -1741,7 +1741,7 @@ const BaseReport: React.FC<BaseReportProps> = ({
         </div>
 
         {/* Action Bar */}
-        <div className="bg-white rounded-lg border border-gray-300 shadow-sm p-4 mb-6">
+        <div className="bg-[var(--card)] rounded-lg border border-gray-300 shadow-sm p-4 mb-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div className="flex flex-wrap gap-2">
               <button
@@ -1836,7 +1836,7 @@ const BaseReport: React.FC<BaseReportProps> = ({
         </div>
 
         {/* Report Data */}
-        <div className="bg-white rounded-lg border border-gray-300 shadow-sm overflow-hidden">
+        <div className="bg-[var(--card)] rounded-lg border border-gray-300 shadow-sm overflow-hidden">
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />

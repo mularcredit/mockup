@@ -31,7 +31,7 @@ export const ApplicationDetailModal = ({ application, onClose }: ApplicationDeta
   return (
     <>
       <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-xl shadow-xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
+        <div className="bg-[var(--card)] rounded-xl shadow-xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
           {/* Header */}
           <div className="bg-gradient-to-r from-[#38d270] to-[#19b051] p-6 text-white">
             <div className="flex justify-between items-center">
@@ -56,7 +56,7 @@ export const ApplicationDetailModal = ({ application, onClose }: ApplicationDeta
           <div className="overflow-y-auto p-6 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Personal Information */}
-              <div className="bg-white border border-gray-100 shadow-sm rounded-lg p-5">
+              <div className="bg-[var(--card)] border border-gray-100 shadow-sm rounded-lg p-5">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="bg-blue-50 p-2 rounded-full">
                     <User className="w-5 h-5 text-[#38d270]" />
@@ -75,7 +75,7 @@ export const ApplicationDetailModal = ({ application, onClose }: ApplicationDeta
               </div>
               
               {/* Address Information */}
-              <div className="bg-white border border-gray-100 shadow-sm rounded-lg p-5">
+              <div className="bg-[var(--card)] border border-gray-100 shadow-sm rounded-lg p-5">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="bg-blue-50 p-2 rounded-full">
                     <MapPin className="w-5 h-5 text-[#38d270]" />
@@ -93,7 +93,7 @@ export const ApplicationDetailModal = ({ application, onClose }: ApplicationDeta
               </div>
               
               {/* Education */}
-              <div className="bg-white border border-gray-100 shadow-sm rounded-lg p-5">
+              <div className="bg-[var(--card)] border border-gray-100 shadow-sm rounded-lg p-5">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="bg-blue-50 p-2 rounded-full">
                     <GraduationCap className="w-5 h-5 text-[#38d270]" />
@@ -110,7 +110,7 @@ export const ApplicationDetailModal = ({ application, onClose }: ApplicationDeta
               </div>
               
               {/* Work Experience */}
-              <div className="bg-white border border-gray-100 shadow-sm rounded-lg p-5">
+              <div className="bg-[var(--card)] border border-gray-100 shadow-sm rounded-lg p-5">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="bg-blue-50 p-2 rounded-full">
                     <Briefcase className="w-5 h-5 text-[#38d270]" />
@@ -129,7 +129,7 @@ export const ApplicationDetailModal = ({ application, onClose }: ApplicationDeta
               </div>
               
               {/* Skills & Languages */}
-              <div className="bg-white border border-gray-100 shadow-sm rounded-lg p-5">
+              <div className="bg-[var(--card)] border border-gray-100 shadow-sm rounded-lg p-5">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="bg-blue-50 p-2 rounded-full">
                     <Code className="w-5 h-5 text-[#38d270]" />
@@ -146,7 +146,7 @@ export const ApplicationDetailModal = ({ application, onClose }: ApplicationDeta
               </div>
               
               {/* Application Materials */}
-              <div className="bg-white border border-gray-100 shadow-sm rounded-lg p-5">
+              <div className="bg-[var(--card)] border border-gray-100 shadow-sm rounded-lg p-5">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="bg-blue-50 p-2 rounded-full">
                     <FileText className="w-5 h-5 text-[#38d270]" />

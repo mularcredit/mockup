@@ -155,7 +155,7 @@ const UserProfileDropdown = ({
     <div className="relative">
       <button
         ref={buttonRef}
-        className="flex items-center w-full p-3 text-left rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500"
+        className="flex items-center w-full p-3 text-left rounded-lg hover:bg-[var(--glass-h)] transition-colors focus:outline-none focus:ring-2 focus:ring-green-500"
         onClick={handleButtonClick}
         aria-expanded={isOpen}
         aria-haspopup="true"
@@ -187,7 +187,7 @@ const UserProfileDropdown = ({
                 setActiveTab('details');
                 setIsOpen(false);
               }}
-              className="w-full text-left px-4 py-3 text-xs text-gray-700 hover:bg-gray-50 flex items-center transition-colors border-b border-gray-100"
+              className="w-full text-left px-4 py-3 text-xs text-gray-700 hover:bg-[var(--glass-h)] flex items-center transition-colors border-b border-gray-100"
             >
               <User className="h-4 w-4 mr-3 text-gray-500" />
               My Profile
@@ -195,14 +195,14 @@ const UserProfileDropdown = ({
           )}
           <button
             onClick={handlePasswordReset}
-            className="w-full text-left px-4 py-3 text-xs text-gray-700 hover:bg-gray-50 flex items-center transition-colors border-b border-gray-100"
+            className="w-full text-left px-4 py-3 text-xs text-gray-700 hover:bg-[var(--glass-h)] flex items-center transition-colors border-b border-gray-100"
           >
             <LockKeyhole className="h-4 w-4 mr-3 text-gray-500" />
             Reset Password
           </button>
           <button
             onClick={handleSignOut}
-            className="w-full text-left px-4 py-3 text-xs text-gray-700 hover:bg-gray-50 flex items-center transition-colors"
+            className="w-full text-left px-4 py-3 text-xs text-gray-700 hover:bg-[var(--glass-h)] flex items-center transition-colors"
           >
             <LogOut className="h-4 w-4 mr-3 text-gray-500" />
             Sign out

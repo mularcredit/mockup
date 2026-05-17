@@ -585,7 +585,7 @@ const TrainingModule = () => {
                   href={currentDocument.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-100 transition-colors flex items-center"
+                  className="px-6 py-3 bg-white text-black rounded-lg hover:bg-[var(--glass-h)] transition-colors flex items-center"
                 >
                   <Download className="h-5 w-5 mr-2" />
                   Open PDF in New Tab
@@ -605,7 +605,7 @@ const TrainingModule = () => {
                   href={currentDocument.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-100 transition-colors flex items-center"
+                  className="px-6 py-3 bg-white text-black rounded-lg hover:bg-[var(--glass-h)] transition-colors flex items-center"
                 >
                   <Download className="h-5 w-5 mr-2" />
                   Download File
@@ -703,7 +703,7 @@ const TrainingModule = () => {
                       <h4 className="text-lg font-medium text-gray-900 mb-4">{q.question}</h4>
                       <div className="space-y-3">
                         {q.options.map((opt) => (
-                          <label key={opt} className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+                          <label key={opt} className="flex items-center space-x-4 p-3 rounded-lg hover:bg-[var(--glass-h)] transition-colors cursor-pointer">
                             <input
                               type="radio"
                               name={`question-${q.id}`}
@@ -785,7 +785,7 @@ const TrainingModule = () => {
             {getAdjacentDocuments().prev ? (
               <button
                 onClick={() => handleSelectDocument(getAdjacentDocuments().prev!)}
-                className="flex-1 flex items-center justify-start px-6 py-3 border border-gray-300 shadow-sm text-xs font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+                className="flex-1 flex items-center justify-start px-6 py-3 border border-gray-300 shadow-sm text-xs font-medium rounded-lg text-gray-700 bg-white hover:bg-[var(--glass-h)] transition-colors"
               >
                 <ChevronLeft className="h-5 w-5 mr-2" />
                 <div className="text-left">
@@ -800,7 +800,7 @@ const TrainingModule = () => {
             {getAdjacentDocuments().next ? (
               <button
                 onClick={() => handleSelectDocument(getAdjacentDocuments().next!)}
-                className="flex-1 flex items-center justify-end px-6 py-3 border border-gray-300 shadow-sm text-xs font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+                className="flex-1 flex items-center justify-end px-6 py-3 border border-gray-300 shadow-sm text-xs font-medium rounded-lg text-gray-700 bg-white hover:bg-[var(--glass-h)] transition-colors"
               >
                 <div className="text-right">
                   <div className="text-xs text-gray-500">Next</div>

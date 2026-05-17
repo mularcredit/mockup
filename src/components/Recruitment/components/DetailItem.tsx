@@ -28,7 +28,7 @@ export const DetailItem = ({
             href={value || '#'} 
             target="_blank" 
             rel="noopener noreferrer"
-            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-xs font-medium text-[#58cc8b] bg-white hover:bg-gray-50 transition-colors"
+            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-xs font-medium text-[#58cc8b] bg-[var(--card)] hover:bg-gray-50 transition-colors"
           >
             <Download className="w-4 h-4 mr-2" />
             {fileName || 'Download Resume'}

@@ -271,7 +271,7 @@ const IncidentReport = () => {
                         {!isAnonymous && (
                             <button
                                 onClick={() => setShowMyReports(!showMyReports)}
-                                className="px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors flex items-center"
+                                className="px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-[var(--glass-h)] transition-colors flex items-center"
                             >
                                 <FileText className="h-4 w-4 mr-2" />
                                 My Reports
@@ -328,7 +328,7 @@ const IncidentReport = () => {
                         ) : (
                             <div className="space-y-3">
                                 {myReports.map((report) => (
-                                    <div key={report.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                                    <div key={report.id} className="border border-gray-200 rounded-lg p-4 hover:bg-[var(--glass-h)] transition-colors">
                                         <div className="flex items-start justify-between mb-2">
                                             <h3 className="font-medium text-gray-900">{report.title}</h3>
                                             {getStatusBadge(report.status)}
@@ -496,7 +496,7 @@ const IncidentReport = () => {
                                 type="button"
                                 onClick={resetForm}
                                 disabled={isSubmitting}
-                                className="px-6 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+                                className="px-6 py-2 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-[var(--glass-h)] transition-colors disabled:opacity-50"
                             >
                                 Clear Form
                             </button>

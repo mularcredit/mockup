@@ -245,9 +245,9 @@ const ManagerAssignment = () => {
     };
 
     return (
-        <div className="p-6 max-w-7xl mx-auto space-y-6 min-h-screen bg-gray-50/50">
+        <div className="p-6 max-w-7xl mx-auto space-y-6 min-h-screen bg-[var(--glass)]">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[var(--card)] p-6 rounded-2xl border border-gray-100 shadow-sm">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
                         <div className="p-2 bg-green-100 rounded-lg text-green-600">
@@ -295,15 +295,15 @@ const ManagerAssignment = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     {/* Left: Search & Select */}
                     <div className="lg:col-span-8 space-y-4">
-                        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex flex-col h-[700px]">
+                        <div className="bg-[var(--card)] rounded-2xl border border-gray-200 shadow-sm overflow-hidden flex flex-col h-[700px]">
                             {/* Filters */}
-                            <div className="p-4 border-b border-gray-100 space-y-4 bg-white sticky top-0 z-10">
+                            <div className="p-4 border-b border-gray-100 space-y-4 bg-[var(--card)] sticky top-0 z-10">
                                 <div className="flex flex-col sm:flex-row gap-3">
                                     <div className="relative flex-1">
                                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                                         <input
                                             type="text"
-                                            className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all bg-gray-50/50"
+                                            className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500/20 focus:border-green-500 outline-none transition-all bg-[var(--glass)]"
                                             placeholder="Search Employee..."
                                             value={searchTerm}
                                             onChange={(e) => setSearchTerm(e.target.value)}
@@ -337,7 +337,7 @@ const ManagerAssignment = () => {
                                             onClick={() => setSelectedEmployeeId(emp['Employee Number'])}
                                             className={`
                          p-3 rounded-xl border cursor-pointer transition-all flex items-center gap-3
-                         ${isSelected ? 'bg-green-50 border-green-200 ring-1 ring-green-200' : 'bg-white border-gray-100 hover:bg-gray-50'}
+                         ${isSelected ? 'bg-green-50 border-green-200 ring-1 ring-green-200' : 'bg-[var(--card)] border-gray-100 hover:bg-gray-50'}
                        `}
                                         >
                                             <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${isSelected ? 'bg-green-200 text-green-800' : 'bg-gray-100 text-gray-600'}`}>
@@ -364,8 +364,8 @@ const ManagerAssignment = () => {
 
                     {/* Right: Appointment Form */}
                     <div className="lg:col-span-4 space-y-6">
-                        <div className="bg-white rounded-2xl border border-gray-200 shadow-lg sticky top-6">
-                            <div className="p-5 border-b border-gray-100 bg-gray-50/50 rounded-t-2xl">
+                        <div className="bg-[var(--card)] rounded-2xl border border-gray-200 shadow-lg sticky top-6">
+                            <div className="p-5 border-b border-gray-100 bg-[var(--glass)] rounded-t-2xl">
                                 <h2 className="font-bold text-gray-900 flex items-center gap-2">
                                     <Settings size={18} className="text-green-600" />
                                     Role Appointment
@@ -410,7 +410,7 @@ const ManagerAssignment = () => {
                                                 onClick={() => handleRoleSelect('branch')}
                                                 className={`p-3 rounded-xl border text-sm font-medium transition-all ${roleType === 'branch'
                                                     ? 'bg-green-50 border-green-200 text-green-700 ring-1 ring-green-200'
-                                                    : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'
+                                                    : 'bg-[var(--card)] border-gray-200 text-gray-600 hover:border-gray-300'
                                                     }`}
                                             >
                                                 Branch Manager
@@ -420,7 +420,7 @@ const ManagerAssignment = () => {
                                                 onClick={() => handleRoleSelect('regional')}
                                                 className={`p-3 rounded-xl border text-sm font-medium transition-all ${roleType === 'regional'
                                                     ? 'bg-purple-50 border-purple-200 text-purple-700 ring-1 ring-purple-200'
-                                                    : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'
+                                                    : 'bg-[var(--card)] border-gray-200 text-gray-600 hover:border-gray-300'
                                                     }`}
                                             >
                                                 Regional Manager
@@ -492,7 +492,7 @@ const ManagerAssignment = () => {
 
             {/* ASSIGNED LIST TAB */}
             {activeTab === 'list' && (
-                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+                <div className="bg-[var(--card)] rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
                     <div className="p-6 border-b border-gray-100 flex justify-between items-center">
                         <div>
                             <h2 className="text-lg font-bold text-gray-900">Current Assignments</h2>
@@ -515,7 +515,7 @@ const ManagerAssignment = () => {
                                     <th className="px-6 py-4 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-100">
+                            <tbody className="divide-y divide-[var(--p-line)]">
                                 {assignedManagers.length > 0 ? (
                                     assignedManagers
                                         .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
@@ -526,7 +526,7 @@ const ManagerAssignment = () => {
                                             const globalIndex = (currentPage - 1) * itemsPerPage + index + 1;
 
                                             return (
-                                                <tr key={mgr['Employee Number']} className="hover:bg-gray-50/50">
+                                                <tr key={mgr['Employee Number']} className="hover:bg-[var(--glass)]">
                                                     <td className="px-4 py-4 text-center text-xs text-gray-400 font-mono">
                                                         {globalIndex.toString().padStart(2, '0')}
                                                     </td>
@@ -571,11 +571,11 @@ const ManagerAssignment = () => {
                     </div>
                     {/* Pagination Controls */}
                     {assignedManagers.length > itemsPerPage && (
-                        <div className="p-4 border-t border-gray-100 flex items-center justify-between bg-gray-50/50">
+                        <div className="p-4 border-t border-gray-100 flex items-center justify-between bg-[var(--glass)]">
                             <button
                                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                 disabled={currentPage === 1}
-                                className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-all"
+                                className="px-4 py-2 text-sm font-medium text-gray-600 bg-[var(--card)] border border-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-all"
                             >
                                 Previous
                             </button>
@@ -585,7 +585,7 @@ const ManagerAssignment = () => {
                             <button
                                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(assignedManagers.length / itemsPerPage)))}
                                 disabled={currentPage === Math.ceil(assignedManagers.length / itemsPerPage)}
-                                className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-all"
+                                className="px-4 py-2 text-sm font-medium text-gray-600 bg-[var(--card)] border border-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-all"
                             >
                                 Next
                             </button>

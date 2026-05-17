@@ -44,7 +44,7 @@ const MpesaSinglePaymentModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg max-w-md w-full p-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
           <Smartphone className="h-5 w-5 text-green-600" />
@@ -177,7 +177,7 @@ const MpesaBulkPaymentModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
         <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
           <Users className="h-5 w-5 text-green-600" />
@@ -228,7 +228,7 @@ const MpesaBulkPaymentModal = ({
 
         <div className="mb-4 max-h-60 overflow-y-auto">
           <p className="text-xs font-medium mb-2">Staff to be paid:</p>
-          <ul className="text-xs divide-y divide-gray-200">
+          <ul className="text-xs divide-y divide-[var(--p-line)]">
             {filteredEmployees.map(emp => (
               <li key={emp.employee_id} className="py-2 flex items-center justify-between">
                 <div className="flex items-center">

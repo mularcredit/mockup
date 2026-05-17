@@ -769,8 +769,8 @@ const EmployeeDataTable: React.FC<TownProps> = ({ selectedTown, onTownChange }) 
       : 0;
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-        <div className="bg-white rounded-lg max-w-md w-full">
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div className="bg-[var(--card)] rounded-lg max-w-md w-full">
           <div className="p-6 border-b border-gray-200 flex justify-between items-center">
             <h3 className="text-lg font-semibold">Processing Bulk Upload</h3>
             <button
@@ -904,11 +904,11 @@ const EmployeeDataTable: React.FC<TownProps> = ({ selectedTown, onTownChange }) 
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+    <div className="bg-[var(--card)] rounded-lg shadow-sm border border-gray-100 overflow-hidden">
       <UploadProgressModal />
 
       {/* Table Controls */}
-      <div className="p-4 border-b border-gray-100 bg-white">
+      <div className="p-4 border-b border-gray-100 bg-[var(--card)]">
         <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-3">
           {/* Search */}
           <div className="relative flex-1 max-w-md">
@@ -1034,7 +1034,7 @@ const EmployeeDataTable: React.FC<TownProps> = ({ selectedTown, onTownChange }) 
       
       {/* Table */}
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200 overflow-scroll">
+        <table className="min-w-full divide-y divide-[var(--p-line)] overflow-scroll">
           <thead className="bg-gray-50">
             <tr>
               <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -1095,7 +1095,7 @@ const EmployeeDataTable: React.FC<TownProps> = ({ selectedTown, onTownChange }) 
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-[var(--card)] divide-y divide-[var(--p-line)]">
             {/* New Employee Row */}
             {isAddingNew && (
               <tr className="bg-blue-50">
@@ -1539,19 +1539,19 @@ const EmployeeDataTable: React.FC<TownProps> = ({ selectedTown, onTownChange }) 
       </div>
       
       {/* Pagination */}
-      <div className="px-4 py-3 border-t border-gray-200 flex items-center justify-between bg-white">
+      <div className="px-4 py-3 border-t border-gray-200 flex items-center justify-between bg-[var(--card)]">
         <div className="flex-1 flex justify-between sm:hidden">
           <button
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className="relative inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50"
+            className="relative inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-[var(--card)] hover:bg-gray-50"
           >
             Previous
           </button>
           <button
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
-            className="ml-3 relative inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50"
+            className="ml-3 relative inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-[var(--card)] hover:bg-gray-50"
           >
             Next
           </button>
@@ -1569,7 +1569,7 @@ const EmployeeDataTable: React.FC<TownProps> = ({ selectedTown, onTownChange }) 
               <button
                 onClick={() => setCurrentPage(1)}
                 disabled={currentPage === 1}
-                className="relative inline-flex items-center px-1.5 py-1.5 rounded-l-md border border-gray-200 bg-white text-xs text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="relative inline-flex items-center px-1.5 py-1.5 rounded-l-md border border-gray-200 bg-[var(--card)] text-xs text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="sr-only">First</span>
                 <ChevronsLeft className="h-3 w-3" aria-hidden="true" />
@@ -1577,7 +1577,7 @@ const EmployeeDataTable: React.FC<TownProps> = ({ selectedTown, onTownChange }) 
               <button
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
-                className="relative inline-flex items-center px-1.5 py-1.5 border border-gray-200 bg-white text-xs text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="relative inline-flex items-center px-1.5 py-1.5 border border-gray-200 bg-[var(--card)] text-xs text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="sr-only">Previous</span>
                 <ChevronLeft className="h-3 w-3" aria-hidden="true" />
@@ -1603,7 +1603,7 @@ const EmployeeDataTable: React.FC<TownProps> = ({ selectedTown, onTownChange }) 
                     className={`relative inline-flex items-center px-2 py-1.5 border text-xs font-medium ${
                       currentPage === pageNum
                         ? 'z-10 bg-emerald-50 border-emerald-500 text-emerald-600'
-                        : 'bg-white border-gray-200 text-gray-500 hover:bg-gray-50'
+                        : 'bg-[var(--card)] border-gray-200 text-gray-500 hover:bg-gray-50'
                     }`}
                   >
                     {pageNum}
@@ -1614,7 +1614,7 @@ const EmployeeDataTable: React.FC<TownProps> = ({ selectedTown, onTownChange }) 
               <button
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}
-                className="relative inline-flex items-center px-1.5 py-1.5 border border-gray-200 bg-white text-xs text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="relative inline-flex items-center px-1.5 py-1.5 border border-gray-200 bg-[var(--card)] text-xs text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="sr-only">Next</span>
                 <ChevronRight className="h-3 w-3" aria-hidden="true" />
@@ -1622,7 +1622,7 @@ const EmployeeDataTable: React.FC<TownProps> = ({ selectedTown, onTownChange }) 
               <button
                 onClick={() => setCurrentPage(totalPages)}
                 disabled={currentPage === totalPages}
-                className="relative inline-flex items-center px-1.5 py-1.5 rounded-r-md border border-gray-200 bg-white text-xs text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="relative inline-flex items-center px-1.5 py-1.5 rounded-r-md border border-gray-200 bg-[var(--card)] text-xs text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="sr-only">Last</span>
                 <ChevronsRight className="h-3 w-3" aria-hidden="true" />

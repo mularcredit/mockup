@@ -169,7 +169,7 @@ export const BranchesSection = () => {
 
   if (error) {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <div className="bg-[var(--card)] rounded-xl shadow-sm border border-gray-200 p-6">
         <div className="text-center">
           <p className="text-red-600 mb-4">{error}</p>
           <GlowButton onClick={fetchKenyaOfficeLocations} size="sm">
@@ -182,7 +182,7 @@ export const BranchesSection = () => {
 
   return (
     <div className="space-y-4">
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <div className="bg-[var(--card)] rounded-xl shadow-sm border border-gray-200 p-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold text-gray-900">Kenya Office Hiring Needs</h2>
           <div className="flex gap-2">
@@ -219,7 +219,7 @@ export const BranchesSection = () => {
         )}
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <div className="bg-[var(--card)] rounded-xl shadow-sm border border-gray-200 p-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold text-gray-900">Kenya Office Hiring Status</h2>
           <GlowButton onClick={fetchKenyaOfficeLocations} size="sm" variant="secondary">
@@ -359,8 +359,8 @@ export const BranchesSection = () => {
 
       {/* Add New Office Modal */}
       {showAddForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-lg w-full max-w-md">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-[var(--card)] rounded-xl shadow-lg w-full max-w-md">
             <div className="p-6 border-b border-gray-200">
               <h3 className="text-lg font-semibold text-gray-900">Add New Office</h3>
             </div>

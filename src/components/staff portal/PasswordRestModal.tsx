@@ -110,7 +110,7 @@ const PasswordResetModal: React.FC<PasswordResetModalProps> = ({ isOpen, onClose
   const isPasswordStrong = passwordStrength.length === 0 && formData.newPassword.length > 0;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 p-4 overflow-y-auto">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-start justify-center z-50 p-4 overflow-y-auto">
       <div className="w-full max-w-md my-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
@@ -266,7 +266,7 @@ const PasswordResetModal: React.FC<PasswordResetModalProps> = ({ isOpen, onClose
               <button
                 type="button"
                 onClick={handleClose}
-                className="w-full sm:flex-1 px-4 py-2 sm:py-3 border border-gray-300 rounded-lg text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                className="w-full sm:flex-1 px-4 py-2 sm:py-3 border border-gray-300 rounded-lg text-xs font-medium text-gray-700 hover:bg-[var(--glass-h)] transition-colors"
                 disabled={isSubmitting}
               >
                 Cancel

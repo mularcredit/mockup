@@ -976,7 +976,7 @@ const ExpenseModule: React.FC<TownProps> = ({ selectedTown, onTownChange, select
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--page)] flex items-center justify-center">
         <div className="text-center">
           <Loader className="w-8 h-8 animate-spin mx-auto text-gray-900" />
           <p className="mt-2 text-gray-600">Loading expenses...</p>
@@ -986,9 +986,9 @@ const ExpenseModule: React.FC<TownProps> = ({ selectedTown, onTownChange, select
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[var(--page)]">
       {/* Enhanced Header with Better Coverage Display */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-[var(--card)] border-b border-gray-200">
         <div className="px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
@@ -1025,7 +1025,7 @@ const ExpenseModule: React.FC<TownProps> = ({ selectedTown, onTownChange, select
       <div className="px-8 py-8 space-y-8">
         {/* Enhanced Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="bg-[var(--card)] rounded-lg border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-gray-600">Total</p>
@@ -1036,7 +1036,7 @@ const ExpenseModule: React.FC<TownProps> = ({ selectedTown, onTownChange, select
             </div>
           </div>
 
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="bg-[var(--card)] rounded-lg border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-gray-600">Rent & Utilities</p>
@@ -1046,7 +1046,7 @@ const ExpenseModule: React.FC<TownProps> = ({ selectedTown, onTownChange, select
             </div>
           </div>
 
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="bg-[var(--card)] rounded-lg border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-gray-600">Petty Cash</p>
@@ -1056,7 +1056,7 @@ const ExpenseModule: React.FC<TownProps> = ({ selectedTown, onTownChange, select
             </div>
           </div>
 
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="bg-[var(--card)] rounded-lg border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-gray-600">Travel</p>
@@ -1066,7 +1066,7 @@ const ExpenseModule: React.FC<TownProps> = ({ selectedTown, onTownChange, select
             </div>
           </div>
 
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="bg-[var(--card)] rounded-lg border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-gray-600">Pending</p>
@@ -1077,7 +1077,7 @@ const ExpenseModule: React.FC<TownProps> = ({ selectedTown, onTownChange, select
             </div>
           </div>
 
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="bg-[var(--card)] rounded-lg border border-gray-200 p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs font-medium text-gray-600">Recommended</p>
@@ -1090,7 +1090,7 @@ const ExpenseModule: React.FC<TownProps> = ({ selectedTown, onTownChange, select
         </div>
 
         {/* Enhanced Filters */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-[var(--card)] rounded-lg border border-gray-200 p-6">
           <div className="flex flex-col space-y-4">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
               <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
@@ -1135,7 +1135,7 @@ const ExpenseModule: React.FC<TownProps> = ({ selectedTown, onTownChange, select
                     onClick={() => setViewMode('list')}
                     className={`p-1.5 rounded-md transition-colors text-xs ${
                       viewMode === 'list' 
-                        ? 'bg-white shadow-sm text-gray-900' 
+                        ? 'bg-[var(--card)] shadow-sm text-gray-900' 
                         : 'text-gray-500 hover:text-gray-700'
                     }`}
                   >
@@ -1145,7 +1145,7 @@ const ExpenseModule: React.FC<TownProps> = ({ selectedTown, onTownChange, select
                     onClick={() => setViewMode('grid')}
                     className={`p-1.5 rounded-md transition-colors text-xs ${
                       viewMode === 'grid' 
-                        ? 'bg-white shadow-sm text-gray-900' 
+                        ? 'bg-[var(--card)] shadow-sm text-gray-900' 
                         : 'text-gray-500 hover:text-gray-700'
                     }`}
                   >
@@ -1205,7 +1205,7 @@ const ExpenseModule: React.FC<TownProps> = ({ selectedTown, onTownChange, select
           </div>
 
           {filteredExpenses.length === 0 ? (
-            <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
+            <div className="bg-[var(--card)] rounded-lg border border-gray-200 p-12 text-center">
               <Receipt className="w-8 h-8 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">No expenses found</h3>
               <p className="text-gray-600 mb-4">
@@ -1223,7 +1223,7 @@ const ExpenseModule: React.FC<TownProps> = ({ selectedTown, onTownChange, select
                 return (
                   <div
                     key={expense.id}
-                    className="bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
+                    className="bg-[var(--card)] rounded-lg border border-gray-200 hover:border-gray-300 transition-colors"
                   >
                     <div className="p-6">
                       <div className="flex items-start justify-between mb-4">
@@ -1427,7 +1427,7 @@ const ExpenseModule: React.FC<TownProps> = ({ selectedTown, onTownChange, select
       
       {showAddForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] overflow-hidden">
+          <div className="bg-[var(--card)] rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] overflow-hidden">
             <div className="border-b border-gray-200 px-6 py-4">
               <div className="flex justify-between items-center">
                 <h2 className="text-lg font-medium text-gray-900">New Expense</h2>
@@ -1635,7 +1635,7 @@ const ExpenseModule: React.FC<TownProps> = ({ selectedTown, onTownChange, select
                   <button
                     type="button"
                     onClick={() => setShowAddForm(false)}
-                    className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-xs font-medium"
+                    className="px-4 py-2 text-gray-700 bg-[var(--card)] border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-xs font-medium"
                   >
                     Cancel
                   </button>
@@ -1657,7 +1657,7 @@ const ExpenseModule: React.FC<TownProps> = ({ selectedTown, onTownChange, select
        {/* Approval Modal */}
             {showApprovalModal && approvalExpense && (
               <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+                <div className="bg-[var(--card)] rounded-lg shadow-xl w-full max-w-md">
                   <div className="border-b border-gray-200 px-6 py-4">
                     <div className="flex justify-between items-center">
                       <h2 className="text-lg font-medium text-gray-900">
@@ -1724,7 +1724,7 @@ const ExpenseModule: React.FC<TownProps> = ({ selectedTown, onTownChange, select
                     <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
                       <button
                         onClick={() => setShowApprovalModal(false)}
-                        className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-xs font-medium"
+                        className="px-4 py-2 text-gray-700 bg-[var(--card)] border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-xs font-medium"
                       >
                         Cancel
                       </button>
@@ -1756,7 +1756,7 @@ const ExpenseModule: React.FC<TownProps> = ({ selectedTown, onTownChange, select
 {/* Receipt Upload Modal */}
       {showReceiptUpload && receiptUploadExpense && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+          <div className="bg-[var(--card)] rounded-lg shadow-xl w-full max-w-md">
             <div className="border-b border-gray-200 px-6 py-4">
               <div className="flex justify-between items-center">
                 <h2 className="text-lg font-medium text-gray-900">Upload Receipt</h2>
@@ -1804,7 +1804,7 @@ const ExpenseModule: React.FC<TownProps> = ({ selectedTown, onTownChange, select
               <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
                 <button
                   onClick={() => setShowReceiptUpload(false)}
-                  className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-xs font-medium"
+                  className="px-4 py-2 text-gray-700 bg-[var(--card)] border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-xs font-medium"
                 >
                   Cancel
                 </button>
@@ -1825,7 +1825,7 @@ const ExpenseModule: React.FC<TownProps> = ({ selectedTown, onTownChange, select
       {/* Expense Details Modal */}
             {selectedExpense && (
               <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                <div className="bg-white rounded-lg shadow-xl w-full max-w-lg">
+                <div className="bg-[var(--card)] rounded-lg shadow-xl w-full max-w-lg">
                   <div className="border-b border-gray-200 px-6 py-4">
                     <div className="flex justify-between items-center">
                       <h2 className="text-lg font-medium text-gray-900">Expense Details</h2>

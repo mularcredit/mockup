@@ -174,11 +174,11 @@ const TransactionStatusChecker: React.FC = () => {
 
     const getStatusStyles = (status: string) => {
         switch (status) {
-            case 'success': return 'bg-green-50 text-green-700 border-green-200';
-            case 'failed': return 'bg-red-50 text-red-700 border-red-200';
-            case 'pending': return 'bg-yellow-50 text-yellow-700 border-yellow-200';
-            case 'checking': return 'bg-blue-50 text-blue-700 border-blue-200';
-            default: return 'bg-gray-50 text-gray-700 border-gray-200';
+            case 'success': return 'bg-[var(--green-d)] text-[var(--green)] border border-[var(--green-glow)]';
+            case 'failed': return 'bg-[var(--red-d)] text-[var(--red)] border border-[var(--red-glow)]';
+            case 'pending': return 'bg-[var(--amber-d)] text-[var(--amber)] border border-[var(--amber-d)]';
+            case 'checking': return 'bg-[var(--p-dim)] text-[var(--p)] border border-[var(--p-line)]';
+            default: return 'bg-[var(--glass)] text-[var(--t3)] border border-[var(--p-line)]';
         }
     };
 
@@ -188,24 +188,24 @@ const TransactionStatusChecker: React.FC = () => {
 
                 {/* Left Column: Input Panel */}
                 <div className="lg:col-span-5 space-y-6">
-                    <div className="bg-[#f3f4f6] rounded-[10px] p-6 flex flex-col gap-6">
+                    <div className="bg-[var(--card)] border border-[var(--p-line)] rounded-xl p-6 flex flex-col gap-6">
 
                         {/* Tabs */}
                         <div className="flex flex-wrap gap-2">
                             <button
                                 onClick={() => setActiveTab('single')}
-                                className={`inline-flex items-center gap-2 px-4 py-2 rounded-[25px] text-xs font-medium transition-colors ${activeTab === 'single'
-                                    ? 'bg-blue-100 text-blue-800'
-                                    : 'bg-white text-gray-600 hover:bg-violet-50 hover:text-violet-700'
+                                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium transition-colors border ${activeTab === 'single'
+                                    ? 'bg-[var(--p-dim)] text-[var(--p)] border-[var(--p-line)]'
+                                    : 'bg-[var(--card)] text-[var(--t3)] border-[var(--p-line)] hover:bg-[var(--glass-h)] hover:text-[var(--t1)]'
                                     }`}
                             >
                                 <Zap className="w-3.5 h-3.5" /> Single Lookup
                             </button>
                             <button
                                 onClick={() => setActiveTab('bulk')}
-                                className={`inline-flex items-center gap-2 px-4 py-2 rounded-[25px] text-xs font-medium transition-colors ${activeTab === 'bulk'
-                                    ? 'bg-blue-100 text-blue-800'
-                                    : 'bg-white text-gray-600 hover:bg-violet-50 hover:text-violet-700'
+                                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium transition-colors border ${activeTab === 'bulk'
+                                    ? 'bg-[var(--p-dim)] text-[var(--p)] border-[var(--p-line)]'
+                                    : 'bg-[var(--card)] text-[var(--t3)] border-[var(--p-line)] hover:bg-[var(--glass-h)] hover:text-[var(--t1)]'
                                     }`}
                             >
                                 <Database className="w-3.5 h-3.5" /> Bulk Lookup
@@ -217,18 +217,18 @@ const TransactionStatusChecker: React.FC = () => {
                             {activeTab === 'single' ? (
                                 <div className="space-y-4">
                                     <div>
-                                        <label className="block text-xs font-semibold text-gray-700 mb-2">
+                                        <label className="block text-xs font-semibold text-[var(--t3)] uppercase tracking-wider mb-2">
                                             Transaction ID (M-Pesa Receipt Number)
                                         </label>
                                         <div className="relative">
-                                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--t4)]" />
                                             <input
                                                 type="text"
                                                 value={singleCode}
                                                 onChange={(e) => setSingleCode(e.target.value.toUpperCase())}
                                                 onKeyPress={(e) => e.key === 'Enter' && checkSingleStatus()}
                                                 placeholder="e.g. SAA0XXXXXX"
-                                                className="w-full pl-11 pr-4 py-2 bg-white rounded-[25px] text-xs focus:ring-2 focus:ring-violet-400 focus:outline-none uppercase font-mono border-none"
+                                                className="w-full pl-11 pr-4 py-2 bg-[var(--card)] border border-[var(--p-line)] rounded-xl text-xs focus:ring-1 focus:ring-[var(--p)] focus:outline-none uppercase font-mono text-[var(--t1)]"
                                                 disabled={isChecking}
                                             />
                                         </div>
@@ -237,7 +237,7 @@ const TransactionStatusChecker: React.FC = () => {
                                     <button
                                         onClick={checkSingleStatus}
                                         disabled={isChecking || !singleCode.trim()}
-                                        className="text-xs w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-[25px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                        className="text-xs w-full py-3 bg-[var(--p)] hover:bg-[var(--p-glow)] text-[var(--card)] rounded-xl font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                                     >
                                         {isChecking ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
                                         Check Status
@@ -246,7 +246,7 @@ const TransactionStatusChecker: React.FC = () => {
                             ) : (
                                 <div className="space-y-4">
                                     <div>
-                                        <label className="block text-xs font-semibold text-gray-700 mb-2">
+                                        <label className="block text-xs font-semibold text-[var(--t3)] uppercase tracking-wider mb-2">
                                             Multiple Transaction IDs (One per line)
                                         </label>
                                         <textarea
@@ -254,7 +254,7 @@ const TransactionStatusChecker: React.FC = () => {
                                             onChange={(e) => setBulkCodes(e.target.value.toUpperCase())}
                                             placeholder="SAA0XXXXXX&#10;SAB1XXXXXX&#10;SAC2XXXXXX"
                                             rows={6}
-                                            className="w-full p-4 bg-white rounded-[15px] text-xs focus:ring-2 focus:ring-violet-400 focus:outline-none font-mono uppercase border-none resize-none"
+                                            className="w-full p-4 bg-[var(--card)] border border-[var(--p-line)] rounded-xl text-xs focus:ring-1 focus:ring-[var(--p)] focus:outline-none font-mono uppercase text-[var(--t1)] resize-none"
                                             disabled={isChecking}
                                         />
                                     </div>
@@ -262,7 +262,7 @@ const TransactionStatusChecker: React.FC = () => {
                                     <button
                                         onClick={checkBulkStatus}
                                         disabled={isChecking || !bulkCodes.trim()}
-                                        className="text-xs w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-[25px] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                        className="text-xs w-full py-3 bg-[var(--p)] hover:bg-[var(--p-glow)] text-[var(--card)] rounded-xl font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                                     >
                                         {isChecking ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Database className="w-4 h-4" />}
                                         Check {bulkCodes.split(/[\n,;]/).filter(c => c.trim()).length || 0} Transactions
@@ -271,8 +271,8 @@ const TransactionStatusChecker: React.FC = () => {
                             )}
 
                             {/* Info Callout */}
-                            <div className="mt-6 p-4 bg-blue-50/50 rounded-[15px] flex gap-3 text-blue-800 text-xs">
-                                <Info className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                            <div className="mt-6 p-4 bg-[var(--p-dim)] border border-[var(--p-line)] rounded-xl flex gap-3 text-[var(--t2)] text-xs">
+                                <Info className="w-4 h-4 text-[var(--p)] shrink-0 mt-0.5" />
                                 <p>
                                     This tool sends a server-to-server request directly to Safaricom's B2C API to query the
                                     Transaction Status. If successful, Safaricom will queue a callback to the system within a few minutes.
@@ -284,65 +284,65 @@ const TransactionStatusChecker: React.FC = () => {
 
                 {/* Right Column: Results List */}
                 <div className="lg:col-span-7">
-                    <div className="bg-[#f3f4f6] rounded-[10px] h-full flex flex-col min-h-[500px]">
-                        <div className="px-6 py-5 flex items-center justify-between">
-                            <h3 className="text-xs font-semibold text-gray-700 uppercase tracking-wide flex items-center gap-2">
-                                <RefreshCw className="w-3.5 h-3.5 text-gray-500" /> Result History
+                    <div className="bg-[var(--card)] border border-[var(--p-line)] rounded-xl h-full flex flex-col min-h-[500px] overflow-hidden">
+                        <div className="px-6 py-5 flex items-center justify-between border-b border-[var(--p-line)]">
+                            <h3 className="text-xs font-semibold text-[var(--t3)] uppercase tracking-wide flex items-center gap-2">
+                                <RefreshCw className="w-3.5 h-3.5 text-[var(--t4)]" /> Result History
                             </h3>
                             {results.length > 0 && (
                                 <button
                                     onClick={() => setResults([])}
-                                    className="text-xs text-red-600 hover:text-red-800 font-medium flex items-center gap-1 transition-colors hover:bg-red-50 px-3 py-1.5 rounded-[25px]"
+                                    className="text-xs text-[var(--red)] hover:text-[var(--t1)] font-medium flex items-center gap-1 transition-colors hover:bg-[var(--red-d)] px-3 py-1.5 rounded-xl border border-transparent hover:border-[var(--red-glow)]"
                                 >
                                     <Trash2 className="w-3.5 h-3.5" /> Clear History
                                 </button>
                             )}
                         </div>
 
-                        <div className="flex-1 overflow-y-auto px-6 pb-6 max-h-[600px] flex flex-col gap-3">
+                        <div className="flex-1 overflow-y-auto px-6 py-6 max-h-[600px] flex flex-col gap-3">
                             {results.length > 0 ? (
                                 results.map((result) => (
-                                    <div key={result.transactionID} className="bg-white p-4 rounded-[15px] flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors">
+                                    <div key={result.transactionID} className="bg-[var(--glass)] border border-[var(--p-line)] p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all hover:border-[var(--p-glow)]">
                                         <div className="flex items-center gap-4">
                                             {/* Status Icon */}
-                                            <div className="shrink-0 bg-gray-50/50 w-10 h-10 rounded-full flex items-center justify-center">
-                                                {result.status === 'checking' ? <RefreshCw className="w-5 h-5 text-blue-600 animate-spin" /> :
-                                                    result.status === 'success' ? <CheckCircle className="w-5 h-5 text-green-600" /> :
-                                                        result.status === 'failed' ? <XCircle className="w-5 h-5 text-red-600" /> :
-                                                            <Clock className="w-5 h-5 text-yellow-600" />}
+                                            <div className="shrink-0 bg-[var(--p-dim)] w-10 h-10 rounded-full flex items-center justify-center border border-[var(--p-line)]">
+                                                {result.status === 'checking' ? <RefreshCw className="w-5 h-5 text-[var(--p)] animate-spin" /> :
+                                                    result.status === 'success' ? <CheckCircle className="w-5 h-5 text-[var(--green)]" /> :
+                                                        result.status === 'failed' ? <XCircle className="w-5 h-5 text-[var(--red)]" /> :
+                                                            <Clock className="w-5 h-5 text-[var(--amber)]" />}
                                             </div>
 
                                             {/* Details */}
                                             <div>
                                                 <div className="flex items-center gap-2">
-                                                    <span className="font-bold text-gray-900 font-mono text-sm">
+                                                    <span className="font-bold text-[var(--t1)] font-mono text-sm">
                                                         {result.transactionID}
                                                     </span>
                                                     <button
                                                         onClick={() => copyToClipboard(result.transactionID)}
-                                                        className="text-gray-400 hover:text-blue-600 p-1 hover:bg-blue-50 rounded-full transition-colors"
+                                                        className="text-[var(--t4)] hover:text-[var(--p)] p-1 hover:bg-[var(--glass-h)] rounded-full transition-colors"
                                                         title="Copy ID"
                                                     >
                                                         <Copy className="w-3.5 h-3.5" />
                                                     </button>
                                                 </div>
-                                                <p className="text-gray-500 mt-0.5 text-xs">
+                                                <p className="text-[var(--t3)] mt-0.5 text-xs">
                                                     Conv ID: {result.originatorConversationID || 'Waiting...'}
                                                 </p>
                                                 {result.error && (
-                                                    <p className="text-red-500 mt-1 text-xs font-medium">{result.error}</p>
+                                                    <p className="text-[var(--red)] mt-1 text-xs font-medium">{result.error}</p>
                                                 )}
                                             </div>
                                         </div>
 
                                         {/* Status Badge & Remove Action */}
                                         <div className="flex items-center justify-between sm:justify-end gap-3 ml-14 sm:ml-0">
-                                            <span className={`px-3 py-1.5 inline-flex text-[10px] font-bold tracking-wider rounded-[25px] uppercase ${getStatusStyles(result.status)}`}>
+                                            <span className={`px-3 py-1.5 inline-flex text-[10px] font-bold tracking-wider rounded-xl uppercase ${getStatusStyles(result.status)}`}>
                                                 {result.status}
                                             </span>
                                             <button
                                                 onClick={() => setResults(prev => prev.filter(r => r.transactionID !== result.transactionID))}
-                                                className="text-gray-400 hover:text-red-500 p-1.5 hover:bg-red-50 rounded-full transition-colors"
+                                                className="text-[var(--t4)] hover:text-[var(--red)] p-1.5 hover:bg-[var(--red-d)] rounded-full transition-colors"
                                                 title="Remove from list"
                                             >
                                                 <X className="w-4 h-4" />
@@ -351,9 +351,9 @@ const TransactionStatusChecker: React.FC = () => {
                                     </div>
                                 ))
                             ) : (
-                                <div className="h-full flex flex-col items-center justify-center py-20 text-gray-400">
-                                    <Database className="w-12 h-12 mb-4 text-gray-300" />
-                                    <p className="text-sm font-medium text-gray-500">No recent status checks.</p>
+                                <div className="h-full flex flex-col items-center justify-center py-20 text-[var(--t4)]">
+                                    <Database className="w-12 h-12 mb-4 opacity-20" />
+                                    <p className="text-sm font-medium text-[var(--t3)]">No recent status checks.</p>
                                     <p className="mt-1 text-xs text-center">Enter a transaction ID on the left to query safaricom.</p>
                                 </div>
                             )}

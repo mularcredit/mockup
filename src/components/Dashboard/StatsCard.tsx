@@ -1,14 +1,14 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { DivideIcon as LucideIcon } from 'lucide-react';
+import { TrendingUp } from "lucide-react";
 
 interface StatsCardProps {
   title: string;
   value: string | number;
   change?: string;
   changeType?: 'positive' | 'negative' | 'neutral';
-  icon: LucideIcon;
-  color?: 'green' | 'blue' | 'orange' | 'red';
+  subtitle?: string;
+  type?: 'primary' | 'success' | 'default';
+  icon?: React.ElementType;
 }
 
 export default function StatsCard({
@@ -16,46 +16,49 @@ export default function StatsCard({
   value,
   change,
   changeType = 'neutral',
-  icon: Icon,
-  color = 'green'
+  subtitle,
+  type = 'default',
+  icon: Icon = TrendingUp
 }: StatsCardProps) {
-  const iconColors = {
-    green: 'text-green-400',
-    blue: 'text-blue-400',
-    orange: 'text-orange-400',
-    red: 'text-red-400'
-  };
   
-  const changeColors = {
-    positive: 'text-green-500',
-    negative: 'text-red-500',
-    neutral: 'text-gray-500'
+  const typeClasses = {
+    primary: 'm-p bg-gradient-to-br from-[rgba(245,166,35,0.15)] to-[rgba(245,166,35,0.05)] border-[var(--p-glow)]',
+    success: 'm-g bg-gradient-to-br from-[rgba(0,245,155,0.15)] to-[rgba(0,245,155,0.05)] border-[var(--green-glow)]',
+    default: 'm-d bg-[var(--card)] border-[var(--p-line)]'
+  };
+
+  const badgeClasses = {
+    positive: 'bg-[var(--green-d)] text-[var(--green)]',
+    negative: 'bg-[var(--red-d)] text-[var(--red)]',
+    neutral: 'bg-[var(--p-dim)] text-[var(--p)]'
   };
   
   return (
-    <motion.div
-      className="bg-white backdrop-blur-sm border rounded-lg p-6 hover:border-green-500/50 hover:shadow-[0_0_20px_rgba(34,197,94,0.06)] shadow-sm transition-all duration-300"
-      whileHover={{ 
-        scale: 1.02,
-        y: -2
-      }}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-    >
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-gray-600 text-xs font-medium">{title}</p>
-          <p className="text-gray-900 text-2xl font-bold mt-1">{value}</p>
-          {change && (
-            <p className={`text-xs mt-1 ${changeColors[changeType]}`}>
-              {change}
-            </p>
-          )}
-        </div>
-        <div className={`p-3 rounded-lg bg-gray-100 ${iconColors[color]}`}>
-          <Icon className="w-6 h-6" />
-        </div>
+    <div className={`metric-tile ${typeClasses[type]} p-5 rounded-xl border backdrop-blur-md transition-all hover:-translate-y-1 hover:shadow-2xl group relative overflow-hidden`}>
+      <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+        <Icon className="w-8 h-8" />
       </div>
-    </motion.div>
+      
+      {change && (
+        <div className={`inline-flex mb-3 text-[10px] font-bold px-2.5 py-1 rounded-full ${badgeClasses[changeType]} shadow-sm`}>
+          {change}
+        </div>
+      )}
+      
+      <div className="relative z-10">
+        <div className="text-[24px] font-medium text-[var(--t1)] leading-none mb-1.5 tracking-tight tabular-nums">
+          {value}
+        </div>
+        <div className="text-[11px] text-[var(--t3)] tracking-wider font-medium">
+          {title}
+        </div>
+        
+        {subtitle && (
+          <div className="text-[10px] text-[var(--t4)] mt-3 pt-3 border-t border-[var(--p-line)] leading-relaxed">
+            {subtitle}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

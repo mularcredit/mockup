@@ -1,655 +1,501 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import toast from 'react-hot-toast';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import Select from 'react-select';
+import { useNavigate } from 'react-router-dom';
 import { useAppUpdate } from '../sw';
-import { motion, AnimatePresence } from 'framer-motion';
-import {
-  EnvelopeSimple,
-  LockKey,
-  Buildings,
-  ArrowRight,
-  CircleNotch,
-  CheckCircle
+import { 
+    CircleNotch,
+    CheckCircle,
+    X,
+    Quotes
 } from '@phosphor-icons/react';
+import { motion, AnimatePresence } from 'framer-motion';
+import './Login.css';
 
 interface LoginProps {
-  onLoginSuccess: (userData: any) => void;
+    onLoginSuccess: (userData: any) => void;
 }
 
 interface Branch {
-  Town: string;
+    Town: string;
 }
 
 interface SuccessPopupProps {
-  show: boolean;
-  onClose: () => void;
-  message: string;
+    show: boolean;
+    onClose: () => void;
+    message: string;
 }
 
-// End of helper functions
-
 function SuccessPopup({ show, onClose, message }: SuccessPopupProps) {
-  if (!show) return null;
-  return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="bg-white/10 backdrop-blur-3xl border border-white/20 p-8 rounded-lg shadow-2xl max-w-sm w-full text-center"
-      >
-        <div className="w-20 h-20 bg-gray-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
-          <CheckCircle size={40} className="text-gray-900" weight="fill" />
+    if (!show) return null;
+    return (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-[100] p-4">
+            <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                className="bg-[#08120D] border border-[#C8A84B] p-10 max-w-sm w-full text-center rounded-2xl shadow-[0_0_40px_rgba(200,168,75,0.1)]"
+            >
+                <div className="w-16 h-16 bg-[rgba(29,158,117,0.1)] rounded-2xl flex items-center justify-center mx-auto mb-6 border border-[#1D9E75]">
+                    <CheckCircle size={32} className="text-[#1D9E75]" weight="fill" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2 tracking-tight">Request Sent</h3>
+                <p className="text-white/60 text-[12px] mb-8 font-medium leading-relaxed">{message}</p>
+                <button
+                    onClick={onClose}
+                    className="w-full py-3 bg-[#C8A84B] text-[#07080d] rounded-xl font-bold text-xs uppercase tracking-wider"
+                >
+                    Got it
+                </button>
+            </motion.div>
         </div>
-        <h3 className="text-2xl font-bold text-white mb-2">Request Sent!</h3>
-        <p className="text-gray-200 text-xs mb-8">{message}</p>
-        <button
-          onClick={onClose}
-          className="w-full py-4 bg-gray-900 hover:bg-gray-800 text-white text-xs font-bold rounded-lg shadow-lg transition-all"
-        >
-          Got it
-        </button>
-      </motion.div>
-    </div>
-  );
+    );
 }
 
 export default function Login({ onLoginSuccess }: LoginProps) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [selectedBranch, setSelectedBranch] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [branches, setBranches] = useState<Branch[]>([]);
-  const [isFetchingBranches, setIsFetchingBranches] = useState(true);
-  const [isSignUp, setIsSignUp] = useState(false);
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-  const [isBranchAutoPopulated, setIsBranchAutoPopulated] = useState(false);
-  const [isRegionalManager, setIsRegionalManager] = useState(false);
-  const [isCheckingEmail, setIsCheckingEmail] = useState(false);
-  const [emailExists, setEmailExists] = useState(false);
-  const [showForgotPassword, setShowForgotPassword] = useState(false);
-  const [resetEmail, setResetEmail] = useState('');
-  const [resetLoading, setResetLoading] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [selectedBranch, setSelectedBranch] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [branches, setBranches] = useState<Branch[]>([]);
+    const [showPassword, setShowPassword] = useState(false);
+    const [isSignUp, setIsSignUp] = useState(false);
+    const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+    const [isFetchingBranches, setIsFetchingBranches] = useState(false);
+    const [isBranchAutoPopulated, setIsBranchAutoPopulated] = useState(false);
+    const [showForgotPassword, setShowForgotPassword] = useState(false);
+    const [resetEmail, setResetEmail] = useState('');
+    const [resetLoading, setResetLoading] = useState(false);
+    const [isLightMode, setIsLightMode] = useState(document.body.classList.contains('light'));
 
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+    // Theme detection for logo
+    useEffect(() => {
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'class') {
+                    setIsLightMode(document.body.classList.contains('light'));
+                }
+            });
+        });
 
-  const ADMIN_EMAILS = [
-    'admin@mularcredit.co.ke',
-    'checker@mularcredit.com',
-    'hr@mularcredit.co.ke',
-    'it@mularcredit.co.ke',
-    'hr@zira.com',
-    'olivia.hr@mularcredit.com',
-    'daniel.admin@mularcredit.com',
-    'checker.superadmin@mularcredit.com',
-    'titus1admin@mularcredit.co.ke',
-    'ian3admin@mularcredit.co.ke',
-    'collins2admin@mularcredit.co.ke',
-    'zira@zira.io',
-    'admin@malicash.co'
-  ];
+        observer.observe(document.body, { attributes: true });
+        return () => observer.disconnect();
+    }, []);
+    
+    const navigate = useNavigate();
+    const { checkForUpdates } = useAppUpdate();
 
-  const isAdminEmail = (email: string) => ADMIN_EMAILS.includes(email.toLowerCase());
-  const { checkForUpdates } = useAppUpdate();
+    const ADMIN_EMAILS = [
+        'admin@mularcredit.co.ke',
+        'checker@mularcredit.com',
+        'hr@mularcredit.co.ke',
+        'it@mularcredit.co.ke',
+        'hr@zira.com',
+        'olivia.hr@mularcredit.com',
+        'daniel.admin@mularcredit.com',
+        'checker.superadmin@mularcredit.com',
+        'titus1admin@mularcredit.co.ke',
+        'ian3admin@mularcredit.co.ke',
+        'collins2admin@mularcredit.co.ke',
+        'zira@zira.io',
+        'admin@malicash.co'
+    ];
 
-  useEffect(() => {
-    toast.dismiss();
-    checkForUpdates();
-  }, [checkForUpdates]);
+    const isAdminEmail = (email: string) => ADMIN_EMAILS.includes(email.toLowerCase());
 
-  useEffect(() => {
-    const checkSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data.session && searchParams.get('type') === 'signup') {
-        toast.success('Email verified successfully!');
-        navigate('/');
-      }
-    };
-    checkSession();
-  }, [navigate, searchParams]);
+    useEffect(() => {
+        toast.dismiss();
+        checkForUpdates();
+    }, [checkForUpdates]);
 
-  useEffect(() => {
-    const fetchTowns = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('kenya_branches_duplicate')
-          .select('Town')
-          .order('Town', { ascending: true });
-        if (error) throw error;
-        setBranches(data || []);
-      } catch (error) {
-        toast.error('Failed to load towns');
-      } finally {
-        setIsFetchingBranches(false);
-      }
-    };
-    fetchTowns();
-  }, []);
+    useEffect(() => {
+        const fetchTowns = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from('kenya_branches_duplicate')
+                    .select('Town')
+                    .order('Town', { ascending: true });
+                if (error) throw error;
+                setBranches(data || []);
+            } catch (error) {
+                console.error('Failed to load towns');
+            }
+        };
+        fetchTowns();
+    }, []);
 
-  const checkEmailExists = async (email: string) => {
-    if (!email) return false;
-    setIsCheckingEmail(true);
-    try {
-      const { data: authData } = await supabase
-        .from('users')
-        .select('email')
-        .eq('email', email)
-        .single();
-      if (authData) {
-        setEmailExists(true);
-        return true;
-      }
-      const { data: signupData } = await supabase
-        .from('staff_signup_requests')
-        .select('email')
-        .eq('email', email)
-        .eq('status', 'pending')
-        .single();
-      if (signupData) {
-        setEmailExists(true);
-        return true;
-      }
-      setEmailExists(false);
-      return false;
-    } catch (error) {
-      return false;
-    } finally {
-      setIsCheckingEmail(false);
-    }
-  };
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) throw error;
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (email && isSignUp) checkEmailExists(email);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [email, isSignUp]);
+            const { data: userData } = await supabase
+                .from('users')
+                .select('*')
+                .eq('id', data.user.id)
+                .single();
 
-  useEffect(() => {
-    const detectTown = async () => {
-      // Don't detect for empty or admin emails
-      if (!email || isAdminEmail(email)) {
-        setIsBranchAutoPopulated(false);
-        setIsRegionalManager(false);
-        return;
-      }
-
-      const searchEmail = email.trim();
-      if (searchEmail.length < 5) return; // Wait for more characters
-
-      try {
-        // 1. Check regional managers first
-        const { data: managerData } = await supabase
-          .from('regional_managers')
-          .select('email')
-          .ilike('email', searchEmail)
-          .maybeSingle();
-
-        if (managerData) {
-          setIsRegionalManager(true);
-          setIsBranchAutoPopulated(false);
-          return;
-        }
-
-        // 2. Check main employees table (current source of truth)
-        const { data: mainEmpData } = await supabase
-          .from('employees')
-          .select('Town')
-          .ilike('"Work Email"', searchEmail)
-          .maybeSingle();
-
-        if (mainEmpData?.Town) {
-          setSelectedBranch(mainEmpData.Town);
-          setIsBranchAutoPopulated(true);
-          setIsRegionalManager(false);
-          return;
-        }
-
-        // 3. Fallback to duplicate records table
-        const { data: employeeData } = await supabase
-          .from('Employee_Records_Duplicate')
-          .select('Town')
-          .ilike('"Official Email"', searchEmail)
-          .maybeSingle();
-
-        if (employeeData && employeeData.Town) {
-          setSelectedBranch(employeeData.Town);
-          setIsBranchAutoPopulated(true);
-          setIsRegionalManager(false);
-        } else {
-          setIsBranchAutoPopulated(false);
-          setIsRegionalManager(false);
-        }
-      } catch (err) {
-        console.error('Branch detection error:', err);
-      }
-    };
-
-    const timer = setTimeout(() => {
-      detectTown();
-    }, 600); // 600ms debounce
-
-    return () => clearTimeout(timer);
-  }, [email]);
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-
-      const { data: userData } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', data.user.id)
-        .single();
-
-      if (userData) {
-        // Immediate termination checks - verify account status
-        if (userData.account_status && userData.account_status !== 'ACTIVE') {
-          await supabase.auth.signOut();
-          toast.error(`Your account is ${userData.account_status.toLowerCase()}. Please contact support.`);
-          setLoading(false);
-          return;
-        }
-
-        // Verify employment status for non-admin/management roles
-        if (!isAdminEmail(email)) {
-          const { data: empData } = await supabase
-            .from('employees')
-            .select('Status, "Termination Date"')
-            .eq('"Work Email"', email)
-            .maybeSingle();
-
-          if (empData && (empData.Status === 'Inactive' || empData['Termination Date'])) {
-            await supabase.auth.signOut();
-            toast.error('Your employment account has been deactivated. Please contact HR for assistance.');
+            if (userData) {
+                if (userData.account_status && userData.account_status !== 'ACTIVE') {
+                    await supabase.auth.signOut();
+                    toast.error(`Your account is ${userData.account_status.toLowerCase()}. Please contact support.`);
+                    setLoading(false);
+                    return;
+                }
+                onLoginSuccess(userData);
+            }
+        } catch (error: any) {
+            toast.error(error.message || 'Login failed');
+        } finally {
             setLoading(false);
+        }
+    };
+
+    const handleStaffSignUp = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            const { error } = await supabase
+                .from('staff_signup_requests')
+                .insert([{
+                    email,
+                    branch: isAdminEmail(email) ? 'HEAD_OFFICE' : selectedBranch,
+                    status: 'pending'
+                }]);
+            if (error) throw error;
+            setShowSuccessPopup(true);
+            setEmail('');
+            setSelectedBranch('');
+        } catch (error: any) {
+            toast.error(error.message || 'Request failed');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleForgotPassword = async (e?: React.FormEvent) => {
+        if (e) e.preventDefault();
+        const targetEmail = showForgotPassword ? resetEmail : email;
+        
+        if (!targetEmail) {
+            toast.error('Please enter your work email first');
             return;
-          }
         }
 
-        onLoginSuccess(userData);
-      }
-    } catch (error: any) {
-      toast.error(error.message || 'Login failed');
-    } finally {
-      setLoading(false);
-    }
-  };
+        setResetLoading(true);
+        try {
+            const { error } = await supabase.auth.resetPasswordForEmail(targetEmail, {
+                redirectTo: `${window.location.origin}/update-password`,
+            });
+            if (error) throw error;
+            toast.success(`Password reset link sent to ${targetEmail}`);
+            setShowForgotPassword(false);
+            setResetEmail('');
+        } catch (error: any) {
+            toast.error(error.message || 'Failed to send reset link');
+        } finally {
+            setResetLoading(false);
+        }
+    };
 
-  const handleStaffSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (emailExists) return;
-    setLoading(true);
-    try {
-      const { error } = await supabase
-        .from('staff_signup_requests')
-        .insert([{
-          email,
-          branch: isAdminEmail(email) ? 'HEAD_OFFICE' : selectedBranch,
-          status: 'pending'
-        }]);
-      if (error) throw error;
-      setShowSuccessPopup(true);
-      setEmail('');
-      setSelectedBranch('');
-      setIsBranchAutoPopulated(false);
-    } catch (error: any) {
-      toast.error(error.message || 'Request failed');
-    } finally {
-      setLoading(false);
-    }
-  };
+    // Restore Branch Lookup Logic (Git Restored)
+    useEffect(() => {
+        const fetchBranchForEmail = async () => {
+            if (!isSignUp && email && email.includes('@') && email.length > 5) {
+                setIsFetchingBranches(true);
+                try {
+                    if (isAdminEmail(email)) {
+                        setSelectedBranch('');
+                        setIsBranchAutoPopulated(false);
+                        return;
+                    }
 
-  const handleForgotPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setResetLoading(true);
-    try {
-      const { error } = await supabase.auth.resetPasswordForEmail(resetEmail);
-      if (error) throw error;
-      toast.success('Reset link sent to your email');
-      setShowForgotPassword(false);
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to send reset link');
-    } finally {
-      setResetLoading(false);
-    }
-  };
+                    const client = supabaseAdmin || supabase;
+                    const { data, error } = await client
+                        .from('users')
+                        .select('branch')
+                        .eq('email', email.toLowerCase())
+                        .maybeSingle();
 
-  const branchOptions = branches.map(branch => ({
-    value: branch.Town,
-    label: branch.Town
-  }));
+                    if (data && data.branch) {
+                        setSelectedBranch(data.branch);
+                        setIsBranchAutoPopulated(true);
+                    } else {
+                        setSelectedBranch('');
+                        setIsBranchAutoPopulated(false);
+                    }
+                } catch (err) {
+                    console.error('Error fetching branch:', err);
+                    setSelectedBranch('');
+                    setIsBranchAutoPopulated(false);
+                } finally {
+                    setIsFetchingBranches(false);
+                }
+            } else {
+                setIsBranchAutoPopulated(false);
+            }
+        };
 
-  return (
-    <div className="flex min-h-screen bg-gray-50 font-sans [&_h1]:font-sans [&_h2]:font-sans [&_h3]:font-sans [&_h4]:font-sans [&_button]:font-sans [&_input]:font-sans [&_label]:font-sans">
-      {/* Left side - Visual & Brand */}
-      <div className="hidden lg:flex lg:w-[45%] relative overflow-hidden bg-gray-900">
-        {/* Animated Background Layers */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src="/leaf.jpg"
-            alt="Nature Background"
-            className="absolute inset-0 w-full h-full object-cover opacity-50"
-          />
-          <div className="absolute inset-0 bg-black/40" />
-        </div>
+        const debounceTimer = setTimeout(fetchBranchForEmail, 500);
+        return () => clearTimeout(debounceTimer);
+    }, [email, isSignUp]);
 
-        {/* Content Overlay */}
-        <div className="relative z-10 w-full flex flex-col justify-between p-16">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center shadow-lg shadow-black/20">
-              <img src="/solo.png" alt="Company Logo" className="w-6 h-6 object-contain brightness-0 invert" />
-            </div>
-            <span className="text-white font-bold text-2xl tracking-tight">Zira<span className="text-gray-400">HR</span></span>
-          </div>
+    return (
+        <div className="login-viewport">
+            {/* LEFT COLUMN */}
+            <div className="login-left-pane">
+                <div className="bg-engine">
+                    <div className="bg-fill"></div>
+                    <div className="bg-ambient"></div>
+                    <div className="bg-custom-grid"></div>
+                    {/* Curved Pattern Layer Removed */}
+                </div>
 
-          <div className="space-y-6">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              <h1 className="text-5xl font-extrabold text-white leading-tight">
-                Automate Your <br />
-                <span className="text-gray-400">Payroll & HR Workflows</span>
-              </h1>
-              <p className="mt-4 text-gray-400 text-xs max-w-md">
-                Manage staff records, automate compensation, and handle branch operations with a single, unified business dashboard.
-              </p>
-            </motion.div>
-
-            <div className="flex gap-12 pt-8">
-              <div className="flex flex-col">
-                <span className="text-white font-bold text-2xl">99.9%</span>
-                <span className="text-gray-500 text-xs uppercase tracking-widest font-bold">Uptime</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-white font-bold text-2xl">24/7</span>
-                <span className="text-gray-500 text-xs uppercase tracking-widest font-bold">Support</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="text-white text-xs font-light">
-            © 2026 ZiraHr · Business edition
-          </div>
-        </div>
-      </div>
-
-      {/* Right side - Auth Form */}
-      <div className="w-full lg:w-[55%] flex items-center justify-center p-6 lg:p-12 relative bg-white">
-        <div className="w-full max-w-[440px]">
-          {/* Mobile Logo */}
-          <div className="lg:hidden text-center mb-10">
-            <div className="inline-flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center">
-                <img src="/solo.png" alt="Logo" className="w-5 h-5 brightness-0 invert" />
-              </div>
-              <span className="text-2xl font-bold text-gray-900 tracking-tight">Zira<span className="text-gray-500">HR</span></span>
-            </div>
-          </div>
-
-          <AnimatePresence mode='wait'>
-            <motion.div
-              key={isSignUp ? 'signup' : 'login'}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-              className="space-y-8"
-            >
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold text-gray-900">
-                  {isSignUp ? 'Apply for Account' : 'Welcome Back'}
-                </h2>
-                <p className="text-gray-500 text-xs font-medium">
-                  {isSignUp
-                    ? 'Submit your details to join the organization.'
-                    : 'Enter your credentials to access your dashboard.'}
-                </p>
-              </div>
-
-              <form className="space-y-6" onSubmit={isSignUp ? handleStaffSignUp : handleLogin}>
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-gray-500 ml-1">Email address</label>
-                  <div className="relative group">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <EnvelopeSimple size={20} className="text-gray-400 group-focus-within:text-gray-900 transition-colors" />
-                    </div>
-                    <input
-                      type="email"
-                      required
-                      className={`block w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-900 placeholder-gray-400 focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 transition-all ${emailExists && isSignUp ? 'border-red-300 focus:border-red-500' : 'hover:border-gray-300'
-                        }`}
-                      placeholder="name@company.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                {/* LEFT LOGO */}
+                <div className="login-logo-left">
+                    <img 
+                        src="/ZIRA.png" 
+                        alt="ZiraHR" 
+                        className="login-logo-main"
                     />
-                    {isCheckingEmail && (
-                      <div className="absolute inset-y-0 right-4 flex items-center">
-                        <CircleNotch size={18} className="animate-spin text-gray-900" />
-                      </div>
-                    )}
-                  </div>
                 </div>
 
-                {!isSignUp && (
-                  <div className="space-y-1.5">
-                    <div className="flex justify-between items-center ml-1">
-                      <label className="text-xs font-bold text-gray-500">Password</label>
-                      <button
-                        type="button"
-                        onClick={() => setShowForgotPassword(true)}
-                        className="text-xs font-medium text-gray-400 hover:text-gray-900 transition-colors"
-                      >
-                        Forgot?
-                      </button>
-                    </div>
-                    <div className="relative group">
-                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <LockKey size={20} className="text-gray-400 group-focus-within:text-gray-900 transition-colors" />
-                      </div>
-                      <input
-                        type="password"
-                        required
-                        className="block w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-900 placeholder-gray-400 focus:outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 hover:border-gray-300 transition-all"
-                        placeholder="••••••••"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                )}
 
-                {!isAdminEmail(email) && !isRegionalManager && (
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-gray-500 ml-1 flex items-center gap-2">
-                      Town office
-                      {isBranchAutoPopulated && (
-                        <span className="flex items-center gap-1 px-1.5 py-0.5 rounded text-gray-900 text-[10px] font-bold border border-gray-200 bg-gray-100">
-                          <CheckCircle size={10} weight="fill" /> AUTO
-                        </span>
-                      )}
-                    </label>
-                    <div className="relative group">
-                      <div className="absolute z-10 top-[14px] left-4 pointer-events-none">
-                        <Buildings size={20} className="text-gray-400 group-focus-within:text-gray-900 transition-colors" />
-                      </div>
-                      <div className="relative">
-                        {isBranchAutoPopulated ? (
-                          <input
-                            type="text"
-                            className="block w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-900 font-medium cursor-not-allowed"
-                            value={selectedBranch}
-                            readOnly
-                          />
-                        ) : (
-                          <Select
-                            id="branch"
-                            name="branch"
-                            options={branchOptions}
-                            placeholder="Select branch..."
-                            isSearchable
-                            isLoading={isFetchingBranches}
-                            styles={{
-                              control: (base: any, state: any) => ({
-                                ...base,
-                                minHeight: '48px',
-                                backgroundColor: '#f9fafb',
-                                borderRadius: '0.5rem',
-                                paddingLeft: '32px',
-                                fontSize: '0.75rem',
-                                borderColor: state.isFocused ? '#111827' : '#e5e7eb',
-                                boxShadow: 'none',
-                                '&:hover': {
-                                  borderColor: state.isFocused ? '#111827' : '#d1d5db'
-                                }
-                              }),
-                              menu: (base: any) => ({
-                                ...base,
-                                borderRadius: '0.5rem',
-                                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-                                padding: '0.5rem',
-                                fontSize: '0.75rem'
-                              }),
-                              option: (base: any, state: any) => ({
-                                ...base,
-                                borderRadius: '0.25rem',
-                                backgroundColor: state.isSelected ? '#111827' : state.isFocused ? '#f3f4f6' : 'transparent',
-                                color: state.isSelected ? 'white' : '#374151'
-                              })
-                            }}
-                            value={selectedBranch ? { value: selectedBranch, label: selectedBranch } : null}
-                            onChange={(selectedOption: any) => setSelectedBranch(selectedOption?.value || '')}
-                            components={{ IndicatorSeparator: () => null }}
-                          />
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )}
 
-                <div className="pt-2">
-                  <motion.button
-                    type="submit"
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.98 }}
-                    disabled={loading || isFetchingBranches || (isSignUp && emailExists)}
-                    className={`w-full flex justify-center items-center gap-2 py-4 px-4 rounded-lg text-xs font-bold text-white shadow-lg transition-all ${loading || isFetchingBranches || (isSignUp && emailExists)
-                      ? 'bg-gray-300 cursor-not-allowed shadow-none'
-                      : 'bg-gray-900 hover:bg-gray-800 shadow-gray-900/20'
-                      }`}
-                  >
-                    {loading ? (
-                      <>
-                        <CircleNotch size={20} className="animate-spin" />
-                        <span>Processing...</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>{isSignUp ? 'Request Access' : 'Sign In'}</span>
-                        <ArrowRight size={18} weight="bold" />
-                      </>
-                    )}
-                  </motion.button>
+                {/* BOTTOM CONTENT */}
+                <div className="left-content-wrapper">
+                    <h1 className="headline-ultra-thin">
+                        Your people.<br />
+                        Your <strong>growth.</strong><br />
+                        One platform.
+                    </h1>
+
+                    <p className="subtext-light">
+                        Streamline payroll, manage branch operations, and oversee employee lifecycles through a secure, high-performance platform built for scale.
+                    </p>
+
                 </div>
-              </form>
-
-              <div className="text-center pt-8 border-t border-gray-100">
-                <button
-                  type="button"
-                  onClick={() => setIsSignUp(!isSignUp)}
-                  className="text-gray-500 text-xs font-medium hover:text-gray-900 transition-colors"
-                >
-                  {isSignUp ? 'Already have an account?' : 'Need an account?'}
-                  <span className="ml-1 text-gray-900 font-bold underline decoration-gray-200 underline-offset-4">
-                    {isSignUp ? 'Sign In' : 'Apply Now'}
-                  </span>
-                </button>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </div>
-
-      <SuccessPopup
-        show={showSuccessPopup}
-        onClose={() => {
-          setShowSuccessPopup(false);
-          setIsSignUp(false);
-        }}
-        message="Your account request has been submitted successfully."
-      />
-
-      {showForgotPassword && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white p-8 rounded-lg shadow-2xl max-w-md w-full relative"
-          >
-            <div className="flex justify-between items-start mb-6">
-              <div className="space-y-1">
-                <h3 className="text-xl font-bold text-gray-900">Reset Password</h3>
-                <p className="text-xs text-gray-500">We'll send a recovery link to your email.</p>
-              </div>
-              <button
-                onClick={() => {
-                  setShowForgotPassword(false);
-                  setResetEmail('');
-                }}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
-              >
-                <span className="text-2xl">&times;</span>
-              </button>
             </div>
 
-            <form onSubmit={handleForgotPassword} className="space-y-6">
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-gray-500 ml-1">Work email</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <EnvelopeSimple size={20} className="text-gray-400" />
-                  </div>
-                  <input
-                    type="email"
-                    required
-                    className="block w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-gray-900 transition-all"
-                    placeholder="name@company.com"
-                    value={resetEmail}
-                    onChange={(e) => setResetEmail(e.target.value)}
-                  />
+            {/* RIGHT COLUMN */}
+            <div className="login-right-pane">
+                {/* RIGHT LOGO */}
+                <div className="login-logo-right">
+                    <img 
+                        src="/zira-dark.png" 
+                        alt="ZiraHR" 
+                        className="login-logo-main"
+                    />
                 </div>
-              </div>
+                <div className="w-full max-w-[420px] mx-auto relative z-10">
+                    <div className="form-eyebrow-section">
+                        <div className="eyebrow-hairline"></div>
+                        <span className="eyebrow-title">Secure access</span>
+                    </div>
 
-              <div className="flex gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowForgotPassword(false);
-                    setResetEmail('');
-                  }}
-                  className="flex-1 py-3 px-4 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-semibold rounded-lg transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={resetLoading}
-                  className="flex-1 py-3 px-4 bg-gray-900 hover:bg-gray-800 text-white text-xs font-bold rounded-lg shadow-lg shadow-gray-900/25 transition-all disabled:opacity-50"
-                >
-                  {resetLoading ? 'Sending...' : 'Send Link'}
-                </button>
-              </div>
-            </form>
-          </motion.div>
+                    <h2 className="form-title-h1">{isSignUp ? 'Request Access' : 'Welcome back'}</h2>
+                    <p className="form-subtext-p">
+                        {isSignUp 
+                            ? 'Enter your professional details to request system access.'
+                            : 'Sign in to your ZiraHR workspace.'
+                        }
+                    </p>
+
+                    <form onSubmit={isSignUp ? handleStaffSignUp : handleLogin}>
+                        {/* FIELD 1 — Work email */}
+                        <div className="label-container">Work email</div>
+                        <div className="input-group-relative">
+                            <i className="ti-mail input-icon-l-side"></i>
+                            <input 
+                                type="email" 
+                                className="input-main-ctrl"
+                                placeholder="you@zira.io"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
+                        </div>
+
+                        {!isSignUp && (
+                            <div className="label-container">
+                                <span>Password</span>
+                                <span 
+                                    className="label-link-gold"
+                                    onClick={() => setShowForgotPassword(true)}
+                                >
+                                    Forgot password?
+                                </span>
+                            </div>
+                        )}
+                        {!isSignUp && (
+                            <div className="input-group-relative">
+                                <i className="ti-lock input-icon-l-side"></i>
+                                <input 
+                                    type={showPassword ? "text" : "password"} 
+                                    className="input-main-ctrl"
+                                    placeholder="••••••••••"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                                <i 
+                                    className={`ti-eye input-icon-r-side`} 
+                                    onClick={() => setShowPassword(!showPassword)}
+                                ></i>
+                            </div>
+                        )}
+
+                        {/* FIELD 3 — Branch */}
+                        {(isSignUp || !isAdminEmail(email)) && (
+                            <>
+                                <div className="label-container">
+                                    <span>Branch</span>
+                                    {isBranchAutoPopulated && !isSignUp && (
+                                        <span className="text-[9px] text-[#1D9E75] font-bold uppercase tracking-wider bg-[#1D9E75]/10 px-1.5 py-0.5 rounded border border-[#1D9E75]/20 animate-pulse">
+                                            Auto-populated
+                                        </span>
+                                    )}
+                                    {isFetchingBranches && (
+                                        <CircleNotch className="w-3 h-3 animate-spin text-[#C8A84B]/40" />
+                                    )}
+                                </div>
+                                <div className="input-group-relative">
+                                    <i className="ti-building input-icon-l-side"></i>
+                                    <select 
+                                        className="input-main-ctrl"
+                                        value={selectedBranch}
+                                        onChange={(e) => {
+                                            setSelectedBranch(e.target.value);
+                                            if (!isSignUp) setIsBranchAutoPopulated(false);
+                                        }}
+                                        required
+                                    >
+                                        <option value="" disabled>Select your branch...</option>
+                                        <option value="Nairobi HQ">Nairobi HQ</option>
+                                        <option value="Mombasa">Mombasa</option>
+                                        <option value="Kisumu">Kisumu</option>
+                                        <option value="Nakuru">Nakuru</option>
+                                        {branches.map((b, i) => (
+                                            <option key={i} value={b.Town}>{b.Town}</option>
+                                        ))}
+                                    </select>
+                                    <i className="ti-chevron-down input-icon-r-side pointer-events-none"></i>
+                                </div>
+                            </>
+                        )}
+
+                        {/* SUBMIT BUTTON */}
+                        <button type="submit" className="btn-login-main" disabled={loading}>
+                            {loading ? (
+                                <CircleNotch className="w-4 h-4 animate-spin" />
+                            ) : (
+                                <>
+                                    {isSignUp ? 'Submit request' : 'Sign in'}
+                                    <i className="ti-arrow-right"></i>
+                                </>
+                            )}
+                        </button>
+                    </form>
+
+                    <div className="divider-box">
+                        <div className="divider-line"></div>
+                        <span className="divider-text">or</span>
+                        <div className="divider-line"></div>
+                    </div>
+
+                    <div className="form-footer-bottom">
+                        {isSignUp ? 'Already have an account? ' : 'No account? '}
+                        <span 
+                            className="footer-link-gold"
+                            onClick={() => setIsSignUp(!isSignUp)}
+                        >
+                            {isSignUp ? 'Login now' : 'Request access'}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <SuccessPopup
+                show={showSuccessPopup}
+                onClose={() => {
+                    setShowSuccessPopup(false);
+                    setIsSignUp(false);
+                }}
+                message="Your request has been submitted successfully. Our HR team will review your credentials for approval."
+            />
+
+            {/* FORGOT PASSWORD MODAL — Ambient Horizon Style */}
+            <AnimatePresence>
+                {showForgotPassword && (
+                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-[110] p-4">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            className="bg-[#08120D] border border-[#C8A84B] p-8 max-w-md w-full rounded-2xl shadow-[0_0_50px_rgba(200,168,75,0.15)] relative overflow-hidden"
+                        >
+                            <div className="absolute top-0 right-0 p-4">
+                                <button 
+                                    onClick={() => setShowForgotPassword(false)}
+                                    className="text-white/30 hover:text-white transition-colors"
+                                >
+                                    <X size={20} />
+                                </button>
+                            </div>
+
+                            <div className="mb-6">
+                                <div className="w-12 h-12 bg-[rgba(200,168,75,0.1)] rounded-xl flex items-center justify-center mb-4 border border-[#C8A84B]/20">
+                                    <i className="ti-lock text-[#C8A84B] text-xl"></i>
+                                </div>
+                                <h3 className="text-xl font-bold text-white mb-2 tracking-tight">Reset Password</h3>
+                                <p className="text-white/50 text-xs leading-relaxed">
+                                    Enter your registered work email address below to receive a secure password reset link.
+                                </p>
+                            </div>
+
+                            <form onSubmit={handleForgotPassword} className="space-y-4">
+                                <div>
+                                    <div className="label-container">Work email</div>
+                                    <div className="input-group-relative">
+                                        <i className="ti-mail input-icon-l-side"></i>
+                                        <input 
+                                            type="email" 
+                                            className="input-main-ctrl"
+                                            placeholder="you@zira.io"
+                                            value={resetEmail}
+                                            onChange={(e) => setResetEmail(e.target.value)}
+                                            required
+                                            autoFocus
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="flex gap-3 pt-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowForgotPassword(false)}
+                                        className="flex-1 py-3 px-4 border border-white/10 rounded-xl text-xs font-medium text-white/60 hover:bg-white/5 transition-all"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={resetLoading}
+                                        className="flex-1 py-3 px-4 bg-[#C8A84B] text-[#07080d] rounded-xl text-xs font-bold hover:brightness-110 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
+                                    >
+                                        {resetLoading ? (
+                                            <CircleNotch className="w-4 h-4 animate-spin" />
+                                        ) : (
+                                            'Send link'
+                                        )}
+                                    </button>
+                                </div>
+                            </form>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
-      )}
-    </div>
-  );
+    );
 }

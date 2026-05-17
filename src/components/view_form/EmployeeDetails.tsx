@@ -656,7 +656,7 @@ Company Name
         animate={{ opacity: 1 }}
         className="p-6 max-w-6xl mx-auto flex justify-center items-center min-h-[60vh] text-xs"
       >
-        <div className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full text-center border border-green-100">
+        <div className="bg-[var(--card)] rounded-xl shadow-lg p-8 max-w-md w-full text-center border border-green-100">
           <div className="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
             <X className="w-8 h-8 text-red-600" />
           </div>
@@ -681,7 +681,7 @@ Company Name
         animate={{ opacity: 1 }}
         className="p-6 max-w-6xl mx-auto flex justify-center items-center min-h-[60vh] text-xs"
       >
-        <div className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full text-center border border-red-100">
+        <div className="bg-[var(--card)] rounded-xl shadow-lg p-8 max-w-md w-full text-center border border-red-100">
           <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
             <X className="w-8 h-8 text-green-600" />
           </div>
@@ -751,7 +751,7 @@ Company Name
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-300 overflow-hidden">
+      <div className="bg-[var(--card)] rounded-xl shadow-sm border border-gray-300 overflow-hidden">
         {/* Header */}
         <div className={`p-6 md:p-8 border-b border-gray-300 ${employee['Termination Date'] ? 'bg-red-50' : 'bg-gradient-to-r from-green-50 to-emerald-50'}`}>
           <div className="flex flex-col md:flex-row md:items-start justify-between">
@@ -858,7 +858,7 @@ Company Name
                           value={terminationDate}
                           onChange={(e) => setTerminationDate(e.target.value)}
                           min={format(new Date(), 'yyyy-MM-dd')}
-                          className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm shadow-sm transition-all duration-200 hover:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+                          className="w-full px-4 py-2.5 bg-[var(--card)] border border-gray-200 rounded-lg text-sm shadow-sm transition-all duration-200 hover:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
                         />
                       </div>
 
@@ -889,7 +889,7 @@ Company Name
                           value={exitInterview}
                           onChange={(e) => setExitInterview(e.target.value)}
                           placeholder="Optional notes from exit interview..."
-                          className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-sm shadow-sm transition-all duration-200 hover:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 resize-y"
+                          className="w-full px-4 py-3 bg-[var(--card)] border border-gray-200 rounded-lg text-sm shadow-sm transition-all duration-200 hover:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 resize-y"
                         />
                       </div>
 
@@ -900,7 +900,7 @@ Company Name
                           value={returnedPropertyNotes}
                           onChange={(e) => setReturnedPropertyNotes(e.target.value)}
                           placeholder="List returned company property (e.g., MacBook, office keys)..."
-                          className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg text-sm shadow-sm transition-all duration-200 hover:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 resize-y"
+                          className="w-full px-4 py-3 bg-[var(--card)] border border-gray-200 rounded-lg text-sm shadow-sm transition-all duration-200 hover:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 resize-y"
                         />
                       </div>
 
@@ -969,7 +969,7 @@ Company Name
 
                 <div className="space-y-4">
                   {pendingTerminationRequests.map(request => (
-                    <div key={request.id} className="bg-white rounded-lg p-4 border border-yellow-100">
+                    <div key={request.id} className="bg-[var(--card)] rounded-lg p-4 border border-yellow-100">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                           <p className="text-sm font-medium text-gray-700">Requested By:</p>
@@ -1116,7 +1116,7 @@ Company Name
                   <span>Termination Letter Preview</span>
                 </h3>
 
-                <div className="bg-white p-4 rounded border border-gray-200 text-xs whitespace-pre-line h-64 overflow-y-auto">
+                <div className="bg-[var(--card)] p-4 rounded border border-gray-200 text-xs whitespace-pre-line h-64 overflow-y-auto">
                   {generateTerminationLetter()}
                 </div>
 
@@ -1158,11 +1158,11 @@ Company Name
       {/* Confirmation Modal */}
       {
         showConfirm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="bg-white rounded-xl shadow-xl p-6 max-w-md w-full"
+              className="bg-[var(--card)] rounded-xl shadow-xl p-6 max-w-md w-full"
             >
               <div className="text-center">
                 <div className={`mx-auto flex items-center justify-center h-12 w-12 rounded-full ${employee['Termination Date'] ? 'bg-blue-100' : 'bg-red-100'
@@ -1191,7 +1191,7 @@ Company Name
               <div className="mt-5 sm:mt-6 grid grid-cols-2 gap-3">
                 <button
                   type="button"
-                  className="inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 sm:text-xs"
+                  className="inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-[var(--card)] text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 sm:text-xs"
                   onClick={() => setShowConfirm(false)}
                 >
                   Cancel

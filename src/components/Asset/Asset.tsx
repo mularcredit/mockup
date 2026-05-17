@@ -358,14 +358,14 @@ const AssetManagement: React.FC = () => {
     <div className="p-6 space-y-6 text-xs">
       {/* Add Asset Modal */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <motion.div 
             ref={addModalRef}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.2 }}
-            className="bg-white rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto text-xs"
+            className="bg-[var(--card)] rounded-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto text-xs"
           >
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
@@ -626,7 +626,7 @@ const AssetManagement: React.FC = () => {
               <motion.div 
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="absolute right-0 mt-1 w-40 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10 text-xs"
+                className="absolute right-0 mt-1 w-40 origin-top-right rounded-md bg-[var(--card)] shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10 text-xs"
               >
                 <div className="py-1">
                   {[
@@ -657,7 +657,7 @@ const AssetManagement: React.FC = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white backdrop-blur-sm border border-gray-200 rounded-lg p-3 hover:shadow-[0_0_15px_rgba(59,130,246,0.2)] transition-all duration-300"
+          className="bg-[var(--card)] backdrop-blur-sm border border-gray-200 rounded-lg p-3 hover:shadow-[0_0_15px_rgba(59,130,246,0.2)] transition-all duration-300"
         >
           <div className="flex items-center justify-between">
             <div>
@@ -677,7 +677,7 @@ const AssetManagement: React.FC = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className="bg-white backdrop-blur-sm border border-gray-200 rounded-lg p-3 hover:shadow-[0_0_15px_rgba(34,197,94,0.2)] transition-all duration-300"
+          className="bg-[var(--card)] backdrop-blur-sm border border-gray-200 rounded-lg p-3 hover:shadow-[0_0_15px_rgba(34,197,94,0.2)] transition-all duration-300"
         >
           <div className="flex items-center justify-between">
             <div>
@@ -697,7 +697,7 @@ const AssetManagement: React.FC = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white backdrop-blur-sm border border-gray-200 rounded-lg p-3 hover:shadow-[0_0_15px_rgba(234,179,8,0.2)] transition-all duration-300"
+          className="bg-[var(--card)] backdrop-blur-sm border border-gray-200 rounded-lg p-3 hover:shadow-[0_0_15px_rgba(234,179,8,0.2)] transition-all duration-300"
         >
           <div className="flex items-center justify-between">
             <div>
@@ -717,7 +717,7 @@ const AssetManagement: React.FC = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25 }}
-          className="bg-white backdrop-blur-sm border border-gray-200 rounded-lg p-3 hover:shadow-[0_0_15px_rgba(107,114,128,0.2)] transition-all duration-300"
+          className="bg-[var(--card)] backdrop-blur-sm border border-gray-200 rounded-lg p-3 hover:shadow-[0_0_15px_rgba(107,114,128,0.2)] transition-all duration-300"
         >
           <div className="flex items-center justify-between">
             <div>
@@ -737,7 +737,7 @@ const AssetManagement: React.FC = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-white backdrop-blur-sm border border-gray-200 rounded-lg p-3 hover:shadow-[0_0_15px_rgba(239,68,68,0.2)] transition-all duration-300"
+          className="bg-[var(--card)] backdrop-blur-sm border border-gray-200 rounded-lg p-3 hover:shadow-[0_0_15px_rgba(239,68,68,0.2)] transition-all duration-300"
         >
           <div className="flex items-center justify-between">
             <div>
@@ -755,7 +755,7 @@ const AssetManagement: React.FC = () => {
       </div>
       
       {/* Category Tabs - Like in employee component */}
-      <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-lg p-4">
+      <div className="glass-card p-4">
         <h3 className="text-xs font-semibold text-gray-700 mb-3">Asset Categories</h3>
         <div className="flex flex-wrap gap-2">
           <button
@@ -788,7 +788,7 @@ const AssetManagement: React.FC = () => {
       </div>
       
       {/* Filters */}
-      <div className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-lg p-4">
+      <div className="glass-card p-4">
         <div className="grid grid-cols-1 md:grid-cols-6 gap-3 items-center">
           {/* Search Input */}
           <div className="relative md:col-span-2">
@@ -900,7 +900,7 @@ const AssetManagement: React.FC = () => {
         {currentAssets.map((asset, index) => (
           <motion.div
             key={asset.id}
-            className="bg-white backdrop-blur-sm border border-gray-200 rounded-lg p-4 hover:border-green-500/50 hover:shadow-[0_0_15px_rgba(34,197,94,0.2)] shadow-md transition-all duration-300"
+            className="bg-[var(--card)] backdrop-blur-sm border border-gray-200 rounded-lg p-4 hover:border-green-500/50 hover:shadow-[0_0_15px_rgba(34,197,94,0.2)] shadow-md transition-all duration-300"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05 }}
@@ -1074,16 +1074,16 @@ const AssetManagement: React.FC = () => {
 
       {/* View Asset Modal */}
       {isViewModalOpen && selectedAsset && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-3 z-50 backdrop-blur-sm">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-3 z-50 backdrop-blur-sm">
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ type: "spring", damping: 20, stiffness: 300 }}
-            className="bg-white rounded-lg w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden border border-gray-300 text-xs"
+            className="bg-[var(--card)] rounded-lg w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden border border-gray-300 text-xs"
           >
             {/* Header */}
-            <div className="p-4 pb-0 flex justify-between items-center sticky top-0 bg-white z-10 border-b border-gray-300">
+            <div className="p-4 pb-0 flex justify-between items-center sticky top-0 bg-[var(--card)] z-10 border-b border-gray-300">
               <div className="flex items-center space-x-2">
                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${getCategoryColor(selectedAsset.category || 'other')}`}>
                   {getCategoryIcon(selectedAsset.category || 'other')}

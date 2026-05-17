@@ -438,7 +438,7 @@ const AdminVideoUpload = () => {
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
-      <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
+      <div className="bg-[var(--card)] rounded-xl shadow-sm overflow-hidden border border-gray-200">
         {/* Header */}
         <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
           <h1 className="text-xl font-medium text-gray-900 flex items-center">
@@ -496,7 +496,7 @@ const AdminVideoUpload = () => {
                     <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                       <div className="space-y-1 text-center">
                         <div className="flex text-xs text-gray-600 justify-center">
-                          <label className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
+                          <label className="relative cursor-pointer bg-[var(--card)] rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
                             <span>Upload a video file</span>
                             <input
                               ref={fileInputRef}
@@ -569,7 +569,7 @@ const AdminVideoUpload = () => {
                     <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                       <div className="space-y-1 text-center">
                         <div className="flex text-xs text-gray-600 justify-center">
-                          <label className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
+                          <label className="relative cursor-pointer bg-[var(--card)] rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
                             <span>Upload a thumbnail</span>
                             <input
                               ref={thumbnailInputRef}
@@ -641,7 +641,7 @@ const AdminVideoUpload = () => {
                   <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                     <div className="space-y-1 text-center">
                       <div className="flex text-xs text-gray-600 justify-center">
-                        <label className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
+                        <label className="relative cursor-pointer bg-[var(--card)] rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
                           <span>Upload a document</span>
                           <input
                             ref={documentInputRef}
@@ -848,7 +848,7 @@ const AdminVideoUpload = () => {
       </div>
 
       {/* Existing content reference */}
-      <div className="mt-8 bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
+      <div className="mt-8 bg-[var(--card)] rounded-xl shadow-sm overflow-hidden border border-gray-200">
         <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
           <h2 className="text-lg font-medium text-gray-900 flex items-center">
             <FileText className="h-5 w-5 mr-2 text-gray-500" />
@@ -857,7 +857,7 @@ const AdminVideoUpload = () => {
         </div>
         <div className="p-6">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="min-w-full divide-y divide-[var(--p-line)]">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -880,7 +880,7 @@ const AdminVideoUpload = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-[var(--card)] divide-y divide-[var(--p-line)]">
                 {[...existingVideos, ...existingDocuments]
                   .sort((a, b) => a.order - b.order)
                   .map((item) => (

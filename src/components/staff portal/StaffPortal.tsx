@@ -187,7 +187,7 @@ function SidebarNavItem({
       onClick={onClick}
       className={`group flex items-center justify-between w-full px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ease-out ${active
         ? 'bg-gray-900 text-white shadow-lg shadow-gray-900/20'
-        : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
+        : 'text-gray-500 hover:bg-[var(--glass-h)] hover:text-gray-900'
         }`}
     >
       <div className="flex items-center gap-3">
@@ -411,7 +411,7 @@ function NotificationSidebar({
                 <h3 className="text-lg font-bold text-gray-900">Notifications</h3>
                 <p className="text-xs text-gray-500">{notifications.length} updates pending</p>
               </div>
-              <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+              <button onClick={onClose} className="p-2 hover:bg-[var(--glass-h)] rounded-full transition-colors">
                 <X className="w-5 h-5 text-gray-400" />
               </button>
             </div>
@@ -461,7 +461,7 @@ function NotificationSidebar({
               <div className="p-6 border-t border-gray-100">
                 <button
                   onClick={onClearAll}
-                  className="w-full py-3 text-xs font-bold text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-xl transition-all border border-gray-100"
+                  className="w-full py-3 text-xs font-bold text-gray-500 hover:text-gray-700 hover:bg-[var(--glass-h)] rounded-xl transition-all border border-gray-100"
                 >
                   Clear all notifications
                 </button>
@@ -1125,7 +1125,7 @@ const LeaveApplicationsList = () => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {applications.map((app) => (
-                <tr key={app.id} className="hover:bg-gray-50">
+                <tr key={app.id} className="hover:bg-[var(--glass-h)]">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-xs font-medium text-gray-900 capitalize">
                       {app["Leave Type"].replace(/-/g, ' ')}
@@ -1747,7 +1747,7 @@ const SalaryAdvanceForm = () => {
             <button
               onClick={refreshApplications}
               disabled={isRefreshing}
-              className={`px-4 py-2 border border-gray-300 rounded-lg text-xs font-medium text-gray-700 hover:bg-gray-50 flex items-center ${isRefreshing ? 'opacity-70 cursor-not-allowed' : ''
+              className={`px-4 py-2 border border-gray-300 rounded-lg text-xs font-medium text-gray-700 hover:bg-[var(--glass-h)] flex items-center ${isRefreshing ? 'opacity-70 cursor-not-allowed' : ''
                 }`}
             >
               {isRefreshing ? (
@@ -1816,7 +1816,7 @@ const SalaryAdvanceForm = () => {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {applications.map((app) => (
-                    <tr key={app.id} className="hover:bg-gray-50">
+                    <tr key={app.id} className="hover:bg-[var(--glass-h)]">
                       <td className="px-6 py-4">
                         <div className="text-sm font-medium text-gray-900">
                           Ksh {parseFloat(app["Amount Requested"]).toLocaleString()}
@@ -2021,7 +2021,7 @@ const SalaryAdvanceForm = () => {
             <button
               type="button"
               onClick={() => setView('list')}
-              className="px-4 py-2 border border-gray-300 rounded-lg text-xs font-medium text-gray-700 hover:bg-gray-50 flex items-center"
+              className="px-4 py-2 border border-gray-300 rounded-lg text-xs font-medium text-gray-700 hover:bg-[var(--glass-h)] flex items-center"
             >
               <PhFileText className="h-4 w-4 mr-2" weight="duotone" />
               View History
@@ -2345,7 +2345,7 @@ const LoanRequestForm = () => {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {applications.map((app) => (
-                    <tr key={app.id} className="hover:bg-gray-50">
+                    <tr key={app.id} className="hover:bg-[var(--glass-h)]">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-xs font-medium text-gray-900">
                           Ksh{app["Loan Amount"]}
@@ -2576,7 +2576,7 @@ const LoanRequestForm = () => {
             <button
               type="button"
               onClick={() => setView('list')}
-              className="px-4 py-2 border border-gray-300 rounded-lg text-xs font-medium text-gray-700 hover:bg-gray-50 flex items-center"
+              className="px-4 py-2 border border-gray-300 rounded-lg text-xs font-medium text-gray-700 hover:bg-[var(--glass-h)] flex items-center"
             >
               <PhFileText className="h-4 w-4 mr-2" weight="duotone" />
               View History
@@ -2763,7 +2763,7 @@ const DashboardHome = ({ setActiveTab, userName }: { setActiveTab: (tab: string)
             whileHover={{ scale: 1.02, y: -1 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => setActiveTab('VideoConf')}
-            className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-50 transition-all shadow-sm"
+            className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 text-gray-700 rounded-lg text-xs font-medium hover:bg-[var(--glass-h)] transition-all shadow-sm"
           >
             <PhChatCircleDots size={14} weight="bold" />
             Hub
@@ -2978,6 +2978,21 @@ const staffMenuGroups: MenuGroup[] = [
 
 // Main StaffPortal Component with Time Tracking
 const StaffPortal = () => {
+  const [isLightMode, setIsLightMode] = useState(document.body.classList.contains('light'));
+
+  // Theme detection for logo
+  useEffect(() => {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          setIsLightMode(document.body.classList.contains('light'));
+        }
+      });
+    });
+
+    observer.observe(document.body, { attributes: true });
+    return () => observer.disconnect();
+  }, []);
   const [activeTab, setActiveTab] = useState('home');
   const [showResetModal, setShowResetModal] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false); // For mobile
@@ -3224,7 +3239,7 @@ const StaffPortal = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 relative flex font-sans text-gray-900 transition-colors duration-300 overflow-hidden">
+    <div className="min-h-screen bg-[var(--page)] relative flex font-sans text-[var(--t1)] transition-colors duration-300 overflow-hidden">
       {/* Dynamic Background Blobs */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full bg-gray-200/30 blur-[130px] animate-pulse" />
@@ -3269,7 +3284,11 @@ const StaffPortal = () => {
                   whileHover={{ rotate: 5, scale: 1.05 }}
                   onClick={() => !isExpanded && setIsCollapsed(false)}
                 >
-                  <img src={solo} alt="Logo" className="relative w-10 h-10 object-contain brightness-0 invert drop-shadow-md" />
+                  <img 
+                    src={isLightMode ? "/zira-dark.png" : solo} 
+                    alt="Logo" 
+                    className={`relative w-10 h-10 object-contain transition-all duration-300 ${!isLightMode ? 'brightness-0 invert drop-shadow-md' : ''}`} 
+                  />
                 </motion.div>
 
                 <AnimatePresence>

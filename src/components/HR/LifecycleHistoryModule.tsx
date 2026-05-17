@@ -123,13 +123,13 @@ export default function LifecycleHistoryModule() {
                     <h2 className="text-lg font-bold text-gray-900">Staff Lifecycle History</h2>
                     <p className="text-xs text-gray-500">Full audit trail of all employee lifecycle events · {history.length} total events</p>
                 </div>
-                <button onClick={fetchData} className="flex items-center gap-2 px-3 py-2 text-xs bg-white border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-600">
+                <button onClick={fetchData} className="flex items-center gap-2 px-3 py-2 text-xs bg-[var(--card)] border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-600">
                     <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} /> Refresh
                 </button>
             </div>
 
             {/* Filters */}
-            <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-3">
+            <div className="bg-[var(--card)] border border-gray-200 rounded-xl p-4 space-y-3">
                 <div className="flex flex-wrap gap-3 items-center">
                     <div className="relative flex-1 min-w-[200px]">
                         <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -138,7 +138,7 @@ export default function LifecycleHistoryModule() {
                             className="w-full pl-9 pr-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500" />
                     </div>
                     <select value={eventTypeFilter} onChange={e => { setEventTypeFilter(e.target.value); setPage(1); }}
-                        className="border border-gray-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-violet-500 bg-white">
+                        className="border border-gray-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-violet-500 bg-[var(--card)]">
                         <option value="all">All Events ({history.length})</option>
                         {Object.entries(EVENT_TYPE_LABELS).map(([k, v]) => (
                             <option key={k} value={k}>{v} ({eventTypeCounts[k] || 0})</option>
@@ -160,27 +160,27 @@ export default function LifecycleHistoryModule() {
                     <Loader2 className="w-6 h-6 animate-spin text-violet-500" />
                 </div>
             ) : filtered.length === 0 ? (
-                <div className="bg-white border border-gray-200 rounded-xl p-12 text-center">
+                <div className="bg-[var(--card)] border border-gray-200 rounded-xl p-12 text-center">
                     <History className="w-8 h-8 text-gray-300 mx-auto mb-2" />
                     <p className="text-sm font-semibold text-gray-900">No history records found</p>
                     <p className="text-xs text-gray-500 mt-1 max-w-sm mx-auto">This timeline will automatically populate as you assign statuses, suspend employees, and perform other HR actions.</p>
                 </div>
             ) : (
                 <>
-                    <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                    <div className="bg-[var(--card)] border border-gray-200 rounded-xl overflow-hidden">
                         <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
                             <span className="text-xs font-semibold text-gray-700">
                                 {filtered.length} event{filtered.length !== 1 ? 's' : ''} {selectedEmp ? '(filtered by employee)' : ''}
                             </span>
                             <span className="text-xs text-gray-400">Page {page} of {totalPages}</span>
                         </div>
-                        <div className="divide-y divide-gray-100">
+                        <div className="divide-y divide-[var(--p-line)]">
                             {paginated.map((event, idx) => {
                                 const isExpanded = expandedId === event.id;
                                 const colorClass = EVENT_COLORS[event.event_type] || 'bg-gray-100 text-gray-600 border-gray-200';
                                 return (
                                     <motion.div key={event.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                                        className="p-4 hover:bg-gray-50/50 transition-colors">
+                                        className="p-4 hover:bg-[var(--glass)] transition-colors">
                                         <div className="flex items-start justify-between gap-3 cursor-pointer"
                                             onClick={() => setExpandedId(isExpanded ? null : event.id)}>
                                             <div className="flex items-start gap-3">
@@ -231,7 +231,7 @@ export default function LifecycleHistoryModule() {
                                                     {event.old_value && (
                                                         <div>
                                                             <p className="text-[10px] font-semibold text-gray-500 uppercase mb-1">Before</p>
-                                                            <pre className="text-[10px] text-gray-700 whitespace-pre-wrap bg-white rounded-lg p-2 border border-gray-100">
+                                                            <pre className="text-[10px] text-gray-700 whitespace-pre-wrap bg-[var(--card)] rounded-lg p-2 border border-gray-100">
                                                                 {JSON.stringify(event.old_value, null, 2)}
                                                             </pre>
                                                         </div>
@@ -239,7 +239,7 @@ export default function LifecycleHistoryModule() {
                                                     {event.new_value && (
                                                         <div>
                                                             <p className="text-[10px] font-semibold text-emerald-600 uppercase mb-1">After</p>
-                                                            <pre className="text-[10px] text-gray-700 whitespace-pre-wrap bg-white rounded-lg p-2 border border-emerald-100">
+                                                            <pre className="text-[10px] text-gray-700 whitespace-pre-wrap bg-[var(--card)] rounded-lg p-2 border border-emerald-100">
                                                                 {JSON.stringify(event.new_value, null, 2)}
                                                             </pre>
                                                         </div>

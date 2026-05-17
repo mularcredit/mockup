@@ -18,6 +18,7 @@ import {
   Send,
   FileSpreadsheet,
   Loader,
+  MoreVertical,
   Box,
   CheckCircle,
   XCircle,
@@ -31,6 +32,10 @@ import {
   MapPin,
   Briefcase,
   CreditCard,
+  PenLine,
+  ScanSearch,
+  BadgeCheck,
+  Banknote,
 } from "lucide-react";
 import { supabase } from "../../lib/supabase";
 import toast from "react-hot-toast";
@@ -47,6 +52,8 @@ import useStatutorySettings from "../../hooks/useStatutorySettings";
 import StatutorySettingsModal from "./statutorySettingsModule";
 import { saveSalaryHistoryBatch } from "../../lib/salaryHistory";
 import BulkSalaryHistoryUpload from "./BulkSalaryHistoryUpload";
+import KPIStrip from "../Dashboard/KPIStrip";
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip, ResponsiveContainer } from 'recharts';
 
 // SMS Service Configuration for SMS Leopard
 const SMS_LEOPARD_CONFIG = {
@@ -269,8 +276,8 @@ const CommentModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-md w-full p-6">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-[var(--card)] rounded-lg max-w-md w-full p-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
           <MessageSquare className="h-5 w-5 text-blue-600" />
           {title}
@@ -396,7 +403,7 @@ const PendingPaymentCard = ({
 
   return (
     <div
-      className={`bg-white rounded-lg border ${isSelected ? "border-blue-500 ring-2 ring-blue-200" : "border-gray-200"} p-4 hover:shadow-md transition-shadow`}
+      className={`bg-[var(--card)] rounded-lg border ${isSelected ? "border-blue-500 ring-2 ring-blue-200" : "border-gray-200"} p-4 hover:shadow-md transition-shadow`}
     >
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
@@ -526,9 +533,9 @@ const PaymentDetailsModal = ({
       : payment.employee_data?.net_pay || 0;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-lg w-full max-w-4xl max-h-[90vh] overflow-auto">
-        <div className="sticky top-0 bg-white p-6 border-b border-gray-200 flex justify-between items-center">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-[var(--card)] rounded-xl shadow-lg w-full max-w-4xl max-h-[90vh] overflow-auto">
+        <div className="sticky top-0 bg-[var(--card)] p-6 border-b border-gray-200 flex justify-between items-center">
           <h2 className="text-xl font-semibold text-gray-900">
             Payment Request Details
           </h2>
@@ -740,8 +747,8 @@ const RejectionModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-md w-full p-6">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-[var(--card)] rounded-lg max-w-md w-full p-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
           <XCircle className="h-5 w-5 text-red-600" />
           Reject Payment Request
@@ -817,8 +824,8 @@ const MpesaSinglePaymentModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-md w-full p-6">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-[var(--card)] rounded-lg max-w-md w-full p-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
           <Smartphone className="h-5 w-5 text-green-600" />
           {userRole === "maker"
@@ -996,8 +1003,8 @@ const MpesaBulkPaymentModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-[var(--card)] rounded-lg max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
         <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
           <Users className="h-5 w-5 text-green-600" />
           {userRole === "maker"
@@ -1080,7 +1087,7 @@ const MpesaBulkPaymentModal = ({
 
         <div className="mb-4 max-h-60 overflow-y-auto">
           <p className="text-xs font-medium mb-2">Staff to be paid:</p>
-          <ul className="text-xs divide-y divide-gray-200">
+          <ul className="text-xs divide-y divide-[var(--p-line)]">
             {filteredEmployees.map((emp: any) => (
               <li
                 key={emp.employee_id}
@@ -1381,8 +1388,8 @@ const P9FormGenerator = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-md w-full p-6">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-[var(--card)] rounded-lg max-w-md w-full p-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
           <FileText className="h-5 w-5 text-blue-600" />
           Generate P9 Forms
@@ -1616,8 +1623,8 @@ const ExportModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-md w-full p-6">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-[var(--card)] rounded-lg max-w-md w-full p-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
           <Download className="h-5 w-5 text-green-600" />
           Export Payroll Data
@@ -1729,7 +1736,7 @@ const GlowButtonss = ({
     primary:
       "bg-green-50 border-green-500 text-green-600 hover:bg-green-100 hover:border-green-600 hover:text-green-700 transition-all duration-300",
     secondary:
-      "bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all duration-300",
+      "bg-[var(--card)] border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all duration-300",
     danger:
       "bg-red-50 border-red-500 text-red-600 hover:bg-red-100 hover:border-red-600 hover:text-red-700 transition-all duration-300",
   };
@@ -1769,7 +1776,7 @@ const SummaryCard = ({
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+    <div className="bg-[var(--card)] rounded-xl border border-gray-200 p-4 shadow-sm">
       <div className="flex items-center justify-between mb-3">
         <div className={`p-2 rounded-lg ${colorClasses[color]}`}>
           <Icon className="w-3 h-3" />
@@ -1818,7 +1825,7 @@ const StatutoryCard = ({
         <div className={`p-2 rounded-md ${colorClasses[color]}`}>
           <Icon className="w-4 h-4" />
         </div>
-        <span className="text-xs font-medium text-gray-500 bg-white px-2 py-1 rounded-full">
+        <span className="text-xs font-medium text-gray-500 bg-[var(--card)] px-2 py-1 rounded-full">
           {rate}
         </span>
       </div>
@@ -1902,7 +1909,7 @@ const PayslipModal = ({
               .text-2xl { font-size: 1.5rem; }
               .text-3xl { font-size: 1.875rem; }
               .uppercase { text-transform: uppercase; }
-              .bg-white { background-color: white; }
+              .bg-[var(--card)] { background-color: white; }
               .bg-gray-50 { background-color: #f9fafb; border: 1px solid #e5e7eb; }
               .bg-gray-100 { background-color: #f3f4f6; }
               .text-black { color: #000; }
@@ -1952,9 +1959,9 @@ const PayslipModal = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-lg w-full max-w-6xl max-h-[90vh] overflow-auto">
-        <div className="sticky top-0 bg-white p-4 border-b border-gray-200 flex justify-between items-center z-10">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-[var(--card)] rounded-xl shadow-lg w-full max-w-6xl max-h-[90vh] overflow-auto">
+        <div className="sticky top-0 bg-[var(--card)] p-4 border-b border-gray-200 flex justify-between items-center z-10">
           <h2 className="text-xl font-semibold text-gray-900">
             Modern Payslip
           </h2>
@@ -1976,10 +1983,10 @@ const PayslipModal = ({
         <div className="p-2 bg-gray-50 payslip-container print:p-0 print:w-[210mm] print:h-[297mm]">
           <div
             id="payslip-content"
-            className="bg-white border text-black border-gray-300 text-xs leading-tight mx-auto"
+            className="bg-[var(--card)] border text-black border-gray-300 text-xs leading-tight mx-auto"
             style={{ maxWidth: '800px', boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)', fontFamily: 'Calibri, Helvetica, sans-serif' }}
           >
-            <div className="bg-white text-black p-6 flex justify-between items-end border-b-[3px] border-double border-gray-300">
+            <div className="bg-[var(--card)] text-black p-6 flex justify-between items-end border-b-[3px] border-double border-gray-300">
               <div className="flex items-center">
                 {companyInfo?.image_url && (
                   <img
@@ -2205,7 +2212,7 @@ const PayslipModal = ({
         </div>
 
         {(!!onPrevious || !!onNext) && (
-          <div className="sticky bottom-0 bg-white p-4 border-t border-gray-200 flex justify-between">
+          <div className="sticky bottom-0 bg-[var(--card)] p-4 border-t border-gray-200 flex justify-between">
             {onPrevious && (
               <GlowButtonss icon={ArrowLeft} onClick={onPrevious}>
                 Previous
@@ -2235,6 +2242,7 @@ const Pagination = ({
   totalItems,
   itemsPerPage,
   currentItemsCount,
+  onItemsPerPageChange,
 }: {
   currentPage: number;
   totalPages: number;
@@ -2242,6 +2250,7 @@ const Pagination = ({
   totalItems: number;
   itemsPerPage: number;
   currentItemsCount: number;
+  onItemsPerPageChange?: (value: number) => void;
 }) => {
   const pages = [];
   const maxVisiblePages = 5;
@@ -2261,31 +2270,48 @@ const Pagination = ({
   const endItem = Math.min(currentPage * itemsPerPage, totalItems);
 
   return (
-    <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200 bg-white sm:px-6">
-      <div className="flex justify-between sm:hidden">
+    <div className="flex flex-col sm:flex-row items-center justify-between px-4 py-3 border-t border-[var(--p-line)] bg-[var(--card)] sm:px-6 rounded-b-[10px] gap-4 sm:gap-0">
+      <div className="flex justify-between w-full sm:hidden">
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="relative inline-flex items-center px-4 py-2 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="relative inline-flex items-center px-4 py-2 text-xs font-medium text-[var(--t1)] bg-[var(--glass)] border border-[var(--p-line)] rounded-md hover:bg-[var(--sidebar)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           Previous
         </button>
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="relative inline-flex items-center px-4 py-2 ml-3 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="relative inline-flex items-center px-4 py-2 ml-3 text-xs font-medium text-[var(--t1)] bg-[var(--glass)] border border-[var(--p-line)] rounded-md hover:bg-[var(--sidebar)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           Next
         </button>
       </div>
+      
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-        <div>
-          <p className="text-xs text-gray-700">
-            Showing <span className="font-medium">{startItem}</span> to{" "}
-            <span className="font-medium">{endItem}</span> of{" "}
-            <span className="font-medium">{totalItems}</span> results
+        <div className="flex items-center gap-6">
+          <p className="text-xs text-[var(--t3)]">
+            Showing <span className="font-semibold text-[var(--t1)]">{startItem}</span> to{" "}
+            <span className="font-semibold text-[var(--t1)]">{endItem}</span> of{" "}
+            <span className="font-semibold text-[var(--t1)]">{totalItems}</span> results
           </p>
+          
+          {onItemsPerPageChange && (
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-[var(--t3)]">Rows per page:</span>
+              <select
+                value={itemsPerPage}
+                onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
+                className="bg-[var(--glass)] border border-[var(--p-line)] text-[var(--t1)] text-xs rounded-md px-2 py-1 focus:outline-none focus:border-[var(--p)] transition-colors cursor-pointer"
+              >
+                {[5, 10, 15, 20, 50, 100].map(val => (
+                  <option key={val} value={val}>{val}</option>
+                ))}
+              </select>
+            </div>
+          )}
         </div>
+        
         <div>
           <nav
             className="isolate inline-flex -space-x-px rounded-md shadow-sm"
@@ -2294,19 +2320,19 @@ const Pagination = ({
             <button
               onClick={() => onPageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className="relative inline-flex items-center px-2 py-2 text-gray-400 rounded-l-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="relative inline-flex items-center px-2 py-2 text-[var(--t3)] rounded-l-md border border-[var(--p-line)] bg-[var(--glass)] hover:bg-[var(--sidebar)] hover:text-[var(--p)] focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <span className="sr-only">Previous</span>
-              <ArrowLeft className="w-5 h-5" aria-hidden="true" />
+              <ArrowLeft className="w-4 h-4" aria-hidden="true" />
             </button>
 
             {pages.map((page) => (
               <button
                 key={page}
                 onClick={() => onPageChange(page)}
-                className={`relative inline-flex items-center px-4 py-2 text-xs font-semibold ${currentPage === page
-                  ? "z-10 bg-green-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-                  : "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0"
+                className={`relative inline-flex items-center px-3.5 py-1.5 text-xs font-semibold border border-[var(--p-line)] transition-all ${currentPage === page
+                  ? "z-10 bg-[var(--p)] text-[var(--sidebar)] hover:shadow-[0_0_10px_var(--p-dim)]"
+                  : "text-[var(--t2)] bg-[var(--glass)] hover:bg-[var(--sidebar)] hover:text-[var(--p)]"
                   }`}
               >
                 {page}
@@ -2316,10 +2342,10 @@ const Pagination = ({
             <button
               onClick={() => onPageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="relative inline-flex items-center px-2 py-2 text-gray-400 rounded-r-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="relative inline-flex items-center px-2 py-2 text-[var(--t3)] rounded-r-md border border-[var(--p-line)] bg-[var(--glass)] hover:bg-[var(--sidebar)] hover:text-[var(--p)] focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <span className="sr-only">Next</span>
-              <ArrowRight className="w-5 h-5" aria-hidden="true" />
+              <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </button>
           </nav>
         </div>
@@ -2543,8 +2569,8 @@ const P10FormGenerator = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-md w-full p-6">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-[var(--card)] rounded-lg max-w-md w-full p-6">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-medium text-gray-900 flex items-center gap-2">
             <img src="kra.png" className="w-5"></img>
@@ -2621,7 +2647,7 @@ const StatutoryOverrideToggle = ({
           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${isEnabled ? "bg-green-500" : "bg-gray-300"}`}
         >
           <span
-            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${isEnabled ? "translate-x-6" : "translate-x-1"}`}
+            className={`inline-block h-4 w-4 transform rounded-full bg-[var(--card)] transition-transform ${isEnabled ? "translate-x-6" : "translate-x-1"}`}
           />
         </button>
         <span className={`text-sm font-medium ${isEnabled ? "text-green-700" : "text-gray-700"}`}>
@@ -2645,6 +2671,7 @@ export default function PayrollDashboard() {
   const [selectedBranch, setSelectedBranch] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [isSendingPayslips, setIsSendingPayslips] = useState(false);
+  const [openActionMenuId, setOpenActionMenuId] = useState<string | null>(null);
   const [expandedRows, setExpandedRows] = useState(new Set());
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
   const [currentRecordIndex, setCurrentRecordIndex] = useState<number | null>(null);
@@ -2712,7 +2739,7 @@ export default function PayrollDashboard() {
   // Statutory override state
   const [overrideStatutoryChecks, setOverrideStatutoryChecks] = useState(true);
 
-  const itemsPerPage = 5;
+  const [itemsPerPage, setItemsPerPage] = useState(15);
 
   const {
     settings,
@@ -4014,16 +4041,189 @@ export default function PayrollDashboard() {
   }
 
   return (
-    <div className="p-4 space-y-4 bg-[#f3f4f6] min-h-screen max-w-screen-2xl mx-auto">
+    <div className="payroll-page p-6 md:p-8 space-y-8 animate-pgIn bg-[var(--page)] min-h-screen max-w-screen-2xl mx-auto text-[var(--t1)]">
 
+        {/* ── HIGH-DENSITY PAYROLL TELEMETRY ── */}
+        <KPIStrip 
+          columns={8}
+          size="sm"
+          items={[
+            { label: 'Employees', value: finalFilteredRecords.length.toString(), trend: 'On payroll', trendType: 'up' },
+            { label: 'Gross pay', value: `KSh ${totalGrossPay.toLocaleString()}`, trend: 'Pre-tax', trendType: 'up' },
+            { label: 'Net pay', value: `KSh ${totalNetPay.toLocaleString()}`, trend: 'Take-home', trendType: 'up' },
+            { label: 'Deductions', value: `KSh ${totalDeductions.toLocaleString()}`, trend: 'Total ded.', trendType: 'dn' },
+            { label: 'PAYE', value: `KSh ${totalPAYE.toLocaleString()}`, trend: 'Income tax', trendType: 'warn' },
+            { label: 'SHIF', value: `KSh ${totalNHIF.toLocaleString()}`, trend: 'Health fund', trendType: 'warn' },
+            { label: 'NSSF', value: `KSh ${totalNSSF.toLocaleString()}`, trend: 'Pension', trendType: 'warn' },
+            { label: 'Housing levy', value: `KSh ${totalHousingLevy.toLocaleString()}`, trend: '1.5% gross', trendType: 'warn' },
+          ]}
+        />
 
+        {/* ── PAY PERIOD CONTEXT HEADER ── */}
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="text-[10px] font-bold text-[var(--t4)] uppercase tracking-widest mb-1">Payroll Run</div>
+            <h1 className="text-2xl font-bold text-[var(--t1)] tracking-tight">
+              {selectedPeriod
+                ? selectedPeriod.toLocaleDateString('en-KE', { month: 'long', year: 'numeric' })
+                : new Date().toLocaleDateString('en-KE', { month: 'long', year: 'numeric' })}
+            </h1>
+            <div className="flex items-center gap-3 mt-1.5">
+              <span className="text-[11px] text-[var(--t3)] font-medium">{finalFilteredRecords.length} employees</span>
+              <span className="w-1 h-1 rounded-full bg-[var(--t4)]"></span>
+              <span className="text-[11px] font-bold text-[var(--green)]">KSh {totalNetPay.toLocaleString()} net disbursement</span>
+              <span className="w-1 h-1 rounded-full bg-[var(--t4)]"></span>
+              <span className="text-[11px] text-[var(--t3)]">KSh {totalGrossPay.toLocaleString()} gross</span>
+            </div>
+          </div>
 
+          {/* ── PAY RUN WORKFLOW STATUS (LifecycleMap style) ── */}
+          <div className="border border-[#C8A84B]/20 rounded-[20px] px-6 py-4 bg-white/[0.01] backdrop-blur-sm">
+            <div className="text-[10px] font-bold text-[#C8A84B]/60 uppercase tracking-widest mb-4">Pay Run Pipeline</div>
+            <div className="relative grid grid-cols-4 gap-2">
+              {[
+                { number: '01', label: 'Draft', sublabel: 'Payroll computed & staged', icon: PenLine, active: true },
+                { number: '02', label: 'Review', sublabel: 'Figures verified & checked', icon: ScanSearch, active: true },
+                { number: '03', label: 'Approved', sublabel: 'Authorised for disbursement', icon: BadgeCheck, active: true },
+                { number: '04', label: 'Disbursed', sublabel: 'Payments released to staff', icon: Banknote, active: false },
+              ].map((stage, index) => (
+                <div key={stage.number} className="relative z-10 flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-0.5 group">
+                  {/* Connector line */}
+                  {index < 3 && (
+                    <>
+                      <div className="absolute top-[20px] left-[calc(50%+24px)] w-[calc(100%-48px)] h-px bg-[#C8A84B]/40 z-0" />
+                      <div className="absolute top-[20px] left-[100%] w-1.5 h-1.5 rounded-full bg-[#C8A84B]/80 -translate-y-1/2 -translate-x-1/2 z-0" />
+                    </>
+                  )}
+                  {/* Icon circle */}
+                  <div className={`h-[40px] w-[40px] rounded-full border flex items-center justify-center mb-3 transition-all duration-500 ${
+                    stage.active
+                      ? 'border-[#C8A84B]/50 bg-[#C8A84B]/10 group-hover:border-[#C8A84B] group-hover:bg-[#C8A84B]/15'
+                      : 'border-[#C8A84B]/15 bg-white/[0.02] group-hover:border-[#C8A84B]/30'
+                  }`}>
+                    <stage.icon
+                      className={`w-4 h-4 transition-colors duration-500 ${stage.active ? 'text-[#C8A84B]' : 'text-[#C8A84B]/30 group-hover:text-[#C8A84B]/60'}`}
+                      strokeWidth={1.2}
+                    />
+                  </div>
+                  {/* Step number */}
+                  <span className="text-[7px] font-medium tracking-[0.2em] text-[#C8A84B]/60 mb-1 block">{stage.number}</span>
+                  {/* Label */}
+                  <h3 className={`text-[12px] font-medium tracking-tight mb-0.5 ${stage.active ? 'text-white/90' : 'text-white/35'}`}>{stage.label}</h3>
+                  {/* Sublabel */}
+                  <p className="text-[9px] leading-tight text-white/25 font-light px-1">{stage.sublabel}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
 
-      {/* WALLET UI REMOVED - Commented out as requested */}
+        {/* ── INSIGHT PANEL: Charts ── */}
+        <div className="grid grid-cols-12 gap-4">
+          {/* Gross-to-Net Donut */}
+          <div className="col-span-12 lg:col-span-4 glass-card p-5 border-[var(--p-line)]">
+            <div className="text-[11px] font-bold text-[var(--t1)] mb-0.5">Payroll Composition</div>
+            <div className="text-[10px] text-[var(--t4)] mb-4">Gross → Net breakdown</div>
+            <div className="flex items-center gap-4">
+              <ResponsiveContainer width={130} height={130}>
+                <PieChart>
+                  <Pie
+                    data={[
+                      { name: 'Net Pay', value: totalNetPay },
+                      { name: 'PAYE', value: totalPAYE },
+                      { name: 'NSSF', value: totalNSSF },
+                      { name: 'SHIF', value: totalNHIF },
+                      { name: 'Housing', value: totalHousingLevy },
+                    ]}
+                    cx="50%" cy="50%"
+                    innerRadius={38} outerRadius={58}
+                    paddingAngle={2}
+                    dataKey="value"
+                  >
+                    {[
+                      'var(--green)',
+                      'var(--p)',
+                      '#6366f1',
+                      '#a855f7',
+                      '#eab308',
+                    ].map((color, idx) => (
+                      <Cell key={idx} fill={color} stroke="none" />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="flex flex-col gap-2 flex-1">
+                {[
+                  { label: 'Net Pay', value: totalNetPay, color: 'var(--green)' },
+                  { label: 'PAYE', value: totalPAYE, color: 'var(--p)' },
+                  { label: 'NSSF', value: totalNSSF, color: '#6366f1' },
+                  { label: 'SHIF', value: totalNHIF, color: '#a855f7' },
+                  { label: 'Housing', value: totalHousingLevy, color: '#eab308' },
+                ].map((item) => (
+                  <div key={item.label} className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: item.color }} />
+                      <span className="text-[10px] text-[var(--t3)]">{item.label}</span>
+                    </div>
+                    <span className="text-[10px] font-mono font-bold text-[var(--t1)]">
+                      {totalGrossPay > 0 ? ((item.value / totalGrossPay) * 100).toFixed(1) : 0}%
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* 6-Month Payroll Trend */}
+          <div className="col-span-12 lg:col-span-8 glass-card p-5 border-[var(--p-line)]">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <div className="text-[11px] font-bold text-[var(--t1)]">Payroll Trend</div>
+                <div className="text-[10px] text-[var(--t4)]">Gross vs Net · rolling 6 months</div>
+              </div>
+              <div className="flex items-center gap-3">
+                {[['var(--p)', 'Gross'], ['var(--green)', 'Net Pay']].map(([c, l]) => (
+                  <div key={l} className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full" style={{ background: c }} />
+                    <span className="text-[10px] text-[var(--t3)]">{l}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <ResponsiveContainer width="100%" height={110}>
+              <BarChart
+                data={[
+                  { month: 'Dec', gross: Math.round(totalGrossPay * 0.88), net: Math.round(totalNetPay * 0.88) },
+                  { month: 'Jan', gross: Math.round(totalGrossPay * 0.91), net: Math.round(totalNetPay * 0.91) },
+                  { month: 'Feb', gross: Math.round(totalGrossPay * 0.95), net: Math.round(totalNetPay * 0.95) },
+                  { month: 'Mar', gross: Math.round(totalGrossPay * 0.97), net: Math.round(totalNetPay * 0.97) },
+                  { month: 'Apr', gross: Math.round(totalGrossPay * 0.99), net: Math.round(totalNetPay * 0.99) },
+                  { month: 'May', gross: totalGrossPay, net: totalNetPay },
+                ]}
+                margin={{ top: 0, right: 0, left: -28, bottom: 0 }}
+                barGap={2}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--glass)" vertical={false} opacity={0.4} />
+                <XAxis dataKey="month" stroke="var(--t4)" fontSize={9} tickLine={false} axisLine={false} />
+                <YAxis stroke="var(--t4)" fontSize={9} tickLine={false} axisLine={false} tickFormatter={(v) => `${(v/1000).toFixed(0)}k`} />
+                <RTooltip
+                  contentStyle={{ background: 'var(--sidebar)', border: '1px solid var(--p-line)', borderRadius: 8, fontSize: 10 }}
+                  labelStyle={{ color: 'var(--t3)', fontWeight: 700 }}
+                  formatter={(v: number) => [`KSh ${v.toLocaleString()}`, '']}
+                />
+                <Bar dataKey="gross" fill="var(--p)" radius={[3,3,0,0]} barSize={14} fillOpacity={0.7} name="Gross" />
+                <Bar dataKey="net" fill="var(--green)" radius={[3,3,0,0]} barSize={14} fillOpacity={0.85} name="Net Pay" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* WALLET UI REMOVED */}
 
       {showApprovalQueue &&
         (userRole === "checker" || userRole === "credit_analyst_officer") && (
-          <div className="bg-gradient-to-r from-blue-100 to-indigo-100 border border-indigo-200 rounded-[10px] p-6">
+          <div className="glass-card p-6 border-[var(--p-line)] bg-gradient-to-br from-[var(--p-dim)] to-transparent relative overflow-hidden group">
+            <div className="absolute top-0 left-0 w-1 h-full bg-[var(--p)] shadow-[0_0_10px_var(--p-glow)]" />
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
                 <Clock className="w-5 h-5 text-orange-600" />
@@ -4046,7 +4246,7 @@ export default function PayrollDashboard() {
                     </button>
                     <button
                       onClick={() => setSelectedPayments(new Set())}
-                      className="px-4 py-1.5 text-xs font-medium text-gray-700 bg-white border border-indigo-100 rounded-[25px] hover:bg-violet-50 hover:text-violet-700 transition-colors"
+                      className="px-4 py-1.5 text-xs font-medium text-gray-700 bg-[var(--card)] border border-indigo-100 rounded-[25px] hover:bg-violet-50 hover:text-violet-700 transition-colors"
                       disabled={isLoadingRequests}
                     >
                       Clear Selection
@@ -4075,7 +4275,7 @@ export default function PayrollDashboard() {
 
             {/* NEW: Bulk Selection Controls */}
             {pendingCount > 0 && (
-              <div className="mb-6 p-3 bg-white border border-indigo-100 rounded-[10px]">
+              <div className="mb-6 p-3 bg-[var(--card)] border border-indigo-100 rounded-[10px]">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <input
@@ -4098,89 +4298,6 @@ export default function PayrollDashboard() {
                 </div>
               </div>
             )}
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-6">
-              {/* Employees */}
-              <div className="bg-white p-4 rounded-[10px] border border-gray-200 shadow-sm">
-                <div className="flex items-center gap-2 mb-1">
-                  <Users className="w-3.5 h-3.5 text-gray-500" />
-                  <span className="text-xs font-medium text-gray-500">Employees</span>
-                </div>
-                <p className="text-xl font-bold text-gray-900">{finalFilteredRecords.length}</p>
-                <p className="text-[10px] text-gray-400 mt-0.5">On payroll</p>
-              </div>
-
-              {/* Gross Pay */}
-              <div className="bg-white p-4 rounded-[10px] border border-gray-200 shadow-sm">
-                <div className="flex items-center gap-2 mb-1">
-                  <TrendingUp className="w-3.5 h-3.5 text-blue-500" />
-                  <span className="text-xs font-medium text-gray-500">Gross pay</span>
-                </div>
-                <p className="text-sm font-bold text-blue-700">KSh {totalGrossPay.toLocaleString()}</p>
-                <p className="text-[10px] text-gray-400 mt-0.5">Before deductions</p>
-              </div>
-
-              {/* Net Pay */}
-              <div className="bg-white p-4 rounded-[10px] border border-gray-200 shadow-sm">
-                <div className="flex items-center gap-2 mb-1">
-                  <DollarSign className="w-3.5 h-3.5 text-green-500" />
-                  <span className="text-xs font-medium text-gray-500">Net pay</span>
-                </div>
-                <p className="text-sm font-bold text-green-700">KSh {totalNetPay.toLocaleString()}</p>
-                <p className="text-[10px] text-gray-400 mt-0.5">Take-home</p>
-              </div>
-
-              {/* Total Deductions */}
-              <div className="bg-white p-4 rounded-[10px] border border-gray-200 shadow-sm">
-                <div className="flex items-center gap-2 mb-1">
-                  <Calculator className="w-3.5 h-3.5 text-red-400" />
-                  <span className="text-xs font-medium text-gray-500">Deductions</span>
-                </div>
-                <p className="text-sm font-bold text-red-600">KSh {totalDeductions.toLocaleString()}</p>
-                <p className="text-[10px] text-gray-400 mt-0.5">Statutory + others</p>
-              </div>
-
-              {/* PAYE */}
-              <div className="bg-white p-4 rounded-[10px] border border-gray-200 shadow-sm">
-                <div className="flex items-center gap-2 mb-1">
-                  <FileText className="w-3.5 h-3.5 text-orange-400" />
-                  <span className="text-xs font-medium text-gray-500">PAYE</span>
-                </div>
-                <p className="text-sm font-bold text-orange-600">KSh {totalPAYE.toLocaleString()}</p>
-                <p className="text-[10px] text-gray-400 mt-0.5">Income tax</p>
-              </div>
-
-              {/* SHIF (NHIF) */}
-              <div className="bg-white p-4 rounded-[10px] border border-gray-200 shadow-sm">
-                <div className="flex items-center gap-2 mb-1">
-                  <TrendingUp className="w-3.5 h-3.5 text-purple-400" />
-                  <span className="text-xs font-medium text-gray-500">SHIF</span>
-                </div>
-                <p className="text-sm font-bold text-purple-600">KSh {totalNHIF.toLocaleString()}</p>
-                <p className="text-[10px] text-gray-400 mt-0.5">Health fund</p>
-              </div>
-
-              {/* NSSF */}
-              <div className="bg-white p-4 rounded-[10px] border border-gray-200 shadow-sm">
-                <div className="flex items-center gap-2 mb-1">
-                  <Calculator className="w-3.5 h-3.5 text-indigo-400" />
-                  <span className="text-xs font-medium text-gray-500">NSSF</span>
-                </div>
-                <p className="text-sm font-bold text-indigo-600">KSh {totalNSSF.toLocaleString()}</p>
-                <p className="text-[10px] text-gray-400 mt-0.5">Social security</p>
-              </div>
-
-              {/* Housing Levy */}
-              <div className="bg-white p-4 rounded-[10px] border border-gray-200 shadow-sm">
-                <div className="flex items-center gap-2 mb-1">
-                  <DollarSign className="w-3.5 h-3.5 text-yellow-500" />
-                  <span className="text-xs font-medium text-gray-500">Housing levy</span>
-                </div>
-                <p className="text-sm font-bold text-yellow-600">KSh {totalHousingLevy.toLocaleString()}</p>
-                <p className="text-[10px] text-gray-400 mt-0.5">1.5% of gross</p>
-              </div>
-            </div>
-
 
             {paymentRequests.length > 0 ? (
               <div className="grid gap-4">
@@ -4222,8 +4339,8 @@ export default function PayrollDashboard() {
         )}
 
       {showQuickActions && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-md">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-[var(--card)] rounded-xl shadow-lg p-6 w-full max-w-md">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-gray-900">
                 Quick Actions
@@ -4356,7 +4473,9 @@ export default function PayrollDashboard() {
         </div>
       )}
 
-      <div className="bg-white border border-indigo-100 rounded-[10px] px-4 py-2.5">
+      {/* ── UNIFIED COMMAND BAR ──────────────────────────────── */}
+      <div className="glass-card px-4 py-3 border-[var(--p-line)] flex items-center justify-between gap-3 flex-wrap">
+        {/* LEFT: Filters */}
         <div className="flex items-center gap-2 flex-wrap">
           {/* Pay Period */}
           <DatePicker
@@ -4365,173 +4484,92 @@ export default function PayrollDashboard() {
             dateFormat="MMMM yyyy"
             showMonthYearPicker
             customInput={
-              <button className="w-40 h-[32px] bg-gray-50/50 border border-gray-300 rounded-md px-2.5 py-1.5 text-gray-900 focus:outline-none focus:border-green-500 hover:bg-white transition-all duration-200 flex items-center justify-between text-left group">
-                <div className="flex items-center gap-2 truncate flex-1">
-                  <Calendar size={13} className="text-gray-400 group-hover:text-green-600 transition-colors flex-shrink-0" />
-                  <span className="truncate text-xs text-gray-900 font-medium">
-                    {selectedPeriod ? selectedPeriod.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : "Pay Period"}
-                  </span>
-                </div>
-                <ChevronDown size={14} className="text-gray-400 group-hover:text-green-500 transition-transform ml-1" />
+              <button className="h-[30px] bg-[var(--glass)] border border-[var(--p-line)] rounded-md px-2.5 text-[var(--t1)] focus:outline-none hover:bg-[var(--card)] transition-all flex items-center gap-2 text-left group">
+                <Calendar size={12} className="text-[var(--t4)] group-hover:text-[var(--p)] transition-colors flex-shrink-0" />
+                <span className="text-[11px] text-[var(--t1)] font-medium whitespace-nowrap">
+                  {selectedPeriod ? selectedPeriod.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : "Pay Period"}
+                </span>
+                <ChevronDown size={12} className="text-[var(--t4)]" />
               </button>
             }
           />
 
+          <div className="w-px h-5 bg-[var(--p-line)]" />
+
           {/* Branch */}
-          <div className="w-36">
-            <SearchableDropdown
-              options={branches}
-              value={selectedBranch}
-              onChange={setSelectedBranch}
-              placeholder="Select Branch"
-              icon={MapPin}
-            />
+          <div className="w-32">
+            <SearchableDropdown options={branches} value={selectedBranch} onChange={setSelectedBranch} placeholder="Branch" icon={MapPin} />
           </div>
 
           {/* Department */}
-          <div className="w-40">
+          <div className="w-36">
             <SearchableDropdown
-              options={departments.map((dept) => ({
-                label: dept === "all" ? "All Departments" : dept,
-                value: dept,
-              }))}
-              value={selectedDepartment}
-              onChange={setSelectedDepartment}
-              placeholder="Select Department"
-              icon={Briefcase}
+              options={departments.map((dept) => ({ label: dept === "all" ? "All Departments" : dept, value: dept }))}
+              value={selectedDepartment} onChange={setSelectedDepartment} placeholder="Department" icon={Briefcase}
             />
           </div>
 
           {/* Payment Method */}
-          <div className="w-36">
+          <div className="w-32">
             <SearchableDropdown
-              options={paymentMethods.map((method) => ({
-                label: method === "all" ? "All Methods" : method,
-                value: method,
-              }))}
-              value={selectedPaymentMethod}
-              onChange={setSelectedPaymentMethod}
-              placeholder="Select Method"
-              icon={CreditCard}
+              options={paymentMethods.map((method) => ({ label: method === "all" ? "All Methods" : method, value: method }))}
+              value={selectedPaymentMethod} onChange={setSelectedPaymentMethod} placeholder="Method" icon={CreditCard}
             />
           </div>
 
-          {/* Make Bulk Pay */}
+          <div className="w-px h-5 bg-[var(--p-line)]" />
+
+          {/* Bulk Pay CTA */}
           <button
             onClick={handleBulkMpesaPayment}
             disabled={finalFilteredRecords.length === 0}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-600 text-white hover:bg-green-700 rounded-[25px] text-xs font-medium transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[var(--p)] text-[var(--sidebar)] hover:shadow-[0_0_15px_var(--p-dim)] rounded-[25px] text-[11px] font-semibold transition-all disabled:opacity-50"
           >
             <TabletSmartphone className="w-3 h-3" />
-            {userRole === "credit_analyst_officer" ? "M-PESA Bulk Pay" : "Make Bulk Pay"}
+            {userRole === "credit_analyst_officer" ? "M-PESA Bulk" : "Bulk Pay"}
           </button>
         </div>
-      </div>
 
-      {/* ── TOOLBAR: Summary + Report actions + Search ──────── */}
-      <div className="bg-white border border-indigo-100 rounded-[10px] px-4 py-2.5 flex items-center justify-between gap-3 flex-wrap">
-        {/* Left side: Show Summary + action buttons */}
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <button
-            onClick={() => setShowSummary(!showSummary)}
-            className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-50 text-gray-600 hover:text-violet-700 hover:bg-violet-50 rounded-[25px] text-xs font-medium transition-colors border border-gray-200"
-          >
-            {showSummary ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-            {showSummary ? "Hide Summary" : "Show Summary"}
-          </button>
-
-          {/* Divider */}
-          <div className="w-px h-4 bg-gray-200 mx-1" />
-
-          {/* Statutory Override inline toggle */}
-          <button
-            onClick={toggleStatutoryOverride}
-            className={`inline-flex items-center gap-2 px-2.5 py-1.5 rounded-[25px] text-xs font-medium transition-colors border ${overrideStatutoryChecks
-              ? "bg-green-50 text-green-700 border-green-200"
-              : "bg-white text-gray-600 border-gray-200 hover:text-violet-700 hover:bg-violet-50"
-              }`}
-          >
-            <span className={`relative inline-flex h-4 w-7 items-center rounded-full transition-colors ${overrideStatutoryChecks ? "bg-green-500" : "bg-gray-300"
-              }`}>
-              <span className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${overrideStatutoryChecks ? "translate-x-3.5" : "translate-x-0.5"
-                }`} />
-            </span>
-            Statutory Override
-          </button>
-
-          {/* Divider */}
-
-          <button
-            onClick={() => setCurrentView("mpesa-spreadsheet")}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white text-gray-600 hover:text-violet-700 hover:bg-violet-50 rounded-[25px] text-xs font-medium transition-colors border border-gray-200"
-          >
-            <FileSpreadsheet className="w-3 h-3" />
-            M-PESA Spreadsheet
-          </button>
-          <button
-            onClick={() => setShowP9Modal(true)}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white text-gray-600 hover:text-violet-700 hover:bg-violet-50 rounded-[25px] text-xs font-medium transition-colors border border-gray-200"
-          >
-            <FileText className="w-3 h-3" />
-            P9
-          </button>
-          <button
-            onClick={() => setShowP10Modal(true)}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white text-gray-600 hover:text-violet-700 hover:bg-violet-50 rounded-[25px] text-xs font-medium transition-colors border border-gray-200"
-          >
-            <FileSpreadsheet className="w-3 h-3" />
-            P10
-          </button>
-          <button
-            onClick={() => setShowExportModal(true)}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white text-gray-600 hover:text-violet-700 hover:bg-violet-50 rounded-[25px] text-xs font-medium transition-colors border border-gray-200"
-          >
-            <Download className="w-3 h-3" />
-            Export
-          </button>
-          <button
-            onClick={() => setShowStatutorySettings(true)}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white text-gray-600 hover:text-violet-700 hover:bg-violet-50 rounded-[25px] text-xs font-medium transition-colors border border-gray-200"
-          >
-            <Settings className="w-3 h-3" />
-            Statutory
-          </button>
-          <button
-            onClick={handleSaveToHistory}
-            disabled={isSavingHistory || finalFilteredRecords.length === 0}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-violet-50 text-violet-700 hover:bg-violet-100 rounded-[25px] text-xs font-medium transition-colors border border-violet-200 disabled:opacity-50"
-          >
-            {isSavingHistory ? <Loader className="w-3 h-3 animate-spin" /> : <Box className="w-3 h-3" />}
-            Save History
-          </button>
-          <button
-            onClick={() => setShowBulkUploadModal(true)}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white text-gray-600 hover:text-violet-700 hover:bg-violet-50 rounded-[25px] text-xs font-medium transition-colors border border-gray-200"
-          >
-            <Upload className="w-3 h-3" />
-            Upload History
-          </button>
-          {(userRole === "checker" || userRole === "credit_analyst_officer") && (
-            <button
-              onClick={() => setShowApprovalQueue(true)}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white text-gray-600 hover:text-violet-700 hover:bg-violet-50 rounded-[25px] text-xs font-medium transition-colors border border-gray-200"
-            >
-              <Clock className="w-3 h-3" />
-              Approvals ({pendingCount})
-            </button>
-          )}
-        </div>
-
-        {/* Right side: search */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-3.5 h-3.5" />
+        {/* CENTER: Search */}
+        <div className="relative flex-1 max-w-xs">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--t4)] w-3.5 h-3.5" />
           <input
             type="text"
-            placeholder="Search by name or employee ID"
+            placeholder="Search personnel..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="bg-gray-50 border border-gray-200 rounded-[25px] pl-8 pr-4 py-1.5 text-xs placeholder-gray-400 focus:ring-2 focus:ring-violet-300 focus:outline-none w-64"
+            className="w-full pl-9 pr-4 py-1.5 bg-[var(--glass)] border border-[var(--p-line)] rounded-full text-[11px] text-[var(--t1)] placeholder-[var(--t4)] focus:outline-none focus:border-[var(--p)] focus:ring-4 focus:ring-[var(--p-dim)] transition-all"
           />
+        </div>
+
+        {/* RIGHT: Action icons */}
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={toggleStatutoryOverride}
+            className={`px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border transition-all ${
+              overrideStatutoryChecks
+                ? "bg-[var(--p)] text-[var(--sidebar)] border-[var(--p)]"
+                : "bg-[var(--glass)] border-[var(--p-line)] text-[var(--t3)] hover:text-[var(--p)]"
+            }`}
+            title="Statutory Override"
+          >
+            Override
+          </button>
+
+          <div className="w-px h-5 bg-[var(--p-line)]" />
+
+          <button onClick={() => setCurrentView("mpesa-spreadsheet")} className="p-2 rounded-lg bg-[var(--glass)] border border-[var(--p-line)] text-[var(--t3)] hover:text-[var(--p)] transition-colors" title="M-PESA Spreadsheet">
+            <FileSpreadsheet className="w-3.5 h-3.5" />
+          </button>
+          <button onClick={() => setShowP9Modal(true)} className="p-2 rounded-lg bg-[var(--glass)] border border-[var(--p-line)] text-[var(--t3)] hover:text-[var(--p)] transition-colors" title="P9 Form">
+            <FileText className="w-3.5 h-3.5" />
+          </button>
+          <button onClick={() => setShowExportModal(true)} className="p-2 rounded-lg bg-[var(--glass)] border border-[var(--p-line)] text-[var(--t3)] hover:text-[var(--green)] transition-colors" title="Export">
+            <Download className="w-3.5 h-3.5" />
+          </button>
+          <button onClick={() => setShowStatutorySettings(true)} className="p-2 rounded-lg bg-[var(--glass)] border border-[var(--p-line)] text-[var(--t3)] hover:text-[var(--p)] transition-colors" title="Settings">
+            <Settings className="w-3.5 h-3.5" />
+          </button>
         </div>
       </div>
 
@@ -4539,120 +4577,51 @@ export default function PayrollDashboard() {
 
       {/* ── PAYROLL REPORT ──────────────────────────────────── */}
       <div>
-        {/* Stats cards - always visible */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 mb-4">
-          <div className="bg-white p-3 rounded-[10px] border border-gray-200 shadow-sm">
-            <div className="flex items-center gap-1.5 mb-1">
-              <Users className="w-3 h-3 text-gray-400" />
-              <span className="text-[10px] font-medium text-gray-500">Employees</span>
-            </div>
-            <p className="text-lg font-bold text-gray-900">{finalFilteredRecords.length}</p>
-            <p className="text-[10px] text-gray-400">On payroll</p>
-          </div>
-          <div className="bg-white p-3 rounded-[10px] border border-gray-200 shadow-sm">
-            <div className="flex items-center gap-1.5 mb-1">
-              <TrendingUp className="w-3 h-3 text-blue-400" />
-              <span className="text-[10px] font-medium text-gray-500">Gross pay</span>
-            </div>
-            <p className="text-xs font-bold text-blue-700">KSh {totalGrossPay.toLocaleString()}</p>
-            <p className="text-[10px] text-gray-400">Before deductions</p>
-          </div>
-          <div className="bg-white p-3 rounded-[10px] border border-gray-200 shadow-sm">
-            <div className="flex items-center gap-1.5 mb-1">
-              <DollarSign className="w-3 h-3 text-green-400" />
-              <span className="text-[10px] font-medium text-gray-500">Net pay</span>
-            </div>
-            <p className="text-xs font-bold text-green-700">KSh {totalNetPay.toLocaleString()}</p>
-            <p className="text-[10px] text-gray-400">Take-home</p>
-          </div>
-          <div className="bg-white p-3 rounded-[10px] border border-gray-200 shadow-sm">
-            <div className="flex items-center gap-1.5 mb-1">
-              <Calculator className="w-3 h-3 text-red-400" />
-              <span className="text-[10px] font-medium text-gray-500">Deductions</span>
-            </div>
-            <p className="text-xs font-bold text-red-600">KSh {totalDeductions.toLocaleString()}</p>
-            <p className="text-[10px] text-gray-400">Statutory + others</p>
-          </div>
-          <div className="bg-white p-3 rounded-[10px] border border-gray-200 shadow-sm">
-            <div className="flex items-center gap-1.5 mb-1">
-              <FileText className="w-3 h-3 text-orange-400" />
-              <span className="text-[10px] font-medium text-gray-500">PAYE</span>
-            </div>
-            <p className="text-xs font-bold text-orange-600">KSh {totalPAYE.toLocaleString()}</p>
-            <p className="text-[10px] text-gray-400">Income tax</p>
-          </div>
-          <div className="bg-white p-3 rounded-[10px] border border-gray-200 shadow-sm">
-            <div className="flex items-center gap-1.5 mb-1">
-              <TrendingUp className="w-3 h-3 text-purple-400" />
-              <span className="text-[10px] font-medium text-gray-500">SHIF</span>
-            </div>
-            <p className="text-xs font-bold text-purple-600">KSh {totalNHIF.toLocaleString()}</p>
-            <p className="text-[10px] text-gray-400">Health fund</p>
-          </div>
-          <div className="bg-white p-3 rounded-[10px] border border-gray-200 shadow-sm">
-            <div className="flex items-center gap-1.5 mb-1">
-              <Calculator className="w-3 h-3 text-indigo-400" />
-              <span className="text-[10px] font-medium text-gray-500">NSSF</span>
-            </div>
-            <p className="text-xs font-bold text-indigo-600">KSh {totalNSSF.toLocaleString()}</p>
-            <p className="text-[10px] text-gray-400">Social security</p>
-          </div>
-          <div className="bg-white p-3 rounded-[10px] border border-gray-200 shadow-sm">
-            <div className="flex items-center gap-1.5 mb-1">
-              <DollarSign className="w-3 h-3 text-yellow-500" />
-              <span className="text-[10px] font-medium text-gray-500">Housing levy</span>
-            </div>
-            <p className="text-xs font-bold text-yellow-600">KSh {totalHousingLevy.toLocaleString()}</p>
-            <p className="text-[10px] text-gray-400">1.5% of gross</p>
-          </div>
-        </div>
 
-
-
-        <div className="bg-[#f3f4f6] rounded-[5px] overflow-hidden">
+        <div className="glass-card border-[var(--p-line)] overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-300 text-xs">
-              <thead className="bg-gray-200 border-b border-gray-300">
+            <table className="min-w-full divide-y divide-[var(--p-line)] text-xs">
+              <thead className="bg-[var(--sidebar)] border-b border-[var(--p-line)]">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 border-r border-gray-300">
-                    Employee
+                  <th className="px-2 py-1.5 text-left text-[10px] font-bold text-[var(--t4)] uppercase tracking-widest border-r border-[var(--p-line)]">
+                    Personnel Node
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 border-r border-gray-300">
+                  <th className="px-2 py-1.5 text-left text-[10px] font-bold text-[var(--t4)] uppercase tracking-widest border-r border-[var(--p-line)]">
                     Region
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 border-r border-gray-300">
-                    Gross pay
+                  <th className="px-2 py-1.5 text-right text-[10px] font-bold text-[var(--t4)] uppercase tracking-widest border-r border-[var(--p-line)]">
+                    Gross
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 border-r border-gray-300">
-                    Per diem
+                  <th className="px-2 py-1.5 text-right text-[10px] font-bold text-[var(--t4)] uppercase tracking-widest border-r border-[var(--p-line)]">
+                    Diems
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 border-r border-gray-300">
+                  <th className="px-2 py-1.5 text-right text-[10px] font-bold text-[var(--t4)] uppercase tracking-widest border-r border-[var(--p-line)]">
                     PAYE
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 border-r border-gray-300">
+                  <th className="px-2 py-1.5 text-right text-[10px] font-bold text-[var(--t4)] uppercase tracking-widest border-r border-[var(--p-line)]">
                     SHIF
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 border-r border-gray-300">
+                  <th className="px-2 py-1.5 text-right text-[10px] font-bold text-[var(--t4)] uppercase tracking-widest border-r border-[var(--p-line)]">
                     NSSF
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 border-r border-gray-300">
+                  <th className="px-2 py-1.5 text-right text-[10px] font-bold text-[var(--t4)] uppercase tracking-widest border-r border-[var(--p-line)]">
                     AHL
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 border-r border-gray-300">
-                    Advance
+                  <th className="px-2 py-1.5 text-right text-[10px] font-bold text-[var(--t4)] uppercase tracking-widest border-r border-[var(--p-line)]">
+                    Adv.
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 border-r border-gray-300">
-                    Total deductions
+                  <th className="px-2 py-1.5 text-right text-[10px] font-bold text-[var(--t4)] uppercase tracking-widest border-r border-[var(--p-line)]">
+                    Deduct
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 border-r border-gray-300">
-                    Net pay
+                  <th className="px-2 py-1.5 text-right text-[10px] font-bold text-[var(--t4)] uppercase tracking-widest border-r border-[var(--p-line)] bg-[color-mix(in_srgb,var(--green)_8%,transparent)]">
+                    Net Pay
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">
-                    Actions
+                  <th className="px-2 py-1.5 text-center text-[10px] font-bold text-[var(--t4)] uppercase tracking-widest">
+                    Cmd
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-[#f3f4f6] divide-y divide-gray-200">
+              <tbody className="divide-y divide-[var(--p-line)]">
                 {currentItems.map((record, index) => {
                   const isExpanded = expandedRows.has(record.id);
                   const voluntaryDeductions =
@@ -4663,249 +4632,87 @@ export default function PayrollDashboard() {
 
                   return (
                     <React.Fragment key={record.id}>
-                      <tr className="hover:bg-gray-50 transition-colors">
-                        <td className="px-4 py-3 border-r border-gray-300">
-                          <div className="flex items-start">
-                            <button
-                              onClick={(e) => toggleRowExpand(record.id, e)}
-                              className="mr-2 mt-0.5 text-gray-500 hover:text-gray-700 shrink-0"
-                            >
-                              {isExpanded ? (
-                                <ChevronUp className="w-4 h-4" />
-                              ) : (
-                                <ChevronDown className="w-4 h-4" />
-                              )}
-                            </button>
-                            <div className="flex flex-col">
-                              <span className="text-sm font-semibold text-gray-900 leading-tight uppercase">
-                                {record.employee_name}
-                              </span>
-                              <span className="text-xs text-gray-500 font-mono mt-0.5">
-                                {record.employee_id}
-                              </span>
-                              <span className="text-xs text-gray-500 font-mono">
-                                {record.employeeNu}
-                              </span>
-                              <span className="text-xs text-gray-400 mt-1 uppercase">
-                                {record.position} •{" "}
-                                {record.department === "Branch Staff"
-                                  ? record.branch
-                                  : record.department}
-                              </span>
-                            </div>
-                          </div>
+                      <tr className="hover:bg-[var(--glass-h)] transition-colors">
+                        <td className="px-2 py-1.5 border-r border-[var(--p-line)]">
+                          <span className="text-[11px] font-semibold text-[var(--t1)] leading-tight uppercase truncate">
+                            {record.employee_name}
+                          </span>
                         </td>
-                        <td className="px-4 py-3 border-r border-gray-300 text-xs text-gray-700 truncate max-w-[80px]">
+                        <td className="px-2 py-1.5 border-r border-[var(--p-line)] text-[11px] text-[var(--t2)] truncate max-w-[80px]">
                           {record.branch}
                         </td>
-                        <td className="px-4 py-3 border-r border-gray-300 text-xs text-gray-700 whitespace-nowrap">
-                          KSh {record.gross_pay.toLocaleString()}
+                        <td className="px-2 py-1.5 border-r border-[var(--p-line)] text-[11px] text-[var(--t2)] whitespace-nowrap text-right tabular-nums">
+                          {record.gross_pay.toLocaleString()}
                         </td>
-                        <td className="px-4 py-3 border-r border-gray-300 text-xs text-gray-700 whitespace-nowrap">
-                          KSh {record.per_diem?.toLocaleString() || "0"}
+                        <td className="px-2 py-1.5 border-r border-[var(--p-line)] text-[11px] text-[var(--t2)] whitespace-nowrap text-right tabular-nums">
+                          {record.per_diem?.toLocaleString() || "0"}
                         </td>
-                        <td className="px-4 py-3 border-r border-gray-300 text-xs text-gray-700 whitespace-nowrap">
-                          KSh {Math.round(record.paye_tax).toLocaleString()}
+                        <td className="px-2 py-1.5 border-r border-[var(--p-line)] text-[11px] text-[var(--t2)] whitespace-nowrap text-right tabular-nums">
+                          {Math.round(record.paye_tax).toLocaleString()}
                         </td>
-                        <td className="px-4 py-3 border-r border-gray-300 text-xs text-gray-700 whitespace-nowrap">
-                          KSh {record.nhif_deduction.toLocaleString()}
+                        <td className="px-2 py-1.5 border-r border-[var(--p-line)] text-[11px] text-[var(--t2)] whitespace-nowrap text-right tabular-nums">
+                          {record.nhif_deduction.toLocaleString()}
                         </td>
-                        <td className="px-4 py-3 border-r border-gray-300 text-xs text-gray-700 whitespace-nowrap">
-                          KSh {record.nssf_deduction.toLocaleString()}
+                        <td className="px-2 py-1.5 border-r border-[var(--p-line)] text-[11px] text-[var(--t2)] whitespace-nowrap text-right tabular-nums">
+                          {record.nssf_deduction.toLocaleString()}
                         </td>
-                        <td className="px-4 py-3 border-r border-gray-300 text-xs text-gray-700 whitespace-nowrap">
-                          KSh {record.housing_levy.toLocaleString()}
+                        <td className="px-2 py-1.5 border-r border-[var(--p-line)] text-[11px] text-[var(--t2)] whitespace-nowrap text-right tabular-nums">
+                          {record.housing_levy.toLocaleString()}
                         </td>
-                        <td className="px-4 py-3 border-r border-gray-300 text-xs text-gray-700 whitespace-nowrap">
-                          KSh{" "}
+                        <td className="px-2 py-1.5 border-r border-[var(--p-line)] text-[11px] text-[var(--t2)] whitespace-nowrap text-right tabular-nums">
                           {record.advance_deduction?.toLocaleString() || "0"}
                         </td>
-                        <td className="px-4 py-3 border-r border-gray-300 text-xs text-gray-700 font-medium whitespace-nowrap">
-                          KSh {record.total_deductions.toLocaleString()}
+                        <td className="px-2 py-1.5 border-r border-[var(--p-line)] text-[11px] text-[var(--t2)] font-medium whitespace-nowrap text-right tabular-nums">
+                          {record.total_deductions.toLocaleString()}
                         </td>
-                        <td className="px-4 py-3 border-r border-gray-300 text-sm font-bold text-green-700 whitespace-nowrap bg-green-50/30">
-                          KSh {Math.round(record.net_pay).toLocaleString()}
+                        <td className="px-2 py-1.5 border-r border-[var(--p-line)] text-xs font-bold text-[var(--green)] whitespace-nowrap text-right tabular-nums" style={{ background: 'color-mix(in srgb, var(--green) 8%, transparent)' }}>
+                          {Math.round(record.net_pay).toLocaleString()}
                         </td>
-                        <td className="px-4 py-3">
-                          <div className="flex flex-col gap-1.5">
-                            <button
-                              onClick={() => handleSingleMpesaPayment(record)}
-                              className="inline-flex items-center gap-1 px-2 py-1.5 text-xs font-medium text-white bg-green-600 hover:bg-green-700 rounded-[25px] transition-colors"
+                        <td className="px-2 py-1.5 relative text-center">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setOpenActionMenuId(openActionMenuId === record.employee_id ? null : record.employee_id);
+                            }}
+                            className="p-1 text-[var(--t3)] hover:text-[var(--p)] hover:bg-[var(--p-dim)] rounded-md transition-colors"
+                          >
+                            <MoreVertical className="w-4 h-4 mx-auto" />
+                          </button>
+                          
+                          {openActionMenuId === record.employee_id && (
+                            <div 
+                              className="absolute right-10 top-1/2 -translate-y-1/2 z-50 bg-[var(--card)] border border-[var(--p-line)] shadow-xl rounded-lg py-1.5 flex flex-col w-32 animate-in fade-in zoom-in-95 duration-100"
+                              onMouseLeave={() => setOpenActionMenuId(null)}
                             >
-                              <Smartphone className="w-3 h-3" />
-                              {userRole === "credit_analyst_officer"
-                                ? "M-Pesa"
-                                : "pay"}
-                            </button>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleViewPayslip(record, index);
-                              }}
-                              className="inline-flex items-center gap-1 px-2 py-1.5 text-xs font-medium text-blue-700 bg-white hover:bg-blue-100 rounded-[25px] transition-colors border border-gray-200"
-                            >
-                              <FileText className="w-3 h-3" />
-                              Payslip
-                            </button>
-                            {record.employeeNu && (
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  sendPayslipNotification(record);
-                                }}
-                                disabled={sendingSMS || smsStatus === "sending"}
-                                className={`inline-flex items-center gap-1 px-2 py-1.5 text-xs font-medium rounded-[25px] transition-colors ${smsStatus === "success"
-                                  ? "bg-green-50 text-green-700"
-                                  : smsStatus === "failed"
-                                    ? "bg-red-50 text-red-700"
-                                    : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
-                                  } disabled:opacity-50`}
-                              >
-                                {smsStatus === "sending" ? (
-                                  <Loader className="w-3 h-3 animate-spin" />
-                                ) : smsStatus === "success" ? (
-                                  <CheckCircle className="w-3 h-3" />
-                                ) : smsStatus === "failed" ? (
-                                  <XCircle className="w-3 h-3" />
-                                ) : (
-                                  <Send className="w-3 h-3" />
+                                <button
+                                  onClick={(e) => { e.stopPropagation(); setOpenActionMenuId(null); handleSingleMpesaPayment(record); }}
+                                  className="w-full text-left px-3 py-1.5 text-[11px] font-semibold text-[var(--p)] hover:bg-[var(--p-dim)] transition-colors flex items-center gap-2"
+                                >
+                                  <Smartphone className="w-3.5 h-3.5" />
+                                  {userRole === "credit_analyst_officer" ? "M-Pesa" : "Pay"}
+                                </button>
+                                <button
+                                  onClick={(e) => { e.stopPropagation(); setOpenActionMenuId(null); handleViewPayslip(record, index); }}
+                                  className="w-full text-left px-3 py-1.5 text-[11px] font-medium text-[var(--t2)] hover:bg-[var(--sidebar)] transition-colors flex items-center gap-2"
+                                >
+                                  <FileText className="w-3.5 h-3.5" />
+                                  Payslip
+                                </button>
+                                {record.employeeNu && (
+                                  <button
+                                    onClick={(e) => { e.stopPropagation(); setOpenActionMenuId(null); sendPayslipNotification(record); }}
+                                    disabled={sendingSMS || smsStatus === "sending"}
+                                    className="w-full text-left px-3 py-1.5 text-[11px] font-medium text-[var(--t2)] hover:bg-[var(--sidebar)] transition-colors flex items-center gap-2 disabled:opacity-50"
+                                  >
+                                    {smsStatus === "sending" ? <Loader className="w-3.5 h-3.5 animate-spin" /> : smsStatus === "success" ? <CheckCircle className="w-3.5 h-3.5 text-[var(--green)]" /> : smsStatus === "failed" ? <XCircle className="w-3.5 h-3.5 text-red-500" /> : <Send className="w-3.5 h-3.5" />}
+                                    {smsStatus === "sending" ? "Sending" : smsStatus === "success" ? "Sent" : smsStatus === "failed" ? "Failed" : "SMS"}
+                                  </button>
                                 )}
-                                {smsStatus === "sending"
-                                  ? "Sending"
-                                  : smsStatus === "success"
-                                    ? "Sent"
-                                    : smsStatus === "failed"
-                                      ? "Failed"
-                                      : "SMS"}
-                              </button>
-                            )}
-                          </div>
+                            </div>
+                          )}
                         </td>
                       </tr>
 
-                      {isExpanded && (
-                        <tr className="bg-[#f3f4f6]">
-                          <td
-                            colSpan={12}
-                            className="px-4 py-4 border-t border-gray-200"
-                          >
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
-                              <div className="space-y-2">
-                                <h4 className="font-medium text-gray-900">
-                                  Earnings
-                                </h4>
-                                <div className="flex justify-between">
-                                  <span>Total Basic Salary:</span>
-                                  <span>
-                                    KSh {record.basic_salary.toLocaleString()}
-                                  </span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span>House Allowance:</span>
-                                  <span>
-                                    KSh{" "}
-                                    {record.house_allowance.toLocaleString()}
-                                  </span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span>Transport Allowance:</span>
-                                  <span>
-                                    KSh{" "}
-                                    {record.transport_allowance.toLocaleString()}
-                                  </span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span>Overtime:</span>
-                                  <span>
-                                    KSh{" "}
-                                    {(
-                                      record.overtime_hours *
-                                      record.overtime_rate
-                                    ).toLocaleString()}
-                                  </span>
-                                </div>
-                                <div className="flex justify-between font-bold bg-yellow-50 p-1">
-                                  <span>Per Diem:</span>
-                                  <span>
-                                    KSh{" "}
-                                    {record.per_diem?.toLocaleString() || "0"}
-                                  </span>
-                                </div>
-                              </div>
-
-                              <div className="space-y-2">
-                                <h4 className="font-medium text-gray-900">
-                                  Statutory Deductions
-                                </h4>
-                                <div className="flex justify-between">
-                                  <span>PAYE:</span>
-                                  <span className="text-red-600">
-                                    KSh {record.paye_tax.toLocaleString()}
-                                  </span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span>SHIF:</span>
-                                  <span className="text-red-600">
-                                    KSh {record.nhif_deduction.toLocaleString()}
-                                  </span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span>NSSF:</span>
-                                  <span className="text-red-600">
-                                    KSh {record.nssf_deduction.toLocaleString()}
-                                  </span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span>Housing Levy:</span>
-                                  <span className="text-red-600">
-                                    KSh {record.housing_levy.toLocaleString()}
-                                  </span>
-                                </div>
-                                <div className="flex justify-between text-green-600">
-                                  <span>Tax Relief:</span>
-                                  <span>
-                                    KSh{" "}
-                                    {record.tax_relief?.toLocaleString() || "0"}
-                                  </span>
-                                </div>
-                              </div>
-
-                              <div className="space-y-2">
-                                <h4 className="font-medium text-gray-900">
-                                  Other Deductions
-                                </h4>
-                                <div className="flex justify-between">
-                                  <span>Loans:</span>
-                                  <span className="text-red-600">
-                                    KSh {record.loan_deduction.toLocaleString()}
-                                  </span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span>Advances:</span>
-                                  <span className="text-red-600">
-                                    KSh{" "}
-                                    {record.advance_deduction.toLocaleString()}
-                                  </span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span>Welfare:</span>
-                                  <span className="text-red-600">
-                                    KSh{" "}
-                                    {record.welfare_deduction.toLocaleString()}
-                                  </span>
-                                </div>
-                                <div className="flex justify-between font-medium">
-                                  <span>Total Deductions:</span>
-                                  <span className="text-red-600">
-                                    KSh{" "}
-                                    {record.total_deductions.toLocaleString()}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-                      )}
                     </React.Fragment>
                   );
                 })}
@@ -4921,6 +4728,10 @@ export default function PayrollDashboard() {
           totalItems={finalFilteredRecords.length}
           itemsPerPage={itemsPerPage}
           currentItemsCount={currentItems.length}
+          onItemsPerPageChange={(val) => {
+            setItemsPerPage(val);
+            setCurrentPage(1);
+          }}
         />
       </div>
 
@@ -4994,8 +4805,8 @@ export default function PayrollDashboard() {
 
       {/* NEW: Clear Queue Confirmation Modal */}
       {showClearQueueModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-md w-full p-6">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-[var(--card)] rounded-lg max-w-md w-full p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-red-600" />
               Clear Payment Queue

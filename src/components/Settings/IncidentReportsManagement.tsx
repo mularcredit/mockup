@@ -283,7 +283,7 @@ const IncidentReportsManagement = () => {
 
     return (
         <div className="p-6">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="glass-card  shadow-sm border border-gray-200">
                 {/* Header */}
                 <div className="p-6 border-b border-gray-200">
                     <div className="flex items-center justify-between mb-4">
@@ -346,7 +346,7 @@ const IncidentReportsManagement = () => {
                 </div>
 
                 {/* Reports List */}
-                <div className="divide-y divide-gray-200">
+                <div className="divide-y divide-[var(--p-line)]">
                     {filteredReports.length === 0 ? (
                         <div className="p-12 text-center">
                             <AlertTriangle className="mx-auto h-12 w-12 text-gray-400" />
@@ -363,7 +363,7 @@ const IncidentReportsManagement = () => {
                                 key={report.id}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
-                                className="p-6 hover:bg-gray-50 transition-colors cursor-pointer"
+                                className="p-6 hover:bg-[var(--glass-h)] transition-colors cursor-pointer"
                                 onClick={() => setSelectedReport(report)}
                             >
                                 <div className="flex items-start justify-between">
@@ -421,13 +421,13 @@ const IncidentReportsManagement = () => {
 
             {/* Report Details Modal */}
             {selectedReport && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto"
+                        className="glass-card  shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto"
                     >
-                        <div className="p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
+                        <div className="p-6 border-b border-gray-200 sticky top-0 bg-[var(--card)] z-10">
                             <div className="flex items-center justify-between">
                                 <h3 className="text-lg font-semibold text-gray-900">Incident Report Details</h3>
                                 <button
@@ -568,7 +568,7 @@ const IncidentReportsManagement = () => {
                                     setResolution('');
                                 }}
                                 disabled={isUpdating}
-                                className="px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+                                className="px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-[var(--glass-h)] transition-colors disabled:opacity-50"
                             >
                                 Close
                             </button>

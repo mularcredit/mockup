@@ -1,0 +1,2243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PeopleEdge KE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --ink: #050B08;
+            --s1: rgba(13, 26, 19, 0.5);
+            --s2: rgba(18, 36, 26, 0.7);
+            --s3: rgba(22, 44, 30, 0.85);
+            --line: rgba(245, 166, 35, 0.09);
+            --line2: rgba(245, 166, 35, 0.15);
+            --gold: #F5A623;
+            --gold-d: rgba(245, 166, 35, 0.08);
+            --green: #00D47E;
+            --green-d: rgba(0, 212, 126, 0.07);
+            --red: #D95F5F;
+            --red-d: rgba(217, 95, 95, 0.07);
+            --amber: #C8900A;
+            --amber-d: rgba(200, 144, 10, 0.07);
+            --blue: #4A8FD4;
+            --blue-d: rgba(74, 143, 212, 0.07);
+            --purple: #8B7EF8;
+            --t1: rgba(255, 255, 255, 0.94);
+            --t2: rgba(196, 209, 201, 0.8);
+            --t3: rgba(138, 154, 145, 0.65);
+            --t4: rgba(74, 96, 84, 0.55);
+            --r: 8px;
+            --rl: 12px;
+        }
+
+        html,
+        body {
+            min-height: 100%;
+            -webkit-font-smoothing: antialiased
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--ink);
+            color: var(--t1);
+            font-size: 13px;
+            line-height: 1.6;
+            font-weight: 400
+        }
+
+        /* ── LAYOUT ── */
+        .wrap {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 36px 40px 80px
+        }
+
+        .g {
+            display: grid;
+            gap: 12px
+        }
+
+        .g2 {
+            grid-template-columns: 1fr 1fr
+        }
+
+        .g3 {
+            grid-template-columns: 1fr 1fr 1fr
+        }
+
+        .g4 {
+            grid-template-columns: 1fr 1fr 1fr 1fr
+        }
+
+        .g-6-4 {
+            grid-template-columns: 6fr 4fr
+        }
+
+        .g-5-3-4 {
+            grid-template-columns: 5fr 3fr 4fr
+        }
+
+        .g-4-4-4 {
+            grid-template-columns: 4fr 4fr 4fr
+        }
+
+        .g-7-5 {
+            grid-template-columns: 7fr 5fr
+        }
+
+        .g-3-5-4 {
+            grid-template-columns: 3fr 5fr 4fr
+        }
+
+        .g-4-8 {
+            grid-template-columns: 4fr 8fr
+        }
+
+        .mb {
+            margin-bottom: 12px
+        }
+
+        .mb2 {
+            margin-bottom: 24px
+        }
+
+        /* ── CARD ── */
+        .card {
+            background: var(--s1);
+            border: 0.5px solid var(--line);
+            border-radius: var(--rl);
+            padding: 24px 26px;
+            position: relative;
+            overflow: hidden
+        }
+
+        .card-sm {
+            padding: 18px 20px
+        }
+
+        .card-xs {
+            padding: 14px 16px
+        }
+
+        /* ── HEADER ── */
+        .pg-hd {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding-bottom: 28px;
+            border-bottom: 0.5px solid var(--line);
+            margin-bottom: 28px
+        }
+
+        .eyebrow {
+            font-size: 10px;
+            color: var(--t4);
+            margin-bottom: 10px;
+            font-weight: 400
+        }
+
+        .display {
+            font-size: 36px;
+            font-weight: 300;
+            color: var(--t1);
+            letter-spacing: -0.8px;
+            line-height: 1
+        }
+
+        .display span {
+            color: var(--gold)
+        }
+
+        .status-row {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-top: 12px
+        }
+
+        .s-item {
+            font-size: 11px;
+            color: var(--t3);
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        .pulse {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: pulse 2.5s ease infinite;
+            flex-shrink: 0
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: .9
+            }
+
+            50% {
+                opacity: .25
+            }
+        }
+
+        /* ── KPI STRIP ── */
+        .kpi-strip {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0;
+            border: 0.5px solid var(--line);
+            border-radius: var(--rl);
+            overflow: hidden;
+            margin-bottom: 28px
+        }
+
+        .kpi-c {
+            padding: 18px 20px;
+            border-right: 0.5px solid var(--line);
+            background: var(--s1)
+        }
+
+        .kpi-c:last-child {
+            border-right: none
+        }
+
+        .kv {
+            font-size: 22px;
+            font-weight: 400;
+            color: var(--t1);
+            letter-spacing: -0.4px;
+            font-variant-numeric: tabular-nums;
+            line-height: 1
+        }
+
+        .kl {
+            font-size: 10px;
+            color: var(--t3);
+            margin-top: 6px
+        }
+
+        .kd {
+            font-size: 10px;
+            margin-top: 6px;
+            font-weight: 400
+        }
+
+        .up {
+            color: var(--green)
+        }
+
+        .dn {
+            color: var(--red)
+        }
+
+        .warn {
+            color: var(--amber)
+        }
+
+        /* ── TYPOGRAPHY ── */
+        .title {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--t1);
+            line-height: 1.3
+        }
+
+        .sub {
+            font-size: 11px;
+            color: var(--t3);
+            margin-top: 3px;
+            line-height: 1.4
+        }
+
+        .label {
+            font-size: 10px;
+            color: var(--t3);
+            font-weight: 400
+        }
+
+        .caption {
+            font-size: 10px;
+            color: var(--t4)
+        }
+
+        .sec {
+            font-size: 10px;
+            color: var(--t4);
+            padding-bottom: 10px;
+            border-bottom: 0.5px solid var(--line);
+            margin-bottom: 16px
+        }
+
+        .metric {
+            font-size: 32px;
+            font-weight: 300;
+            color: var(--t1);
+            letter-spacing: -0.6px;
+            line-height: 1;
+            font-variant-numeric: tabular-nums
+        }
+
+        .metric-sm {
+            font-size: 22px;
+            font-weight: 300;
+            color: var(--t1);
+            letter-spacing: -0.4px;
+            line-height: 1;
+            font-variant-numeric: tabular-nums
+        }
+
+        .tag {
+            font-size: 10px;
+            color: var(--t3);
+            padding: 2px 9px;
+            border: 0.5px solid var(--line);
+            border-radius: 20px
+        }
+
+        /* ── DIVIDER ── */
+        .div {
+            height: 0.5px;
+            background: var(--line);
+            margin: 16px 0
+        }
+
+        /* ── CARD HEADER ── */
+        .ch {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 16px
+        }
+
+        .ch-r {
+            text-align: right
+        }
+
+        /* ── STAT ROW ── */
+        .sr {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 0;
+            border-bottom: 0.5px solid var(--line)
+        }
+
+        .sr:last-child {
+            border: none;
+            padding-bottom: 0
+        }
+
+        .sr:first-child {
+            padding-top: 0
+        }
+
+        .sr-l {
+            font-size: 11px;
+            color: var(--t2);
+            flex: 1
+        }
+
+        .sr-v {
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--t1);
+            font-variant-numeric: tabular-nums
+        }
+
+        .sr-d {
+            font-size: 10px;
+            flex-shrink: 0
+        }
+
+        /* ── MICRO BAR ── */
+        .mbar {
+            height: 2px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1px;
+            overflow: hidden;
+            margin-top: 5px
+        }
+
+        .mfill {
+            height: 100%;
+            border-radius: 1px;
+            transition: width .3s
+        }
+
+        /* ── PROG BAR ── */
+        .prog {
+            margin-bottom: 9px
+        }
+
+        .prog:last-child {
+            margin: 0
+        }
+
+        .prog-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--t2);
+            margin-bottom: 5px
+        }
+
+        .prog-pct {
+            font-size: 10px;
+            color: var(--t3)
+        }
+
+        .prog-track {
+            height: 2px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1px;
+            overflow: hidden
+        }
+
+        .prog-fill {
+            height: 100%;
+            border-radius: 1px
+        }
+
+        /* ── ENGAGEMENT BAR ── */
+        .eng {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 9px
+        }
+
+        .eng:last-child {
+            margin: 0
+        }
+
+        .eng-l {
+            font-size: 11px;
+            color: var(--t2);
+            width: 120px;
+            flex-shrink: 0
+        }
+
+        .eng-t {
+            flex: 1;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1px;
+            overflow: hidden
+        }
+
+        .eng-f {
+            height: 100%;
+            border-radius: 1px
+        }
+
+        .eng-p {
+            font-size: 10px;
+            color: var(--t3);
+            width: 32px;
+            text-align: right;
+            flex-shrink: 0;
+            font-variant-numeric: tabular-nums
+        }
+
+        /* ── COMP ROW ── */
+        .cmp {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 0.5px solid var(--line)
+        }
+
+        .cmp:last-child {
+            border: none;
+            padding-bottom: 0
+        }
+
+        .cmp-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            flex-shrink: 0
+        }
+
+        .cmp-n {
+            font-size: 11px;
+            color: var(--t2);
+            flex: 1
+        }
+
+        .cmp-b {
+            width: 70px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1px;
+            overflow: hidden;
+            flex-shrink: 0
+        }
+
+        .cmp-f {
+            height: 100%;
+            border-radius: 1px
+        }
+
+        .cmp-p {
+            font-size: 11px;
+            color: var(--t2);
+            width: 34px;
+            text-align: right;
+            flex-shrink: 0;
+            font-variant-numeric: tabular-nums
+        }
+
+        /* ── COUNTY ── */
+        .cty {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 9px
+        }
+
+        .cty:last-child {
+            margin: 0
+        }
+
+        .cty-n {
+            font-size: 11px;
+            color: var(--t2);
+            width: 90px;
+            flex-shrink: 0
+        }
+
+        .cty-t {
+            flex: 1;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1px;
+            overflow: hidden
+        }
+
+        .cty-f {
+            height: 100%;
+            border-radius: 1px
+        }
+
+        .cty-v {
+            font-size: 10px;
+            color: var(--t3);
+            width: 38px;
+            text-align: right;
+            flex-shrink: 0;
+            font-variant-numeric: tabular-nums
+        }
+
+        /* ── NOTIFICATION / INSIGHT ITEMS ── */
+        .insight {
+            padding: 10px 0;
+            border-bottom: 0.5px solid var(--line);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px
+        }
+
+        .insight:last-child {
+            border: none;
+            padding-bottom: 0
+        }
+
+        .insight:first-child {
+            padding-top: 0
+        }
+
+        .ins-marker {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            margin-top: 5px;
+            flex-shrink: 0
+        }
+
+        .ins-body {
+            flex: 1
+        }
+
+        .ins-title {
+            font-size: 11px;
+            color: var(--t1);
+            font-weight: 500;
+            line-height: 1.3
+        }
+
+        .ins-sub {
+            font-size: 10px;
+            color: var(--t3);
+            margin-top: 2px;
+            line-height: 1.4
+        }
+
+        .ins-time {
+            font-size: 10px;
+            color: var(--t4);
+            flex-shrink: 0;
+            margin-top: 1px;
+            white-space: nowrap
+        }
+
+        /* ── PERSON ROW ── */
+        .person {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 0.5px solid var(--line)
+        }
+
+        .person:last-child {
+            border: none;
+            padding-bottom: 0
+        }
+
+        .person:first-child {
+            padding-top: 0
+        }
+
+        .avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 500;
+            flex-shrink: 0;
+            color: rgba(0, 0, 0, 0.65)
+        }
+
+        .person-name {
+            font-size: 11px;
+            color: var(--t1);
+            font-weight: 500
+        }
+
+        .person-role {
+            font-size: 10px;
+            color: var(--t3);
+            margin-top: 1px
+        }
+
+        .person-meta {
+            font-size: 10px;
+            color: var(--t3);
+            margin-left: auto;
+            flex-shrink: 0;
+            text-align: right
+        }
+
+        .person-badge {
+            font-size: 9px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-top: 3px;
+            display: inline-block
+        }
+
+        /* ── TIMELINE ── */
+        .tl {
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+            position: relative;
+            margin: 12px 0
+        }
+
+        .tl::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            height: 0.5px;
+            background: var(--line2);
+            z-index: 0
+        }
+
+        .tl-step {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 7px;
+            position: relative;
+            z-index: 1
+        }
+
+        .tl-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 500;
+            flex-shrink: 0
+        }
+
+        .tl-body {
+            background: var(--s2);
+            border: 0.5px solid var(--line2);
+            border-radius: var(--r);
+            padding: 9px 10px;
+            width: 100%
+        }
+
+        .tl-eye {
+            font-size: 9px;
+            color: var(--t4);
+            margin-bottom: 2px
+        }
+
+        .tl-val {
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 1;
+            letter-spacing: -0.3px;
+            font-variant-numeric: tabular-nums
+        }
+
+        .tl-s {
+            font-size: 9px;
+            color: var(--t3);
+            margin-top: 2px
+        }
+
+        .tl-b {
+            height: 2px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1px;
+            margin-top: 6px;
+            overflow: hidden
+        }
+
+        .tl-f {
+            height: 100%;
+            border-radius: 1px
+        }
+
+        /* ── GENDER VIZ ── */
+        .gender-bar {
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            display: flex;
+            margin: 10px 0
+        }
+
+        .gender-split {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 6px
+        }
+
+        .gender-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: var(--t2)
+        }
+
+        .gender-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0
+        }
+
+        /* ── DONUT ── */
+        .donut-wrap {
+            position: relative
+        }
+
+        .donut-center {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            text-align: center
+        }
+
+        /* ── STACKED ── */
+        .stk-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 7px
+        }
+
+        .stk-row:last-child {
+            margin: 0
+        }
+
+        .stk-lbl {
+            font-size: 10px;
+            color: var(--t3);
+            width: 46px;
+            flex-shrink: 0;
+            text-align: right
+        }
+
+        .stk-track {
+            flex: 1;
+            height: 13px;
+            border-radius: 3px;
+            overflow: hidden;
+            display: flex
+        }
+
+        .stk-seg {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            color: rgba(0, 0, 0, 0.6)
+        }
+
+        /* ── FUNNEL ── */
+        .f-step {
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            font-size: 10px;
+            margin-bottom: 3px;
+            height: 22px;
+            color: rgba(0, 0, 0, 0.65)
+        }
+
+        .f-step:last-child {
+            margin: 0
+        }
+
+        /* ── APPROVAL ITEM ── */
+        .appr {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 0;
+            border-bottom: 0.5px solid var(--line)
+        }
+
+        .appr:last-child {
+            border: none;
+            padding-bottom: 0
+        }
+
+        .appr:first-child {
+            padding-top: 0
+        }
+
+        .appr-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: var(--r);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0
+        }
+
+        .appr-t {
+            font-size: 11px;
+            color: var(--t1);
+            font-weight: 500
+        }
+
+        .appr-s {
+            font-size: 10px;
+            color: var(--t3);
+            margin-top: 1px
+        }
+
+        .appr-action {
+            font-size: 10px;
+            color: var(--t3);
+            margin-left: auto;
+            padding: 3px 9px;
+            border: 0.5px solid var(--line2);
+            border-radius: 20px;
+            flex-shrink: 0;
+            cursor: pointer
+        }
+
+        .appr-action:hover {
+            border-color: var(--gold);
+            color: var(--gold)
+        }
+
+        /* ── NINE BOX ── */
+        .ninebox {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 4px;
+            height: 170px
+        }
+
+        .nb {
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center
+        }
+
+        .nb-n {
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1;
+            font-variant-numeric: tabular-nums
+        }
+
+        .nb-l {
+            font-size: 8px;
+            text-align: center;
+            margin-top: 3px;
+            line-height: 1.3;
+            opacity: .7
+        }
+
+        /* ── HEAT ── */
+        .hg {
+            display: grid;
+            grid-template-columns: 76px repeat(12, 1fr);
+            gap: 2px;
+            align-items: center;
+            margin-bottom: 2px
+        }
+
+        .hd {
+            font-size: 9px;
+            color: var(--t4);
+            text-align: right;
+            padding-right: 6px
+        }
+
+        .hc {
+            height: 14px;
+            border-radius: 2px
+        }
+
+        .hm {
+            font-size: 9px;
+            color: var(--t4);
+            text-align: center
+        }
+
+        /* ── GAUGE ── */
+        .gauge-l {
+            font-size: 10px;
+            color: var(--t3);
+            text-align: center;
+            margin-bottom: 5px
+        }
+
+        .gauge-v {
+            font-size: 14px;
+            font-weight: 400;
+            text-align: center;
+            margin-top: 3px;
+            letter-spacing: -0.2px;
+            font-variant-numeric: tabular-nums
+        }
+
+        .gauge-s {
+            font-size: 9px;
+            color: var(--t4);
+            text-align: center;
+            margin-top: 1px
+        }
+
+        /* ── LEGEND ── */
+        .leg {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 10px
+        }
+
+        .leg-i {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 10px;
+            color: var(--t3)
+        }
+
+        .leg-d {
+            width: 16px;
+            height: 2px;
+            border-radius: 1px;
+            flex-shrink: 0
+        }
+
+        /* ── CONTRACT ALERT ── */
+        .contract-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 0.5px solid var(--line)
+        }
+
+        .contract-item:last-child {
+            border: none;
+            padding-bottom: 0
+        }
+
+        .contract-item:first-child {
+            padding-top: 0
+        }
+
+        .ci-days {
+            font-size: 11px;
+            font-weight: 500;
+            width: 32px;
+            flex-shrink: 0;
+            font-variant-numeric: tabular-nums
+        }
+
+        .ci-bar {
+            width: 50px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1px;
+            overflow: hidden;
+            flex-shrink: 0
+        }
+
+        .ci-fill {
+            height: 100%;
+            border-radius: 1px
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+
+        <!-- ── PAGE HEADER ── -->
+        <div class="pg-hd">
+            <div>
+                <div class="eyebrow">Kenya HR intelligence · Q3 2025</div>
+                <div class="display">People<span>Edge</span> KE</div>
+                <div class="status-row">
+                    <div class="s-item">
+                        <div class="pulse"></div>Live · September 2025
+                    </div>
+                    <div class="s-item" style="color:var(--t4)">·</div>
+                    <div class="s-item">8,412 employees</div>
+                    <div class="s-item" style="color:var(--t4)">·</div>
+                    <div class="s-item">47 counties</div>
+                    <div class="s-item" style="color:var(--t4)">·</div>
+                    <div class="s-item">M-Pesa payroll disbursed</div>
+                </div>
+            </div>
+            <div style="text-align:right">
+                <div class="label" style="margin-bottom:5px">Monthly payroll</div>
+                <div
+                    style="font-size:26px;font-weight:300;color:var(--gold);letter-spacing:-0.5px;font-variant-numeric:tabular-nums">
+                    KES 382M</div>
+                <div class="label" style="margin-top:5px">KES 327M net disbursed · September 2025</div>
+            </div>
+        </div>
+
+        <!-- ── KPI STRIP ── -->
+        <div class="kpi-strip mb2">
+            <div class="kpi-c">
+                <div class="kv">8,412</div>
+                <div class="kl">Total employees</div>
+                <div class="kd up">↑ 11.4% year on year</div>
+            </div>
+            <div class="kpi-c">
+                <div class="kv">92.8%</div>
+                <div class="kl">Retention rate</div>
+                <div class="kd up">↑ 1.8 pts quarter on quarter</div>
+            </div>
+            <div class="kpi-c">
+                <div class="kv" style="color:var(--gold)">74</div>
+                <div class="kl">eNPS score</div>
+                <div class="kd up">↑ 9 pts · sector avg 62</div>
+            </div>
+            <div class="kpi-c">
+                <div class="kv">28d</div>
+                <div class="kl">Avg time-to-hire</div>
+                <div class="kd up">↓ 6 days quarter on quarter</div>
+            </div>
+            <div class="kpi-c">
+                <div class="kv" style="color:var(--amber)">79%</div>
+                <div class="kl">Compliance score</div>
+                <div class="kd warn">2 statutory items overdue</div>
+            </div>
+            <div class="kpi-c">
+                <div class="kv">38h</div>
+                <div class="kl">Avg training hours</div>
+                <div class="kd up">↑ 6h · NITA-accredited</div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════
+     ROW 1 — 4 large KPI metric cards
+════════════════════════════════════════════════════ -->
+        <div class="g g4 mb">
+
+            <!-- Headcount card -->
+            <div class="card">
+                <div class="label" style="margin-bottom:10px">Total workforce</div>
+                <div class="metric">8,412</div>
+                <div class="sub" style="margin-top:8px">Across 47 counties · 8 departments · Sep 2025</div>
+                <div class="div"></div>
+                <!-- Gender distribution -->
+                <div class="label" style="margin-bottom:8px">Gender distribution</div>
+                <div class="gender-bar">
+                    <div style="flex:39;background:rgba(245,166,35,0.65)"></div>
+                    <div style="flex:58;background:rgba(74,143,212,0.5)"></div>
+                    <div style="flex:3;background:rgba(139,126,248,0.45)"></div>
+                </div>
+                <div class="gender-split">
+                    <div class="gender-item">
+                        <div class="gender-dot" style="background:var(--gold);opacity:.7"></div>Women · 39%
+                    </div>
+                    <div class="gender-item">
+                        <div class="gender-dot" style="background:var(--blue);opacity:.65"></div>Men · 58%
+                    </div>
+                    <div class="gender-item">
+                        <div class="gender-dot" style="background:var(--purple);opacity:.55"></div>Other · 3%
+                    </div>
+                </div>
+                <div class="div"></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                    <div>
+                        <div class="label" style="margin-bottom:4px">Youth workforce (18–30)</div>
+                        <div style="font-size:18px;font-weight:400;color:var(--t1);font-variant-numeric:tabular-nums">
+                            44%</div>
+                        <div class="mbar">
+                            <div class="mfill" style="width:44%;background:rgba(0,212,126,0.5)"></div>
+                        </div>
+                        <div class="caption" style="margin-top:4px">↑ 3% year on year</div>
+                    </div>
+                    <div>
+                        <div class="label" style="margin-bottom:4px">Remote workforce</div>
+                        <div style="font-size:18px;font-weight:400;color:var(--t1);font-variant-numeric:tabular-nums">
+                            61%</div>
+                        <div class="mbar">
+                            <div class="mfill" style="width:61%;background:rgba(74,143,212,0.5)"></div>
+                        </div>
+                        <div class="caption" style="margin-top:4px">5,131 employees</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payroll card -->
+            <div class="card">
+                <div class="label" style="margin-bottom:10px">Payroll · September 2025</div>
+                <div class="metric" style="color:var(--gold)">KES 382M</div>
+                <div class="sub" style="margin-top:8px">KES 327M net after PAYE, NSSF & SHA</div>
+                <div class="div"></div>
+                <div class="sr">
+                    <div class="sr-l">PAYE → KRA iTax</div>
+                    <div class="sr-v">KES 54M</div>
+                    <div class="sr-d up">100% on time</div>
+                </div>
+                <div class="sr">
+                    <div class="sr-l">NSSF Tier I + II</div>
+                    <div class="sr-v">KES 8.4M</div>
+                    <div class="sr-d up">Compliant</div>
+                </div>
+                <div class="sr">
+                    <div class="sr-l">SHA enrolment</div>
+                    <div class="sr-v">KES 4.2M</div>
+                    <div class="sr-d warn">68% enrolled</div>
+                </div>
+                <div class="sr">
+                    <div class="sr-l">Net disbursed</div>
+                    <div class="sr-v" style="color:var(--green)">KES 327M</div>
+                    <div class="sr-d up">M-Pesa</div>
+                </div>
+                <div class="div"></div>
+                <div class="label" style="margin-bottom:8px">Payroll by department</div>
+                <div style="position:relative;height:90px" class="donut-wrap">
+                    <canvas id="pay-donut" role="img" aria-label="Donut chart payroll by department">Payroll
+                        donut</canvas>
+                    <div class="donut-center">
+                        <div style="font-size:14px;font-weight:400;color:var(--t1);font-variant-numeric:tabular-nums">
+                            382M</div>
+                        <div class="caption">gross</div>
+                    </div>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:8px">
+                    <span class="leg-i"><span class="leg-d" style="background:var(--gold);opacity:.75"></span>Tech
+                        33%</span>
+                    <span class="leg-i"><span class="leg-d" style="background:var(--green);opacity:.7"></span>Sales
+                        24%</span>
+                    <span class="leg-i"><span class="leg-d" style="background:var(--blue);opacity:.7"></span>Ops
+                        20%</span>
+                    <span class="leg-i"><span class="leg-d" style="background:var(--purple);opacity:.65"></span>Other
+                        23%</span>
+                </div>
+            </div>
+
+            <!-- Engagement & eNPS card -->
+            <div class="card">
+                <div class="label" style="margin-bottom:10px">Employee engagement · eNPS</div>
+                <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:8px">
+                    <div class="metric" style="color:var(--gold)">74</div>
+                    <div class="sub">of 100 · sector avg 62</div>
+                </div>
+                <div class="gender-bar" style="margin-bottom:6px">
+                    <div style="flex:52;background:rgba(0,212,126,0.55)"></div>
+                    <div style="flex:26;background:rgba(200,144,10,0.4)"></div>
+                    <div style="flex:22;background:rgba(217,95,95,0.4)"></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:14px">
+                    <div class="gender-item">
+                        <div class="gender-dot" style="background:var(--green);opacity:.7"></div>Promoters 52%
+                    </div>
+                    <div class="gender-item">
+                        <div class="gender-dot" style="background:var(--amber);opacity:.6"></div>Passives 26%
+                    </div>
+                    <div class="gender-item">
+                        <div class="gender-dot" style="background:var(--red);opacity:.55"></div>Detractors 22%
+                    </div>
+                </div>
+                <div class="div" style="margin-top:0"></div>
+                <div class="label" style="margin-bottom:10px">Engagement drivers</div>
+                <div class="eng">
+                    <div class="eng-l">Culture & belonging</div>
+                    <div class="eng-t">
+                        <div class="eng-f" style="width:88%;background:rgba(0,212,126,0.6)"></div>
+                    </div>
+                    <div class="eng-p">88%</div>
+                </div>
+                <div class="eng">
+                    <div class="eng-l">Career growth</div>
+                    <div class="eng-t">
+                        <div class="eng-f" style="width:81%;background:rgba(245,166,35,0.6)"></div>
+                    </div>
+                    <div class="eng-p">81%</div>
+                </div>
+                <div class="eng">
+                    <div class="eng-l">Management quality</div>
+                    <div class="eng-t">
+                        <div class="eng-f" style="width:76%;background:rgba(245,166,35,0.55)"></div>
+                    </div>
+                    <div class="eng-p">76%</div>
+                </div>
+                <div class="eng">
+                    <div class="eng-l">Tools & technology</div>
+                    <div class="eng-t">
+                        <div class="eng-f" style="width:74%;background:rgba(74,143,212,0.55)"></div>
+                    </div>
+                    <div class="eng-p">74%</div>
+                </div>
+                <div class="eng">
+                    <div class="eng-l">Work-life balance</div>
+                    <div class="eng-t">
+                        <div class="eng-f" style="width:70%;background:rgba(74,143,212,0.5)"></div>
+                    </div>
+                    <div class="eng-p">70%</div>
+                </div>
+                <div class="eng" style="margin:0">
+                    <div class="eng-l">Compensation</div>
+                    <div class="eng-t">
+                        <div class="eng-f" style="width:62%;background:rgba(200,144,10,0.5)"></div>
+                    </div>
+                    <div class="eng-p">62%</div>
+                </div>
+            </div>
+
+            <!-- Operational intelligence card -->
+            <div class="card">
+                <div class="label" style="margin-bottom:10px">Operational intelligence</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+                    <div
+                        style="background:var(--s2);border:0.5px solid var(--line);border-radius:var(--r);padding:12px 14px">
+                        <div
+                            style="font-size:22px;font-weight:400;color:var(--t1);font-variant-numeric:tabular-nums;line-height:1">
+                            148</div>
+                        <div class="caption" style="margin-top:5px">On leave today</div>
+                    </div>
+                    <div
+                        style="background:var(--s2);border:0.5px solid var(--line);border-radius:var(--r);padding:12px 14px">
+                        <div
+                            style="font-size:22px;font-weight:400;color:var(--amber);font-variant-numeric:tabular-nums;line-height:1">
+                            23</div>
+                        <div class="caption" style="margin-top:5px">Pending approvals</div>
+                    </div>
+                    <div
+                        style="background:var(--s2);border:0.5px solid var(--line);border-radius:var(--r);padding:12px 14px">
+                        <div
+                            style="font-size:22px;font-weight:400;color:var(--green);font-variant-numeric:tabular-nums;line-height:1">
+                            18</div>
+                        <div class="caption" style="margin-top:5px">New hires this month</div>
+                    </div>
+                    <div
+                        style="background:var(--s2);border:0.5px solid var(--line);border-radius:var(--r);padding:12px 14px">
+                        <div
+                            style="font-size:22px;font-weight:400;color:var(--red);font-variant-numeric:tabular-nums;line-height:1">
+                            12</div>
+                        <div class="caption" style="margin-top:5px">Contracts expiring</div>
+                    </div>
+                </div>
+                <div class="div" style="margin-top:0"></div>
+                <div class="label" style="margin-bottom:10px">Today's schedule</div>
+                <div class="insight">
+                    <div class="ins-marker" style="background:var(--gold)"></div>
+                    <div class="ins-body">
+                        <div class="ins-title">Q3 payroll review</div>
+                        <div class="ins-sub">Finance & People team · Conference room B</div>
+                    </div>
+                    <div class="ins-time">10:00</div>
+                </div>
+                <div class="insight">
+                    <div class="ins-marker" style="background:var(--blue)"></div>
+                    <div class="ins-body">
+                        <div class="ins-title">New hire onboarding · 4 employees</div>
+                        <div class="ins-sub">Technology & Operations departments</div>
+                    </div>
+                    <div class="ins-time">14:00</div>
+                </div>
+                <div class="insight">
+                    <div class="ins-marker" style="background:var(--green)"></div>
+                    <div class="ins-body">
+                        <div class="ins-title">Performance calibration · Sales</div>
+                        <div class="ins-sub">Q3 review cycle · Mombasa branch</div>
+                    </div>
+                    <div class="ins-time">16:30</div>
+                </div>
+                <div class="insight">
+                    <div class="ins-marker" style="background:var(--amber)"></div>
+                    <div class="ins-body">
+                        <div class="ins-title">SHA compliance deadline</div>
+                        <div class="ins-sub">2,692 employees pending enrolment</div>
+                    </div>
+                    <div class="ins-time">EOD</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════
+     ROW 2 — Headcount growth + Runway · Recruitment funnel · Pending activity
+════════════════════════════════════════════════════ -->
+        <div class="sec">Workforce growth & talent acquisition</div>
+        <div class="g g-5-3-4 mb">
+
+            <!-- Headcount growth + runway -->
+            <div class="card">
+                <div class="ch">
+                    <div>
+                        <div class="title">Headcount growth · 2025</div>
+                        <div class="sub">Actual vs target trajectory</div>
+                    </div>
+                    <div class="ch-r">
+                        <div style="font-size:18px;font-weight:400;color:var(--t1);font-variant-numeric:tabular-nums">
+                            8,412</div>
+                        <div class="label">Sep 2025</div>
+                    </div>
+                </div>
+                <div class="leg">
+                    <div class="leg-i">
+                        <div class="leg-d" style="background:var(--gold)"></div>Actual
+                    </div>
+                    <div class="leg-i">
+                        <div class="leg-d" style="background:var(--t4);opacity:.6"></div>Target
+                    </div>
+                </div>
+                <div style="position:relative;height:130px">
+                    <canvas id="hc-chart" role="img" aria-label="Line chart headcount growth 2025">Headcount</canvas>
+                </div>
+                <div class="div"></div>
+                <div class="caption" style="margin-bottom:10px">Growth runway · AI model</div>
+                <div class="tl">
+                    <div class="tl-step">
+                        <div class="tl-dot" style="background:var(--gold);color:#000">01</div>
+                        <div class="tl-body">
+                            <div class="tl-eye">Today</div>
+                            <div class="tl-val" style="color:var(--t1)">8,412</div>
+                            <div class="tl-s">KES 382M / mo</div>
+                            <div class="tl-b">
+                                <div class="tl-f" style="width:84%;background:var(--gold)"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tl-step">
+                        <div class="tl-dot" style="background:var(--green);color:#000">02</div>
+                        <div class="tl-body">
+                            <div class="tl-eye">+3 months</div>
+                            <div class="tl-val" style="color:var(--green)">9,200</div>
+                            <div class="tl-s">KES 418M / mo</div>
+                            <div class="tl-b">
+                                <div class="tl-f" style="width:92%;background:var(--green)"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tl-step">
+                        <div class="tl-dot"
+                            style="background:var(--s2);border:0.5px solid var(--amber);color:var(--amber)">03</div>
+                        <div class="tl-body" style="border-style:dashed">
+                            <div class="tl-eye">Dec 2025 target</div>
+                            <div class="tl-val" style="color:var(--amber)">10,000</div>
+                            <div class="tl-s">KES 480M stretch</div>
+                            <div class="tl-b">
+                                <div class="tl-f" style="width:100%;background:var(--amber)"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recruitment funnel -->
+            <div class="card">
+                <div class="ch">
+                    <div>
+                        <div class="title">Recruitment pipeline</div>
+                        <div class="sub">Q3 2025 · 36 open roles</div>
+                    </div>
+                    <div class="tag">5.7% hire rate</div>
+                </div>
+                <div id="funnel-wrap" style="margin-bottom:14px"></div>
+                <div
+                    style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border:0.5px solid var(--line);border-radius:var(--r);overflow:hidden">
+                    <div style="padding:10px 12px;border-right:0.5px solid var(--line);background:var(--s2)">
+                        <div style="font-size:14px;font-weight:400;color:var(--t1);font-variant-numeric:tabular-nums">
+                            28d</div>
+                        <div class="caption" style="margin-top:3px">Time-to-hire</div>
+                    </div>
+                    <div style="padding:10px 12px;border-right:0.5px solid var(--line);background:var(--s2)">
+                        <div style="font-size:14px;font-weight:400;color:var(--t1);font-variant-numeric:tabular-nums">
+                            KES 46K</div>
+                        <div class="caption" style="margin-top:3px">Cost-per-hire</div>
+                    </div>
+                    <div style="padding:10px 12px;background:var(--s2)">
+                        <div style="font-size:14px;font-weight:400;color:var(--t1);font-variant-numeric:tabular-nums">
+                            82%</div>
+                        <div class="caption" style="margin-top:3px">Offer acceptance</div>
+                    </div>
+                </div>
+                <div class="div"></div>
+                <div class="label" style="margin-bottom:10px">Hire sources</div>
+                <div class="prog">
+                    <div class="prog-row">Employee referrals<span class="prog-pct">34%</span></div>
+                    <div class="prog-track">
+                        <div class="prog-fill" style="width:34%;background:rgba(0,212,126,0.55)"></div>
+                    </div>
+                </div>
+                <div class="prog">
+                    <div class="prog-row">BrighterMonday / LinkedIn<span class="prog-pct">28%</span></div>
+                    <div class="prog-track">
+                        <div class="prog-fill" style="width:28%;background:rgba(74,143,212,0.55)"></div>
+                    </div>
+                </div>
+                <div class="prog">
+                    <div class="prog-row">Direct applications<span class="prog-pct">21%</span></div>
+                    <div class="prog-track">
+                        <div class="prog-fill" style="width:21%;background:rgba(245,166,35,0.55)"></div>
+                    </div>
+                </div>
+                <div class="prog">
+                    <div class="prog-row">TVET / university campus<span class="prog-pct">12%</span></div>
+                    <div class="prog-track">
+                        <div class="prog-fill" style="width:12%;background:rgba(139,126,248,0.5)"></div>
+                    </div>
+                </div>
+                <div class="prog">
+                    <div class="prog-row">Agencies<span class="prog-pct">5%</span></div>
+                    <div class="prog-track">
+                        <div class="prog-fill" style="width:5%;background:rgba(200,144,10,0.5)"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Operational feed -->
+            <div class="card">
+                <div class="title" style="margin-bottom:4px">Pending approvals</div>
+                <div class="sub" style="margin-bottom:14px">23 actions awaiting review</div>
+                <div class="appr">
+                    <div class="appr-icon" style="background:var(--green-d)"><svg width="14" height="14"
+                            viewBox="0 0 24 24" fill="none" stroke="rgba(0,212,126,0.7)" stroke-width="1.5">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <line x1="19" y1="8" x2="19" y2="14" />
+                            <line x1="22" y1="11" x2="16" y2="11" />
+                        </svg></div>
+                    <div>
+                        <div class="appr-t">4 new hire approvals</div>
+                        <div class="appr-s">Technology & Operations · onboarding queued</div>
+                    </div>
+                    <div class="appr-action">Review</div>
+                </div>
+                <div class="appr">
+                    <div class="appr-icon" style="background:var(--amber-d)"><svg width="14" height="14"
+                            viewBox="0 0 24 24" fill="none" stroke="rgba(200,144,10,0.7)" stroke-width="1.5">
+                            <rect x="3" y="4" width="18" height="18" rx="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" />
+                            <line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg></div>
+                    <div>
+                        <div class="appr-t">8 leave requests</div>
+                        <div class="appr-s">Annual & sick leave · Oct 2025</div>
+                    </div>
+                    <div class="appr-action">Review</div>
+                </div>
+                <div class="appr">
+                    <div class="appr-icon" style="background:var(--blue-d)"><svg width="14" height="14"
+                            viewBox="0 0 24 24" fill="none" stroke="rgba(74,143,212,0.7)" stroke-width="1.5">
+                            <path d="M12 20h9" />
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                        </svg></div>
+                    <div>
+                        <div class="appr-t">6 contract renewals</div>
+                        <div class="appr-s">Expiring within 30 days · Sales & CX</div>
+                    </div>
+                    <div class="appr-action">Review</div>
+                </div>
+                <div class="appr">
+                    <div class="appr-icon" style="background:var(--red-d)"><svg width="14" height="14"
+                            viewBox="0 0 24 24" fill="none" stroke="rgba(217,95,95,0.7)" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg></div>
+                    <div>
+                        <div class="appr-t">5 probation endings</div>
+                        <div class="appr-s">Decisions due this week · all departments</div>
+                    </div>
+                    <div class="appr-action">Review</div>
+                </div>
+
+                <div class="div"></div>
+
+                <div class="title" style="margin-bottom:4px;font-size:12px">Upcoming birthdays</div>
+                <div class="sub" style="margin-bottom:12px">Next 7 days · 6 employees</div>
+                <div class="person">
+                    <div class="avatar" style="background:rgba(245,166,35,0.18);color:rgba(245,166,35,0.8)">AW</div>
+                    <div>
+                        <div class="person-name">Amina Waweru</div>
+                        <div class="person-role">Senior Engineer · Technology</div>
+                    </div>
+                    <div class="person-meta">
+                        <div style="font-size:10px;color:var(--t3)">Tomorrow</div>
+                        <div class="person-badge" style="background:rgba(245,166,35,0.1);color:var(--gold)">5 yrs tenure
+                        </div>
+                    </div>
+                </div>
+                <div class="person">
+                    <div class="avatar" style="background:rgba(0,212,126,0.15);color:rgba(0,212,126,0.75)">JO</div>
+                    <div>
+                        <div class="person-name">James Oduya</div>
+                        <div class="person-role">Sales Lead · Mombasa</div>
+                    </div>
+                    <div class="person-meta">
+                        <div style="font-size:10px;color:var(--t3)">Sep 28</div>
+                        <div class="person-badge" style="background:rgba(0,212,126,0.08);color:var(--green)">3 yrs
+                            tenure</div>
+                    </div>
+                </div>
+                <div class="person">
+                    <div class="avatar" style="background:rgba(74,143,212,0.15);color:rgba(74,143,212,0.75)">FM</div>
+                    <div>
+                        <div class="person-name">Faith Muthoni</div>
+                        <div class="person-role">Finance Analyst</div>
+                    </div>
+                    <div class="person-meta">
+                        <div style="font-size:10px;color:var(--t3)">Oct 1</div>
+                        <div class="person-badge" style="background:rgba(74,143,212,0.08);color:var(--blue)">2 yrs
+                            tenure</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════
+     ROW 3 — Performance · Compliance · Payroll trend · Radar
+════════════════════════════════════════════════════ -->
+        <div class="sec">Performance, compliance & analytics</div>
+        <div class="g g4 mb">
+
+            <!-- Performance 9-box + gauges -->
+            <div class="card">
+                <div class="ch">
+                    <div>
+                        <div class="title">Performance matrix</div>
+                        <div class="sub">Nine-box · avg score 3.6</div>
+                    </div>
+                </div>
+                <div class="ninebox">
+                    <div class="nb" style="background:rgba(0,212,126,.07)">
+                        <div class="nb-n" style="color:var(--green)">182</div>
+                        <div class="nb-l" style="color:rgba(0,212,126,.6)">High potential<br>low perform</div>
+                    </div>
+                    <div class="nb" style="background:rgba(245,166,35,.07)">
+                        <div class="nb-n" style="color:var(--gold)">640</div>
+                        <div class="nb-l" style="color:rgba(245,166,35,.6)">High potential<br>mid perform</div>
+                    </div>
+                    <div class="nb" style="background:rgba(0,212,126,.18)">
+                        <div class="nb-n" style="color:rgba(0,0,0,.65)">380</div>
+                        <div class="nb-l" style="color:rgba(0,0,0,.5)">Star performers</div>
+                    </div>
+                    <div class="nb" style="background:rgba(255,255,255,.02)">
+                        <div class="nb-n" style="color:var(--t3)">510</div>
+                        <div class="nb-l" style="color:var(--t4)">Mid potential<br>low perform</div>
+                    </div>
+                    <div class="nb" style="background:rgba(74,143,212,.07)">
+                        <div class="nb-n" style="color:var(--blue)">3,240</div>
+                        <div class="nb-l" style="color:rgba(74,143,212,.6)">Core contributors</div>
+                    </div>
+                    <div class="nb" style="background:rgba(0,212,126,.06)">
+                        <div class="nb-n" style="color:var(--green)">1,820</div>
+                        <div class="nb-l" style="color:rgba(0,212,126,.55)">High perform<br>mid potential</div>
+                    </div>
+                    <div class="nb" style="background:rgba(217,95,95,.08)">
+                        <div class="nb-n" style="color:var(--red)">204</div>
+                        <div class="nb-l" style="color:rgba(217,95,95,.6)">At risk</div>
+                    </div>
+                    <div class="nb" style="background:rgba(200,144,10,.07)">
+                        <div class="nb-n" style="color:var(--amber)">1,120</div>
+                        <div class="nb-l" style="color:rgba(200,144,10,.6)">Reliable<br>performers</div>
+                    </div>
+                    <div class="nb" style="background:rgba(139,126,248,.18)">
+                        <div class="nb-n" style="color:rgba(0,0,0,.65)">316</div>
+                        <div class="nb-l" style="color:rgba(0,0,0,.5)">Future leaders</div>
+                    </div>
+                </div>
+                <div
+                    style="display:flex;justify-content:space-between;font-size:9px;color:var(--t4);margin-top:5px;margin-bottom:12px">
+                    <span>← Low performance</span><span>High performance →</span></div>
+                <div style="position:relative;height:90px">
+                    <canvas id="perf-chart" role="img"
+                        aria-label="Performance rating distribution horizontal bar">Performance distribution</canvas>
+                </div>
+            </div>
+
+            <!-- Compliance -->
+            <div class="card">
+                <div class="ch">
+                    <div>
+                        <div class="title">Compliance · Kenya statutes</div>
+                        <div class="sub">Employment Act · OSHA · WIBA · SHA · DPA</div>
+                    </div>
+                    <div style="font-size:18px;font-weight:400;color:var(--amber);font-variant-numeric:tabular-nums">79%
+                    </div>
+                </div>
+                <div
+                    style="height:3px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden;margin-bottom:14px">
+                    <div
+                        style="width:79%;height:100%;background:linear-gradient(90deg,rgba(0,212,126,0.6),rgba(200,144,10,0.6));border-radius:2px">
+                    </div>
+                </div>
+                <div class="cmp">
+                    <div class="cmp-dot" style="background:var(--green)"></div>
+                    <div class="cmp-n">Data Protection Act 2019</div>
+                    <div class="cmp-b">
+                        <div class="cmp-f" style="width:98%;background:rgba(0,212,126,0.55)"></div>
+                    </div>
+                    <div class="cmp-p">98%</div>
+                </div>
+                <div class="cmp">
+                    <div class="cmp-dot" style="background:var(--green)"></div>
+                    <div class="cmp-n">Employment Act 2007</div>
+                    <div class="cmp-b">
+                        <div class="cmp-f" style="width:96%;background:rgba(0,212,126,0.55)"></div>
+                    </div>
+                    <div class="cmp-p">96%</div>
+                </div>
+                <div class="cmp">
+                    <div class="cmp-dot" style="background:var(--gold)"></div>
+                    <div class="cmp-n">NSSF Act (new rates)</div>
+                    <div class="cmp-b">
+                        <div class="cmp-f" style="width:89%;background:rgba(245,166,35,0.55)"></div>
+                    </div>
+                    <div class="cmp-p">89%</div>
+                </div>
+                <div class="cmp">
+                    <div class="cmp-dot" style="background:var(--amber)"></div>
+                    <div class="cmp-n">OSHA 2007 training</div>
+                    <div class="cmp-b">
+                        <div class="cmp-f" style="width:74%;background:rgba(200,144,10,0.55)"></div>
+                    </div>
+                    <div class="cmp-p">74%</div>
+                </div>
+                <div class="cmp">
+                    <div class="cmp-dot" style="background:var(--amber)"></div>
+                    <div class="cmp-n">SHA enrolment</div>
+                    <div class="cmp-b">
+                        <div class="cmp-f" style="width:68%;background:rgba(200,144,10,0.5)"></div>
+                    </div>
+                    <div class="cmp-p">68%</div>
+                </div>
+                <div class="cmp">
+                    <div class="cmp-dot" style="background:var(--red)"></div>
+                    <div class="cmp-n">WIBA 2007 certification</div>
+                    <div class="cmp-b">
+                        <div class="cmp-f" style="width:61%;background:rgba(217,95,95,0.55)"></div>
+                    </div>
+                    <div class="cmp-p">61%</div>
+                </div>
+
+                <div class="div"></div>
+
+                <div class="title" style="font-size:12px;margin-bottom:10px">Contracts approaching expiry</div>
+                <div class="contract-item">
+                    <div style="font-size:10px;color:var(--t3);width:80px;flex-shrink:0">Esther Njoki · CX</div>
+                    <div class="ci-bar" style="flex:1;width:auto">
+                        <div class="ci-fill" style="width:8%;background:var(--red)"></div>
+                    </div>
+                    <div class="ci-days" style="color:var(--red)">8d</div>
+                </div>
+                <div class="contract-item">
+                    <div style="font-size:10px;color:var(--t3);width:80px;flex-shrink:0">Brian Kamau · Sales</div>
+                    <div class="ci-bar" style="flex:1;width:auto">
+                        <div class="ci-fill" style="width:17%;background:var(--amber)"></div>
+                    </div>
+                    <div class="ci-days" style="color:var(--amber)">17d</div>
+                </div>
+                <div class="contract-item">
+                    <div style="font-size:10px;color:var(--t3);width:80px;flex-shrink:0">Mercy Otieno · Ops</div>
+                    <div class="ci-bar" style="flex:1;width:auto">
+                        <div class="ci-fill" style="width:24%;background:var(--amber)"></div>
+                    </div>
+                    <div class="ci-days" style="color:var(--amber)">24d</div>
+                </div>
+                <div class="contract-item">
+                    <div style="font-size:10px;color:var(--t3);width:80px;flex-shrink:0">David Wafula · Tech</div>
+                    <div class="ci-bar" style="flex:1;width:auto">
+                        <div class="ci-fill" style="width:30%;background:var(--gold)"></div>
+                    </div>
+                    <div class="ci-days" style="color:var(--gold)">30d</div>
+                </div>
+            </div>
+
+            <!-- Payroll trend -->
+            <div class="card">
+                <div class="ch">
+                    <div>
+                        <div class="title">Payroll trend · 2025</div>
+                        <div class="sub">KES millions · gross vs net</div>
+                    </div>
+                    <div class="ch-r">
+                        <div
+                            style="font-size:16px;font-weight:400;color:var(--green);font-variant-numeric:tabular-nums">
+                            KES 382M</div>
+                        <div class="label">Sep 2025</div>
+                    </div>
+                </div>
+                <div class="leg">
+                    <div class="leg-i">
+                        <div class="leg-d" style="background:var(--gold)"></div>Gross
+                    </div>
+                    <div class="leg-i">
+                        <div class="leg-d" style="background:var(--green)"></div>Net
+                    </div>
+                </div>
+                <div style="position:relative;height:130px">
+                    <canvas id="pay-trend" role="img" aria-label="Payroll trend area chart 2025">Payroll trend</canvas>
+                </div>
+                <div class="div"></div>
+                <div class="title" style="font-size:12px;margin-bottom:10px">Hires vs churn · 2025</div>
+                <div class="leg">
+                    <div class="leg-i">
+                        <div
+                            style="width:8px;height:8px;border-radius:2px;background:rgba(245,166,35,0.5);flex-shrink:0">
+                        </div>New hires
+                    </div>
+                    <div class="leg-i">
+                        <div class="leg-d" style="background:var(--red)"></div>Churn %
+                    </div>
+                </div>
+                <div style="position:relative;height:100px">
+                    <canvas id="combo-chart" role="img" aria-label="Hires and churn combination chart">Hires vs
+                        churn</canvas>
+                </div>
+            </div>
+
+            <!-- Radar + county -->
+            <div class="card">
+                <div class="ch">
+                    <div>
+                        <div class="title">HR performance radar</div>
+                        <div class="sub">2025 vs 2024 · normalised</div>
+                    </div>
+                </div>
+                <div class="leg">
+                    <div class="leg-i">
+                        <div class="leg-d" style="background:var(--gold)"></div>2025
+                    </div>
+                    <div class="leg-i">
+                        <div class="leg-d" style="background:var(--t4);opacity:.7"></div>2024
+                    </div>
+                </div>
+                <div style="position:relative;height:160px">
+                    <canvas id="radar-chart" role="img" aria-label="HR performance radar chart">HR radar</canvas>
+                </div>
+                <div class="div"></div>
+                <div class="label" style="margin-bottom:10px">Workforce by county</div>
+                <div class="cty">
+                    <div class="cty-n">Nairobi</div>
+                    <div class="cty-t">
+                        <div class="cty-f" style="width:100%;background:rgba(245,166,35,0.5)"></div>
+                    </div>
+                    <div class="cty-v">4,840</div>
+                </div>
+                <div class="cty">
+                    <div class="cty-n">Mombasa</div>
+                    <div class="cty-t">
+                        <div class="cty-f" style="width:51%;background:rgba(0,212,126,0.45)"></div>
+                    </div>
+                    <div class="cty-v">1,240</div>
+                </div>
+                <div class="cty">
+                    <div class="cty-n">Kisumu</div>
+                    <div class="cty-t">
+                        <div class="cty-f" style="width:28%;background:rgba(74,143,212,0.45)"></div>
+                    </div>
+                    <div class="cty-v">680</div>
+                </div>
+                <div class="cty">
+                    <div class="cty-n">Nakuru</div>
+                    <div class="cty-t">
+                        <div class="cty-f" style="width:20%;background:rgba(139,126,248,0.45)"></div>
+                    </div>
+                    <div class="cty-v">480</div>
+                </div>
+                <div class="cty">
+                    <div class="cty-n">Eldoret</div>
+                    <div class="cty-t">
+                        <div class="cty-f" style="width:13%;background:rgba(200,144,10,0.45)"></div>
+                    </div>
+                    <div class="cty-v">320</div>
+                </div>
+                <div class="cty">
+                    <div class="cty-n">Other</div>
+                    <div class="cty-t">
+                        <div class="cty-f" style="width:21%;background:rgba(74,96,84,0.5)"></div>
+                    </div>
+                    <div class="cty-v">852</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════
+     ROW 4 — Onboarding · Leave heatmap · Training · New hires feed
+════════════════════════════════════════════════════ -->
+        <div class="sec">Onboarding, leave & training</div>
+        <div class="g g-3-5-4 mb">
+
+            <!-- Onboarding progress -->
+            <div class="card">
+                <div class="title" style="margin-bottom:4px">Onboarding progress</div>
+                <div class="sub" style="margin-bottom:14px">18 new hires · September 2025</div>
+
+                <div class="person">
+                    <div class="avatar" style="background:rgba(0,212,126,0.15);color:rgba(0,212,126,0.75)">KN</div>
+                    <div style="flex:1">
+                        <div class="person-name">Kevin Njoroge</div>
+                        <div class="person-role">Software Engineer · Technology</div>
+                        <div
+                            style="height:2px;background:rgba(255,255,255,0.05);border-radius:1px;overflow:hidden;margin-top:6px">
+                            <div style="width:80%;height:100%;background:rgba(0,212,126,0.5);border-radius:1px"></div>
+                        </div>
+                    </div>
+                    <div class="person-meta">
+                        <div style="font-size:10px;color:var(--green)">Day 12</div>
+                        <div class="person-badge" style="background:rgba(0,212,126,0.08);color:var(--green)">80%</div>
+                    </div>
+                </div>
+                <div class="person">
+                    <div class="avatar" style="background:rgba(245,166,35,0.15);color:rgba(245,166,35,0.75)">LW</div>
+                    <div style="flex:1">
+                        <div class="person-name">Lydia Wangari</div>
+                        <div class="person-role">Account Manager · Sales</div>
+                        <div
+                            style="height:2px;background:rgba(255,255,255,0.05);border-radius:1px;overflow:hidden;margin-top:6px">
+                            <div style="width:55%;height:100%;background:rgba(245,166,35,0.5);border-radius:1px"></div>
+                        </div>
+                    </div>
+                    <div class="person-meta">
+                        <div style="font-size:10px;color:var(--gold)">Day 8</div>
+                        <div class="person-badge" style="background:rgba(245,166,35,0.08);color:var(--gold)">55%</div>
+                    </div>
+                </div>
+                <div class="person">
+                    <div class="avatar" style="background:rgba(74,143,212,0.15);color:rgba(74,143,212,0.75)">PO</div>
+                    <div style="flex:1">
+                        <div class="person-name">Peter Omondi</div>
+                        <div class="person-role">Operations Analyst</div>
+                        <div
+                            style="height:2px;background:rgba(255,255,255,0.05);border-radius:1px;overflow:hidden;margin-top:6px">
+                            <div style="width:30%;height:100%;background:rgba(74,143,212,0.5);border-radius:1px"></div>
+                        </div>
+                    </div>
+                    <div class="person-meta">
+                        <div style="font-size:10px;color:var(--blue)">Day 3</div>
+                        <div class="person-badge" style="background:rgba(74,143,212,0.08);color:var(--blue)">30%</div>
+                    </div>
+                </div>
+                <div class="person">
+                    <div class="avatar" style="background:rgba(139,126,248,0.15);color:rgba(139,126,248,0.75)">CM</div>
+                    <div style="flex:1">
+                        <div class="person-name">Caroline Mutua</div>
+                        <div class="person-role">Finance Analyst</div>
+                        <div
+                            style="height:2px;background:rgba(255,255,255,0.05);border-radius:1px;overflow:hidden;margin-top:6px">
+                            <div style="width:15%;height:100%;background:rgba(139,126,248,0.5);border-radius:1px"></div>
+                        </div>
+                    </div>
+                    <div class="person-meta">
+                        <div style="font-size:10px;color:var(--purple)">Day 1</div>
+                        <div class="person-badge" style="background:rgba(139,126,248,0.08);color:var(--purple)">15%
+                        </div>
+                    </div>
+                </div>
+
+                <div class="div"></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                    <div
+                        style="background:var(--s2);border:0.5px solid var(--line);border-radius:var(--r);padding:11px 13px">
+                        <div style="font-size:18px;font-weight:400;color:var(--t1);font-variant-numeric:tabular-nums">
+                            148</div>
+                        <div class="caption" style="margin-top:4px">Employees on leave today</div>
+                    </div>
+                    <div
+                        style="background:var(--s2);border:0.5px solid var(--line);border-radius:var(--r);padding:11px 13px">
+                        <div
+                            style="font-size:18px;font-weight:400;color:var(--green);font-variant-numeric:tabular-nums">
+                            94.7%</div>
+                        <div class="caption" style="margin-top:4px">Attendance rate</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leave heatmap + gauges -->
+            <div class="card">
+                <div class="ch">
+                    <div>
+                        <div class="title">Leave analytics · absence heatmap</div>
+                        <div class="sub">Avg absent days per department · 2025</div>
+                    </div>
+                    <div class="tag">3.8d avg</div>
+                </div>
+                <div id="heat-container"></div>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:8px;font-size:10px;color:var(--t4)">
+                    <span>Low</span>
+                    <div style="display:flex;gap:2px">
+                        <div style="width:12px;height:12px;border-radius:2px;background:rgba(0,212,126,.07)"></div>
+                        <div style="width:12px;height:12px;border-radius:2px;background:rgba(0,212,126,.22)"></div>
+                        <div style="width:12px;height:12px;border-radius:2px;background:rgba(0,212,126,.42)"></div>
+                        <div style="width:12px;height:12px;border-radius:2px;background:rgba(0,212,126,.65)"></div>
+                        <div style="width:12px;height:12px;border-radius:2px;background:rgba(0,212,126,.88)"></div>
+                    </div>
+                    <span>High absence</span>
+                </div>
+                <div class="div"></div>
+                <div class="label" style="margin-bottom:10px">Key performance gauges</div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+                    <div>
+                        <div class="gauge-l">Retention</div><canvas id="g-ret" width="80" height="46"
+                            style="width:100%;max-width:80px;display:block;margin:0 auto"></canvas>
+                        <div class="gauge-v" style="color:var(--green)">92.8%</div>
+                    </div>
+                    <div>
+                        <div class="gauge-l">eNPS</div><canvas id="g-enps" width="80" height="46"
+                            style="width:100%;max-width:80px;display:block;margin:0 auto"></canvas>
+                        <div class="gauge-v" style="color:var(--gold)">74</div>
+                    </div>
+                    <div>
+                        <div class="gauge-l">Compliance</div><canvas id="g-comp" width="80" height="46"
+                            style="width:100%;max-width:80px;display:block;margin:0 auto"></canvas>
+                        <div class="gauge-v" style="color:var(--amber)">79%</div>
+                    </div>
+                    <div>
+                        <div class="gauge-l">Training</div><canvas id="g-train" width="80" height="46"
+                            style="width:100%;max-width:80px;display:block;margin:0 auto"></canvas>
+                        <div class="gauge-v" style="color:var(--green)">84%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Training + activity feed -->
+            <div class="card">
+                <div class="title" style="margin-bottom:4px">Training completion</div>
+                <div class="sub" style="margin-bottom:14px">NITA-accredited · by department</div>
+                <div class="stk-row">
+                    <div class="stk-lbl">Sales</div>
+                    <div class="stk-track" style="height:12px">
+                        <div class="stk-seg" style="flex:86;background:rgba(0,212,126,.6);font-size:9px">86%</div>
+                        <div class="stk-seg" style="flex:8;background:rgba(0,212,126,.2)"></div>
+                        <div class="stk-seg" style="flex:6;background:rgba(255,255,255,.03)"></div>
+                    </div>
+                </div>
+                <div class="stk-row">
+                    <div class="stk-lbl">Technology</div>
+                    <div class="stk-track" style="height:12px">
+                        <div class="stk-seg" style="flex:78;background:rgba(245,166,35,.55);font-size:9px">78%</div>
+                        <div class="stk-seg" style="flex:14;background:rgba(245,166,35,.18)"></div>
+                        <div class="stk-seg" style="flex:8;background:rgba(255,255,255,.03)"></div>
+                    </div>
+                </div>
+                <div class="stk-row">
+                    <div class="stk-lbl">Operations</div>
+                    <div class="stk-track" style="height:12px">
+                        <div class="stk-seg" style="flex:71;background:rgba(74,143,212,.55);font-size:9px">71%</div>
+                        <div class="stk-seg" style="flex:18;background:rgba(74,143,212,.18)"></div>
+                        <div class="stk-seg" style="flex:11;background:rgba(255,255,255,.03)"></div>
+                    </div>
+                </div>
+                <div class="stk-row">
+                    <div class="stk-lbl">Finance</div>
+                    <div class="stk-track" style="height:12px">
+                        <div class="stk-seg" style="flex:64;background:rgba(139,126,248,.5);font-size:9px">64%</div>
+                        <div class="stk-seg" style="flex:22;background:rgba(139,126,248,.18)"></div>
+                        <div class="stk-seg" style="flex:14;background:rgba(255,255,255,.03)"></div>
+                    </div>
+                </div>
+                <div class="stk-row">
+                    <div class="stk-lbl">Marketing</div>
+                    <div class="stk-track" style="height:12px">
+                        <div class="stk-seg" style="flex:52;background:rgba(200,144,10,.5);font-size:9px">52%</div>
+                        <div class="stk-seg" style="flex:24;background:rgba(200,144,10,.18)"></div>
+                        <div class="stk-seg" style="flex:24;background:rgba(255,255,255,.03)"></div>
+                    </div>
+                </div>
+
+                <div class="div"></div>
+
+                <div class="title" style="font-size:12px;margin-bottom:10px">Activity feed</div>
+                <div class="insight">
+                    <div class="ins-marker" style="background:var(--green)"></div>
+                    <div class="ins-body">
+                        <div class="ins-title">Payroll disbursed · September</div>
+                        <div class="ins-sub">KES 327M · 8,412 employees · M-Pesa</div>
+                    </div>
+                    <div class="ins-time">Today</div>
+                </div>
+                <div class="insight">
+                    <div class="ins-marker" style="background:var(--blue)"></div>
+                    <div class="ins-body">
+                        <div class="ins-title">NITA grant received</div>
+                        <div class="ins-sub">KES 2.4M · Q3 training reimbursement</div>
+                    </div>
+                    <div class="ins-time">Sep 20</div>
+                </div>
+                <div class="insight">
+                    <div class="ins-marker" style="background:var(--gold)"></div>
+                    <div class="ins-body">
+                        <div class="ins-title">eNPS survey closed</div>
+                        <div class="ins-sub">Score 74 · 3,840 respondents · record high</div>
+                    </div>
+                    <div class="ins-time">Sep 15</div>
+                </div>
+                <div class="insight">
+                    <div class="ins-marker" style="background:var(--amber)"></div>
+                    <div class="ins-body">
+                        <div class="ins-title">OSHA audit scheduled</div>
+                        <div class="ins-sub">All branches · October 14–18</div>
+                    </div>
+                    <div class="ins-time">Oct 14</div>
+                </div>
+                <div class="insight">
+                    <div class="ins-marker" style="background:var(--red)"></div>
+                    <div class="ins-body">
+                        <div class="ins-title">WIBA deadline approaching</div>
+                        <div class="ins-sub">3,281 employees uncertified · Dec 31</div>
+                    </div>
+                    <div class="ins-time">Dec 31</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── FOOTER ── -->
+        <div
+            style="border-top:0.5px solid var(--line);padding-top:14px;display:flex;align-items:center;justify-content:space-between">
+            <div class="caption">PeopleEdge KE · Kenya HR Intelligence Platform · Nairobi HQ</div>
+            <div class="caption">FY 2025 Q3 · September 2025 · Confidential</div>
+            <div style="font-size:10px;color:var(--gold)">peopleedge.ke</div>
+        </div>
+
+    </div>
+
+    <script>
+        Chart.defaults.color = 'rgba(138,154,145,.55)';
+        Chart.defaults.borderColor = 'rgba(245,166,35,.07)';
+        Chart.defaults.font.family = "'Outfit',sans-serif";
+        Chart.defaults.font.size = 10;
+        Chart.defaults.font.weight = '400';
+        const TT = { backgroundColor: 'rgba(5,11,8,.97)', borderColor: 'rgba(245,166,35,.15)', borderWidth: 0.5, titleColor: 'rgba(255,255,255,.88)', bodyColor: 'rgba(196,209,201,.75)', padding: 10, cornerRadius: 6, titleFont: { size: 11, weight: '500' }, bodyFont: { size: 10, weight: '400' } };
+
+        new Chart(document.getElementById('hc-chart'), {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+                datasets: [
+                    { data: [7120, 7310, 7540, 7780, 7980, 8140, 8220, 8320, 8412], borderColor: 'rgba(245,166,35,.75)', backgroundColor: 'rgba(245,166,35,.05)', fill: true, borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: 'rgba(245,166,35,.8)', pointBorderWidth: 0, tension: .4 },
+                    { data: [7500, 7750, 8000, 8250, 8500, 8750, 9000, 9250, 9500], borderColor: 'rgba(74,96,84,.35)', borderDash: [4, 4], borderWidth: 1, pointRadius: 0, fill: false, tension: .4 }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { ...TT } },
+                scales: { x: { grid: { color: 'rgba(245,166,35,.04)' }, ticks: { color: 'rgba(138,154,145,.45)' } }, y: { grid: { color: 'rgba(245,166,35,.04)' }, ticks: { color: 'rgba(138,154,145,.45)', callback: v => v >= 1000 ? (v / 1000).toFixed(1) + 'k' : v }, min: 6800 } }
+            }
+        });
+
+        new Chart(document.getElementById('pay-donut'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Technology', 'Sales', 'Operations', 'Other'],
+                datasets: [{ data: [33, 24, 20, 23], backgroundColor: ['rgba(245,166,35,.75)', 'rgba(0,212,126,.65)', 'rgba(74,143,212,.65)', 'rgba(139,126,248,.6)'], borderWidth: 0, hoverOffset: 2 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, cutout: '76%', plugins: { legend: { display: false }, tooltip: { ...TT, callbacks: { label: c => c.label + ': ' + c.parsed + '%' } } } }
+        });
+
+        new Chart(document.getElementById('pay-trend'), {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+                datasets: [
+                    { label: 'Gross', data: [340, 348, 354, 360, 366, 370, 374, 378, 382], borderColor: 'rgba(245,166,35,.7)', backgroundColor: 'rgba(245,166,35,.05)', fill: true, borderWidth: 1.5, pointRadius: 2, pointBackgroundColor: 'rgba(245,166,35,.7)', pointBorderWidth: 0, tension: .4 },
+                    { label: 'Net', data: [289, 296, 301, 306, 311, 315, 319, 323, 327], borderColor: 'rgba(0,212,126,.6)', backgroundColor: 'rgba(0,212,126,.04)', fill: true, borderWidth: 1.5, pointRadius: 2, pointBackgroundColor: 'rgba(0,212,126,.6)', pointBorderWidth: 0, tension: .4 }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { ...TT, callbacks: { label: c => 'KES ' + c.parsed.y + 'M' } } },
+                scales: { x: { grid: { color: 'rgba(245,166,35,.04)' }, ticks: { color: 'rgba(138,154,145,.45)' } }, y: { grid: { color: 'rgba(245,166,35,.04)' }, ticks: { color: 'rgba(138,154,145,.45)', callback: v => v + 'M' }, min: 270 } }
+            }
+        });
+
+        new Chart(document.getElementById('perf-chart'), {
+            type: 'bar',
+            data: {
+                labels: ['Exceptional', 'Exceeds', 'Meets', 'Developing', 'Needs work'],
+                datasets: [{ data: [6, 21, 51, 17, 5], backgroundColor: ['rgba(0,212,126,.55)', 'rgba(0,212,126,.4)', 'rgba(245,166,35,.5)', 'rgba(200,144,10,.4)', 'rgba(217,95,95,.4)'], borderRadius: 2, borderSkipped: false }]
+            },
+            options: {
+                indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { ...TT, callbacks: { label: c => c.parsed.x + '%' } } },
+                scales: { x: { min: 0, max: 60, grid: { color: 'rgba(245,166,35,.04)' }, ticks: { color: 'rgba(138,154,145,.45)', callback: v => v + '%' } }, y: { grid: { display: false }, ticks: { color: 'rgba(196,209,201,.5)', font: { size: 9 } } } }
+            }
+        });
+
+        new Chart(document.getElementById('combo-chart'), {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+                datasets: [
+                    { type: 'bar', label: 'New hires', data: [148, 162, 155, 178, 192, 168, 188, 204, 220], backgroundColor: 'rgba(245,166,35,.38)', borderRadius: 2, borderSkipped: false, yAxisID: 'y' },
+                    { type: 'line', label: 'Churn %', data: [8.1, 7.8, 7.4, 7.6, 7.2, 7.5, 7.3, 7.0, 7.2], borderColor: 'rgba(217,95,95,.6)', backgroundColor: 'transparent', borderWidth: 1.5, pointBackgroundColor: 'rgba(217,95,95,.6)', pointRadius: 2, pointBorderWidth: 0, tension: .4, yAxisID: 'y1' }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { ...TT } },
+                scales: { x: { grid: { color: 'rgba(245,166,35,.04)' }, ticks: { color: 'rgba(138,154,145,.45)' } }, y: { grid: { color: 'rgba(245,166,35,.04)' }, ticks: { color: 'rgba(138,154,145,.45)' }, min: 0, max: 280, position: 'left' }, y1: { grid: { display: false }, ticks: { color: 'rgba(217,95,95,.45)', callback: v => v + '%' }, min: 5, max: 12, position: 'right' } }
+            }
+        });
+
+        new Chart(document.getElementById('radar-chart'), {
+            type: 'radar',
+            data: {
+                labels: ['Retention', 'eNPS', 'Compliance', 'Hiring', 'Performance', 'Training'],
+                datasets: [
+                    { label: '2025', data: [93, 74, 79, 72, 76, 84], borderColor: 'rgba(245,166,35,.65)', backgroundColor: 'rgba(245,166,35,.07)', borderWidth: 1.5, pointBackgroundColor: 'rgba(245,166,35,.7)', pointRadius: 3, pointBorderWidth: 0 },
+                    { label: '2024', data: [82, 65, 72, 60, 72, 74], borderColor: 'rgba(74,96,84,.4)', backgroundColor: 'rgba(74,96,84,.03)', borderWidth: 1, pointBackgroundColor: 'rgba(74,96,84,.4)', pointRadius: 2, pointBorderWidth: 0, borderDash: [3, 3] }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { ...TT } },
+                scales: { r: { grid: { color: 'rgba(245,166,35,.07)' }, ticks: { display: false }, angleLines: { color: 'rgba(245,166,35,.07)' }, pointLabels: { color: 'rgba(138,154,145,.65)', font: { size: 9, weight: '400' } }, min: 40, max: 100 } }
+            }
+        });
+
+        function makeRing(id, val, col) { new Chart(document.getElementById(id), { type: 'doughnut', data: { datasets: [{ data: [val, 100 - val], backgroundColor: [col, 'rgba(255,255,255,.04)'], borderWidth: 0, hoverOffset: 0 }] }, options: { responsive: true, maintainAspectRatio: false, cutout: '80%', plugins: { legend: { display: false }, tooltip: { enabled: false } } } }); }
+
+        function drawGauge(id, val, min, max) {
+            const canvas = document.getElementById(id); if (!canvas) return;
+            const dpr = window.devicePixelRatio || 1;
+            const W = canvas.offsetWidth || 80, H = Math.round(W * .62);
+            canvas.width = W * dpr; canvas.height = H * dpr; canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+            const ctx = canvas.getContext('2d'); ctx.scale(dpr, dpr);
+            const cx = W / 2, cy = H * .9, R = W * .38, SW = W * .09;
+            const sA = Math.PI * .75, sw = Math.PI * 1.5;
+            const pct = Math.min(1, Math.max(0, (val - min) / (max - min)));
+            const col = pct >= .88 ? 'rgba(217,95,95,.7)' : pct >= .65 ? 'rgba(0,212,126,.65)' : 'rgba(200,144,10,.65)';
+            ctx.beginPath(); ctx.arc(cx, cy, R, sA, sA + sw); ctx.strokeStyle = 'rgba(255,255,255,.04)'; ctx.lineWidth = SW; ctx.lineCap = 'round'; ctx.stroke();
+            if (pct > 0) { ctx.beginPath(); ctx.arc(cx, cy, R, sA, sA + pct * sw); ctx.strokeStyle = col; ctx.lineWidth = SW; ctx.lineCap = 'round'; ctx.stroke(); }
+            const na = sA + pct * sw, nL = R - .55 * SW;
+            ctx.beginPath(); ctx.moveTo(cx - 3 * Math.cos(na), cy - 3 * Math.sin(na)); ctx.lineTo(cx + nL * Math.cos(na), cy + nL * Math.sin(na));
+            ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.lineCap = 'round'; ctx.stroke();
+            ctx.beginPath(); ctx.arc(cx, cy, SW * .3, 0, Math.PI * 2); ctx.fillStyle = col; ctx.fill();
+            ctx.beginPath(); ctx.arc(cx, cy, SW * .12, 0, Math.PI * 2); ctx.fillStyle = '#050B08'; ctx.fill();
+        }
+
+        window.addEventListener('load', () => {
+            drawGauge('g-ret', 92.8, 0, 100);
+            drawGauge('g-enps', 74, 0, 100);
+            drawGauge('g-comp', 79, 0, 100);
+            drawGauge('g-train', 84, 0, 100);
+        });
+
+        (function () {
+            const data = [['Applications', '3,210', 1], ['Shortlisted', '1,924', .78], ['Interviewed', '964', .6], ['Assessed', '482', .44], ['Offer stage', '241', .3], ['Hired', '184', .18]];
+            const alphas = [.2, .3, .4, .5, .62, .78];
+            const wrap = document.getElementById('funnel-wrap');
+            data.forEach(([label, n, w], i) => {
+                const row = document.createElement('div'); row.className = 'f-step';
+                row.style.cssText = `width:${w * 100}%;background:rgba(245,166,35,${alphas[i]});margin-bottom:3px;height:22px;padding:0 10px;border-radius:3px;display:flex;align-items:center;justify-content:space-between;font-size:10px;color:rgba(0,0,0,0.65)`;
+                row.innerHTML = `<span>${label}</span><span style="font-variant-numeric:tabular-nums">${n}</span>`;
+                wrap.appendChild(row);
+            });
+        })();
+
+        (function () {
+            const depts = ['Technology', 'Sales', 'Operations', 'Finance', 'Customer Exp'];
+            const vals = [[1, 2, 1, 2, 2, 3, 4, 5, 6, 4, 3, 2], [2, 1, 2, 2, 3, 4, 6, 7, 8, 5, 4, 3], [1, 1, 1, 2, 2, 3, 4, 4, 5, 3, 2, 1], [3, 2, 1, 1, 2, 2, 3, 3, 4, 2, 2, 1], [2, 2, 2, 3, 4, 5, 6, 7, 7, 5, 4, 3]];
+            const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+            const max = 8;
+            const stops = ['rgba(0,212,126,.07)', 'rgba(0,212,126,.2)', 'rgba(0,212,126,.38)', 'rgba(0,212,126,.58)', 'rgba(0,212,126,.8)'];
+            const wrap = document.getElementById('heat-container');
+            const hdr = document.createElement('div'); hdr.className = 'hg'; hdr.style.marginBottom = '3px';
+            hdr.appendChild(document.createElement('div'));
+            months.forEach(m => { const d = document.createElement('div'); d.className = 'hm'; d.textContent = m; hdr.appendChild(d); });
+            wrap.appendChild(hdr);
+            depts.forEach((dept, i) => {
+                const row = document.createElement('div'); row.className = 'hg'; row.style.marginBottom = '2px';
+                const lbl = document.createElement('div'); lbl.className = 'hd'; lbl.textContent = dept; row.appendChild(lbl);
+                vals[i].forEach(v => {
+                    const cell = document.createElement('div'); cell.className = 'hc';
+                    cell.style.background = stops[Math.min(4, Math.floor((v / max) * 5))];
+                    cell.title = dept + ': ' + v + ' avg days'; row.appendChild(cell);
+                });
+                wrap.appendChild(row);
+            });
+        })();
+    </script>
+</body>
+
+</html>

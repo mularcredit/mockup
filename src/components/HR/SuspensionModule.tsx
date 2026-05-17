@@ -60,7 +60,7 @@ function PremiumSelect({
     return (
         <div className="relative w-full" ref={ref}>
             <button type="button" onClick={() => setOpen(o => !o)}
-                className={`w-full flex items-center justify-between gap-2 px-3 py-2.5 text-xs border rounded-xl bg-white transition-all ${open ? 'border-red-400 ring-2 ring-red-300' : 'border-gray-200 hover:border-gray-300'}`}>
+                className={`w-full flex items-center justify-between gap-2 px-3 py-2.5 text-xs border rounded-xl bg-[var(--card)] transition-all ${open ? 'border-red-400 ring-2 ring-red-300' : 'border-gray-200 hover:border-gray-300'}`}>
                 <div className="flex items-center gap-2 min-w-0">
                     {Icon && <Icon className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />}
                     <span className={`truncate ${selected ? 'text-gray-800 font-medium' : 'text-gray-400'}`}>
@@ -73,7 +73,7 @@ function PremiumSelect({
                 {open && (
                     <motion.div initial={{ opacity: 0, y: 6, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 4, scale: 0.97 }} transition={{ duration: 0.12 }}
-                        className="absolute z-50 left-0 right-0 mt-1.5 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
+                        className="absolute z-50 left-0 right-0 mt-1.5 bg-[var(--card)] border border-gray-200 rounded-xl shadow-lg overflow-hidden">
                         <div className="max-h-52 overflow-y-auto py-1">
                             {options.map(opt => (
                                 <button key={opt.value} type="button"
@@ -114,7 +114,7 @@ function PremiumDatePicker({ value, onChange }: { value: string; onChange: (v: s
     return (
         <div className="relative w-full" ref={ref}>
             <button type="button" onClick={() => setOpen(o => !o)}
-                className={`w-full flex items-center justify-between gap-2 px-3 py-2.5 text-xs border rounded-xl bg-white transition-all ${open ? 'border-red-400 ring-2 ring-red-300' : 'border-gray-200 hover:border-gray-300'}`}>
+                className={`w-full flex items-center justify-between gap-2 px-3 py-2.5 text-xs border rounded-xl bg-[var(--card)] transition-all ${open ? 'border-red-400 ring-2 ring-red-300' : 'border-gray-200 hover:border-gray-300'}`}>
                 <div className="flex items-center gap-2">
                     <Calendar className="w-3.5 h-3.5 text-gray-400" />
                     <span className={value ? 'text-gray-800 font-medium' : 'text-gray-400'}>{displayValue || 'Select date'}</span>
@@ -125,7 +125,7 @@ function PremiumDatePicker({ value, onChange }: { value: string; onChange: (v: s
                 {open && (
                     <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                         transition={{ duration: 0.12 }}
-                        className="absolute z-50 left-0 mt-1.5 bg-white border border-gray-200 rounded-xl shadow-lg p-3 w-64">
+                        className="absolute z-50 left-0 mt-1.5 bg-[var(--card)] border border-gray-200 rounded-xl shadow-lg p-3 w-64">
                         <div className="flex items-center justify-between mb-3">
                             <button type="button" onClick={() => setViewDate(new Date(year, month - 1, 1))} className="p-1 hover:bg-gray-100 rounded-lg"><ChevronLeft className="w-3.5 h-3.5" /></button>
                             <span className="text-xs font-semibold">{monthNames[month]} {year}</span>
@@ -332,7 +332,7 @@ export default function SuspensionModule({ onRefresh }: { onRefresh?: () => void
             )}
 
             {/* Filters */}
-            <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-3">
+            <div className="bg-[var(--card)] border border-gray-200 rounded-xl p-4 space-y-3">
                 <div className="flex flex-wrap gap-3 items-center">
                     <div className="relative flex-1 min-w-[180px]">
                         <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -355,7 +355,7 @@ export default function SuspensionModule({ onRefresh }: { onRefresh?: () => void
                     {(['all', 'active', 'inactive'] as const).map(f => (
                         <button key={f} onClick={() => { setFilter(f); setPage(1); }}
                             className={`px-3 py-1.5 rounded-lg text-[11px] font-medium border transition-all
-                                ${filter === f ? 'bg-red-600 text-white border-red-600' : 'bg-white text-gray-600 border-gray-200 hover:border-red-300'}`}>
+                                ${filter === f ? 'bg-red-600 text-white border-red-600' : 'bg-[var(--card)] text-gray-600 border-gray-200 hover:border-red-300'}`}>
                             {f.charAt(0).toUpperCase() + f.slice(1)}
                             {f === 'active' && activeSuspensions > 0 && (
                                 <span className="ml-1.5 bg-red-100 text-red-700 px-1.5 py-0.5 rounded-full text-[9px] font-bold">{activeSuspensions}</span>
@@ -371,7 +371,7 @@ export default function SuspensionModule({ onRefresh }: { onRefresh?: () => void
                     <Loader2 className="w-6 h-6 animate-spin text-red-500" />
                 </div>
             ) : filtered.length === 0 ? (
-                <div className="bg-white border border-gray-200 rounded-xl p-12 text-center">
+                <div className="bg-[var(--card)] border border-gray-200 rounded-xl p-12 text-center">
                     <ShieldOff className="w-8 h-8 text-gray-300 mx-auto mb-2" />
                     <p className="text-sm text-gray-500">No suspension records found</p>
                 </div>
@@ -380,7 +380,7 @@ export default function SuspensionModule({ onRefresh }: { onRefresh?: () => void
                     <div className="space-y-2.5">
                         {paginated.map(s => (
                             <motion.div key={s.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
-                                className={`bg-white border rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${s.is_active ? 'border-red-200 bg-red-50/20' : 'border-gray-200'}`}>
+                                className={`bg-[var(--card)] border rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${s.is_active ? 'border-red-200 bg-red-50/20' : 'border-gray-200'}`}>
                                 <div className="flex items-start gap-3">
                                     <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${s.is_active ? 'bg-red-100' : 'bg-gray-100'}`}>
                                         <ShieldOff className={`w-4 h-4 ${s.is_active ? 'text-red-600' : 'text-gray-400'}`} />
@@ -446,7 +446,7 @@ export default function SuspensionModule({ onRefresh }: { onRefresh?: () => void
             {showModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
                     <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-                        className="bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col max-h-[90vh] overflow-hidden">
+                        className="bg-[var(--card)] rounded-2xl shadow-2xl w-full max-w-md flex flex-col max-h-[90vh] overflow-hidden">
                         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
                             <div>
                                 <h3 className="text-sm font-bold text-gray-900">Suspend Employee</h3>
@@ -506,7 +506,7 @@ export default function SuspensionModule({ onRefresh }: { onRefresh?: () => void
                             </div>
                         </div>
 
-                        <div className="px-6 py-4 border-t border-gray-100 flex gap-3 flex-shrink-0 bg-gray-50/50">
+                        <div className="px-6 py-4 border-t border-gray-100 flex gap-3 flex-shrink-0 bg-[var(--glass)]">
                             <button onClick={() => setShowModal(false)}
                                 className="flex-1 py-2.5 text-xs font-semibold border border-gray-200 rounded-xl hover:bg-gray-100 text-gray-600 transition-colors">Cancel</button>
                             <button onClick={handleSave} disabled={saving}

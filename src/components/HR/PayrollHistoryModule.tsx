@@ -111,7 +111,7 @@ export default function PayrollHistoryModule() {
             </div>
 
             {/* Search */}
-            <div className="bg-white border border-gray-200 rounded-xl p-4">
+            <div className="bg-[var(--card)] border border-gray-200 rounded-xl p-4">
                 <div className="relative">
                     <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                     <input type="text" placeholder="Search employee..." value={search} onChange={e => setSearch(e.target.value)}
@@ -124,7 +124,7 @@ export default function PayrollHistoryModule() {
                     <Loader2 className="w-6 h-6 animate-spin text-violet-500" />
                 </div>
             ) : (
-                <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+                <div className="bg-[var(--card)] border border-gray-200 rounded-xl overflow-hidden">
                     <table className="w-full text-xs">
                         <thead>
                             <tr className="bg-gray-50 border-b border-gray-200">
@@ -135,7 +135,7 @@ export default function PayrollHistoryModule() {
                                 <th className="px-4 py-3"></th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100">
+                        <tbody className="divide-y divide-[var(--p-line)]">
                             {filtered.length === 0 ? (
                                 <tr>
                                     <td colSpan={5} className="py-12 text-center text-gray-400">
@@ -168,7 +168,7 @@ export default function PayrollHistoryModule() {
                                     {expandedEmp === emp['Employee Number'] && (
                                         <tr key={`${emp['Employee Number']}-detail`}>
                                             <td colSpan={5} className="px-4 py-3 bg-gray-50">
-                                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 bg-white border border-gray-100 rounded-lg">
+                                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 bg-[var(--card)] border border-gray-100 rounded-lg">
                                                     <div className="text-center p-2">
                                                         <p className="text-[10px] text-gray-500 uppercase mb-1">Basic Salary</p>
                                                         <p className="text-sm font-bold text-gray-900">KES {emp.currentSalary?.toLocaleString() ?? '—'}</p>
@@ -190,7 +190,7 @@ export default function PayrollHistoryModule() {
                                                     <div className="mt-4">
                                                         <h4 className="text-xs font-semibold text-gray-700 mb-2">Detailed Payslip History</h4>
                                                         <div className="overflow-x-auto border border-gray-100 rounded-lg">
-                                                            <table className="min-w-full text-left text-xs bg-white hidden-scrollbar">
+                                                            <table className="min-w-full text-left text-xs bg-[var(--card)] hidden-scrollbar">
                                                                 <thead className="bg-gray-50 border-b border-gray-100">
                                                                     <tr>
                                                                         <th className="px-3 py-2 text-gray-600 font-medium">Period</th>

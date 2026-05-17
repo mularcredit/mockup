@@ -548,7 +548,7 @@ const PayslipModal: React.FC<PayslipModalProps> = ({ record, onClose, onPrevious
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl max-h-[95vh] overflow-auto">
+      <div className="bg-[var(--card)] rounded-2xl shadow-2xl w-full max-w-6xl max-h-[95vh] overflow-auto">
         {/* Modal Header */}
         <div className="sticky top-0 bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 p-6 flex justify-between items-center z-10">
           <div className="flex items-center gap-4">

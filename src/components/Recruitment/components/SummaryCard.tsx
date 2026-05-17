@@ -32,7 +32,7 @@ export const SummaryCard = ({
   const IconComponent = iconMap[icon];
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+    <div className="bg-[var(--card)] rounded-xl border border-gray-200 p-4 shadow-sm">
       <div className="flex items-center justify-between mb-3">
         <div className={`p-2 rounded-lg ${colorClasses[color as keyof typeof colorClasses]}`}>
           {IconComponent && <IconComponent className="w-5 h-5" />}

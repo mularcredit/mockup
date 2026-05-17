@@ -11,34 +11,34 @@ export default function EmailPortal() {
     return (
         <div className="p-6 max-w-7xl mx-auto space-y-6">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--p-line)] pb-5">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Email Portal</h1>
-                    <p className="text-gray-600 mt-1">Manage communications and monitor email logs</p>
+                    <h1 className="text-2xl font-bold text-[var(--t1)] tracking-tight">Corporate Email Portal</h1>
+                    <p className="text-[11px] text-[var(--t3)] mt-1">Send secure company announcements and monitor delivery logs</p>
                 </div>
             </div>
 
             {/* Tabs */}
-            <div className="flex space-x-1 bg-gray-100 p-1 rounded-xl w-fit">
+            <div className="flex space-x-1 bg-[var(--p-dim)] p-1 rounded-xl w-fit border border-[var(--p-line)]">
                 <button
                     onClick={() => setActiveTab('compose')}
-                    className={`flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-all ${activeTab === 'compose'
-                        ? 'bg-white text-gray-900 shadow-sm'
-                        : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/50'
+                    className={`flex items-center px-4 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'compose'
+                        ? 'bg-[var(--gold)] text-[var(--bg)] shadow-md'
+                        : 'text-[var(--t3)] hover:text-[var(--t1)] hover:bg-[var(--glass-h)]'
                         }`}
                 >
-                    <Send className="w-4 h-4 mr-2" />
+                    <Send className="w-3.5 h-3.5 mr-2" />
                     Compose & Send
                 </button>
                 <button
                     onClick={() => setActiveTab('logs')}
-                    className={`flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-all ${activeTab === 'logs'
-                        ? 'bg-white text-gray-900 shadow-sm'
-                        : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/50'
+                    className={`flex items-center px-4 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'logs'
+                        ? 'bg-[var(--gold)] text-[var(--bg)] shadow-md'
+                        : 'text-[var(--t3)] hover:text-[var(--t1)] hover:bg-[var(--glass-h)]'
                         }`}
                 >
-                    <List className="w-4 h-4 mr-2" />
-                    Email Logs
+                    <List className="w-3.5 h-3.5 mr-2" />
+                    Email Delivery Logs
                 </button>
             </div>
 
