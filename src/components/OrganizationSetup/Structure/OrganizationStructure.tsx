@@ -41,27 +41,27 @@ export default function OrganizationStructure({ onChange }: { onChange?: () => v
 
           <div className="flex flex-col gap-5">
             <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-medium text-[#C8A84B]/80 ml-1">Department Code</label>
+              <label className="text-[11px] font-medium text-[#00E5FF]/80 ml-1">Department Code</label>
               <input 
                 type="text" 
                 placeholder="e.g. ENG" 
-                className="w-full bg-white/[0.02] border border-[#C8A84B]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#C8A84B]/50 focus:bg-[#C8A84B]/[0.02] transition-all duration-300"
+                className="w-full bg-white/[0.02] border border-[#00E5FF]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#00E5FF]/50 focus:bg-[#00E5FF]/[0.02] transition-all duration-300"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-medium text-[#C8A84B]/80 ml-1">Department Name</label>
+              <label className="text-[11px] font-medium text-[#00E5FF]/80 ml-1">Department Name</label>
               <input 
                 type="text" 
                 placeholder="e.g. Engineering" 
-                className="w-full bg-white/[0.02] border border-[#C8A84B]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#C8A84B]/50 focus:bg-[#C8A84B]/[0.02] transition-all duration-300"
+                className="w-full bg-white/[0.02] border border-[#00E5FF]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#00E5FF]/50 focus:bg-[#00E5FF]/[0.02] transition-all duration-300"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-medium text-[#C8A84B]/80 ml-1">Parent Department</label>
+              <label className="text-[11px] font-medium text-[#00E5FF]/80 ml-1">Parent Department</label>
               <select 
-                className="w-full bg-[var(--page)] border border-[#C8A84B]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#C8A84B]/50 focus:bg-[#C8A84B]/[0.02] transition-all duration-300 appearance-none"
+                className="w-full bg-[var(--page)] border border-[#00E5FF]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#00E5FF]/50 focus:bg-[#00E5FF]/[0.02] transition-all duration-300 appearance-none"
               >
                 <option value="">Select parent (Optional)</option>
                 {MOCK_DEPARTMENTS.map(d => (
@@ -89,7 +89,7 @@ export default function OrganizationStructure({ onChange }: { onChange?: () => v
               placeholder="Search departments..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-[var(--page)] border border-[#C8A84B]/20 rounded-xl pl-9 pr-4 py-2 text-[12px] text-white/90 focus:outline-none focus:border-[#C8A84B]/50 transition-all"
+              className="w-full bg-[var(--page)] border border-[#00E5FF]/20 rounded-xl pl-9 pr-4 py-2 text-[12px] text-white/90 focus:outline-none focus:border-[#00E5FF]/50 transition-all"
             />
           </div>
 

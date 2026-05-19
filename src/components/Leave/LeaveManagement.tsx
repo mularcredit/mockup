@@ -35,6 +35,8 @@ import { createClient } from '@supabase/supabase-js';
 import { TownProps } from '../../types/supabase';
 import RoleButtonWrapper from '../ProtectedRoutes/RoleButton';
 import LeaveScheduler from './LeaveScheduler';
+import LoadingSpinner from '../UI/LoadingSpinner';
+import KPIStrip from '../Dashboard/KPIStrip';
 
 // Initialize Supabase client
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
@@ -50,6 +52,9 @@ type LeaveType = {
   is_continuous: boolean;
   max_days?: number;
   icon: string;
+  requires_attachment?: boolean;
+  allow_negative_balance?: boolean;
+  eligibility_rule?: string;
 };
 
 type Holiday = {
@@ -129,7 +134,7 @@ const PremiumSearchableDropdown = ({
 
   return (
     <div className="relative" ref={containerRef}>
-      <label className="block text-[10px] uppercase tracking-wider text-gray-400 font-bold mb-1 ml-1">
+      <label className="block text-xs font-medium text-[var(--t4)] mb-1.5 ml-1">
         {label}
       </label>
       <button
@@ -222,13 +227,13 @@ interface BranchAreaMapping {
 
 // Default leave types (Kenyan standard)
 const DEFAULT_LEAVE_TYPES: LeaveType[] = [
-  { id: 'annual', name: 'Annual Leave', description: 'Paid time off work', is_deductible: true, is_continuous: true, max_days: 24, icon: 'Sun' },
-  { id: 'compassionate', name: 'Compassionate Leave', description: 'Time off due to family bereavement', is_deductible: false, is_continuous: true, max_days: 7, icon: 'Heart' },
-  { id: 'maternity', name: 'Maternity Leave', description: 'Time off for new mothers', is_deductible: false, is_continuous: true, max_days: 90, icon: 'Baby' },
-  { id: 'paternity', name: 'Paternity Leave', description: 'Time off for new fathers', is_deductible: false, is_continuous: true, max_days: 14, icon: 'Baby' },
-  { id: 'sick', name: 'Sick Leave', description: 'Time off due to illness', is_deductible: true, is_continuous: true, max_days: 14, icon: 'Activity' },
-  { id: 'overtime', name: 'Overtime Compensation', description: 'Leave awarded for overtime work', is_deductible: false, is_continuous: false, icon: 'Zap' },
-  { id: 'other', name: 'Other Leave', description: 'Other types of leave', is_deductible: true, is_continuous: true, icon: 'Gift' },
+  { id: 'annual', name: 'Annual Leave', description: 'Paid time off work', is_deductible: true, is_continuous: true, max_days: 24, icon: 'Sun', requires_attachment: false, allow_negative_balance: false },
+  { id: 'compassionate', name: 'Compassionate Leave', description: 'Time off due to family bereavement', is_deductible: false, is_continuous: true, max_days: 7, icon: 'Heart', requires_attachment: false, allow_negative_balance: true },
+  { id: 'maternity', name: 'Maternity Leave', description: 'Time off for new mothers', is_deductible: false, is_continuous: true, max_days: 90, icon: 'Baby', requires_attachment: true, allow_negative_balance: false },
+  { id: 'paternity', name: 'Paternity Leave', description: 'Time off for new fathers', is_deductible: false, is_continuous: true, max_days: 14, icon: 'Baby', requires_attachment: false, allow_negative_balance: false },
+  { id: 'sick', name: 'Sick Leave', description: 'Time off due to illness', is_deductible: true, is_continuous: true, max_days: 14, icon: 'Activity', requires_attachment: true, allow_negative_balance: true },
+  { id: 'overtime', name: 'Overtime Compensation', description: 'Leave awarded for overtime work', is_deductible: false, is_continuous: false, icon: 'Zap', requires_attachment: false, allow_negative_balance: false },
+  { id: 'other', name: 'Other Leave', description: 'Other types of leave', is_deductible: true, is_continuous: true, icon: 'Gift', requires_attachment: false, allow_negative_balance: false },
 ];
 
 // Sample holidays (Kenyan public holidays)
@@ -374,92 +379,87 @@ const LeaveTypeIcon = ({ type }: { type: LeaveType }) => {
 // Detailed View Component
 const LeaveApplicationDetails = ({ application, onClose }: { application: LeaveApplication, onClose: () => void }) => {
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-[var(--card)] rounded-xl shadow-lg w-full max-w-4xl max-h-[90vh] flex flex-col">
-        <div className="flex-shrink-0 flex justify-between items-center p-6 border-b border-gray-200">
-          <h3 className="text-lg font-base text-gray-900">Leave Application Details</h3>
+    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center z-50 p-4">
+      <div className="glass-card border border-[var(--p-line)] w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl relative">
+        <div className="flex-shrink-0 flex justify-between items-center p-6 border-b border-[var(--p-line)]">
+          <h3 className="text-xl font-bold text-[var(--t1)] tracking-wide">Leave Application Details</h3>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-[var(--t4)] hover:text-rose-400 p-2 hover:bg-[var(--glass-h)] rounded-full transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6" />
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-6 thin-scrollbar">
-          <div className="space-y-4">
-            {/* ... your existing content ... */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <p className="text-xs text-gray-500">Employee Name</p>
-                <p className="font-medium">{application.Name}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500">Employee Number</p>
-                <p className="font-medium">{application["Employee Number"]}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500">Office Branch</p>
-                <p className="font-medium">{application["Office Branch"] || 'N/A'}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500">Leave Type</p>
-                <p className="font-medium">{application["Leave Type"]}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500">Start Date</p>
-                <p className="font-medium">{formatDate(application["Start Date"])}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500">End Date</p>
-                <p className="font-medium">{formatDate(application["End Date"])}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500">Days</p>
-                <p className="font-medium">{application.Days}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500">Type</p>
-                <p className="font-medium">{application.Type}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500">Status</p>
-                <div className="font-medium">
-                  <StatusBadge status={application.Status} />
-                </div>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500">Recommendation Status</p>
-                <div className="font-medium">
-                  <RecStatusBadge recstatus={application.recstatus} />
-                </div>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500">Applied On</p>
-                <p className="font-medium">{formatDate(application.time_added)}</p>
-              </div>
-            </div>
-
+        <div className="flex-1 overflow-y-auto p-6 thin-scrollbar space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-[var(--sidebar)] p-5 rounded-2xl border border-[var(--p-line)]">
             <div>
-              <p className="text-xs text-gray-500">Reason</p>
-              <p className="font-medium text-sm whitespace-pre-line">{application.Reason}</p>
+              <p className="text-xs font-medium text-[var(--t4)] mb-1">Employee name</p>
+              <p className="font-bold text-[var(--t2)] text-base">{application.Name}</p>
             </div>
-
-            {application.recommendation_notes && (
-              <div>
-                <p className="text-xs text-gray-500">Recommendation Notes</p>
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                  <p className="font-medium whitespace-pre-line text-blue-800">{application.recommendation_notes}</p>
-                </div>
+            <div>
+              <p className="text-xs font-medium text-[var(--t4)] mb-1">Employee number</p>
+              <p className="font-semibold text-[var(--t2)]">{application["Employee Number"]}</p>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-[var(--t4)] mb-1">Office branch</p>
+              <p className="font-semibold text-[var(--t2)]">{application["Office Branch"] || 'N/A'}</p>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-[var(--t4)] mb-1">Leave type</p>
+              <p className="font-semibold text-[var(--p)]">{application["Leave Type"]}</p>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-[var(--t4)] mb-1">Start date</p>
+              <p className="font-semibold text-[var(--t2)]">{formatDate(application["Start Date"])}</p>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-[var(--t4)] mb-1">End date</p>
+              <p className="font-semibold text-[var(--t2)]">{formatDate(application["End Date"])}</p>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-[var(--t4)] mb-1">Days</p>
+              <p className="font-extrabold text-cyan-400 text-lg">{application.Days} days</p>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-[var(--t4)] mb-1">Type</p>
+              <p className="font-semibold text-[var(--t2)]">{application.Type}</p>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-[var(--t4)] mb-1">Status</p>
+              <div className="mt-1">
+                <StatusBadge status={application.Status} />
               </div>
-            )}
+            </div>
+            <div>
+              <p className="text-xs font-medium text-[var(--t4)] mb-1">Recommendation status</p>
+              <div className="mt-1">
+                <RecStatusBadge recstatus={application.recstatus} />
+              </div>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-[var(--t4)] mb-1">Applied on</p>
+              <p className="font-semibold text-[var(--t3)]">{formatDate(application.time_added)}</p>
+            </div>
           </div>
+
+          <div className="bg-[var(--glass)] p-5 rounded-2xl border border-[var(--p-line)] space-y-2">
+            <p className="text-xs font-medium text-[var(--t4)]">Reason</p>
+            <p className="font-semibold text-sm text-[var(--t2)] whitespace-pre-line leading-relaxed">{application.Reason || 'No reason provided.'}</p>
+          </div>
+
+          {application.recommendation_notes && (
+            <div className="bg-amber-500/10 border border-amber-500/30 p-5 rounded-2xl space-y-2 shadow-inner">
+              <p className="text-xs font-bold text-amber-400">Recommendation notes</p>
+              <p className="font-medium whitespace-pre-line text-[var(--t2)] text-sm leading-relaxed">{application.recommendation_notes}</p>
+            </div>
+          )}
         </div>
 
-        <div className="flex-shrink-0 flex justify-end gap-2 p-6 border-t border-gray-200">
+        <div className="flex-shrink-0 flex justify-end gap-2 p-6 border-t border-[var(--p-line)] bg-[var(--sidebar)] rounded-b-xl">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs"
+            className="px-6 py-2.5 bg-[var(--glass)] hover:bg-[var(--glass-h)] text-[var(--t3)] border border-[var(--p-line)] rounded-xl text-xs font-medium hover:text-[var(--t2)] transition-all"
           >
             Close
           </button>
@@ -543,11 +543,11 @@ const StatusUpdateModal = ({
 
   const getButtonColor = () => {
     switch (action) {
-      case 'approve': return 'bg-green-600 hover:bg-green-700';
-      case 'reject': return 'bg-red-600 hover:bg-red-700';
-      case 'recommend': return 'bg-blue-600 hover:bg-blue-700';
-      case 'not_recommend': return 'bg-orange-600 hover:bg-orange-700';
-      default: return 'bg-gray-600 hover:bg-gray-700';
+      case 'approve': return 'bg-[var(--p)] hover:opacity-90 shadow-[0_4px_12px_rgba(16,185,129,0.2)]';
+      case 'reject': return 'bg-rose-600 hover:bg-rose-700 shadow-[0_4px_12px_rgba(244,63,94,0.2)]';
+      case 'recommend': return 'bg-indigo-600 hover:bg-indigo-700 shadow-[0_4px_12px_rgba(99,102,241,0.2)]';
+      case 'not_recommend': return 'bg-amber-600 hover:bg-amber-700 shadow-[0_4px_12px_rgba(217,119,6,0.2)]';
+      default: return 'bg-slate-600 hover:bg-slate-700 shadow-[0_4px_12px_rgba(71,85,105,0.2)]';
     }
   };
 
@@ -566,15 +566,15 @@ const StatusUpdateModal = ({
   const Icon = getButtonIcon();
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-[var(--card)] rounded-xl shadow-lg p-6 w-full max-w-md">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-base text-gray-900">
+    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center z-50 p-4">
+      <div className="glass-card border border-[var(--p-line)] p-6 w-full max-w-md shadow-2xl relative">
+        <div className="flex justify-between items-center mb-6 border-b border-[var(--p-line)] pb-4">
+          <h3 className="text-lg font-bold text-[var(--t1)] tracking-wide">
             {getModalTitle()}
           </h3>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-[var(--t4)] hover:text-rose-400 p-2 hover:bg-[var(--glass-h)] rounded-full transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -582,30 +582,30 @@ const StatusUpdateModal = ({
 
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-[var(--t3)] mb-1.5">
               {getNotesLabel()}
             </label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-xs focus:ring-2 focus:ring-blue-100 focus:border-blue-500"
+              className="w-full border border-[var(--p-line)] bg-[var(--glass)] rounded-xl px-4 py-2.5 text-sm text-[var(--t2)] focus:bg-[var(--sidebar)] focus:ring-2 focus:ring-[var(--p)]/20 focus:border-[var(--p-line)] transition-all shadow-inner"
               rows={4}
               placeholder={getNotesPlaceholder()}
             />
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 pt-6">
+        <div className="flex justify-end gap-2 pt-6 border-t border-[var(--p-line)] mt-6">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs"
+            className="px-4 py-2 bg-[var(--glass)] hover:bg-[var(--glass-h)] text-[var(--t3)] border border-[var(--p-line)] rounded-xl text-xs font-medium hover:text-[var(--t2)] transition-all"
             disabled={isUpdating}
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
-            className={`px-4 py-2 ${getButtonColor()} text-white rounded-lg text-xs flex items-center gap-2`}
+            className={`px-4 py-2 ${getButtonColor()} text-white rounded-xl text-xs font-medium flex items-center gap-2 active:scale-[0.98] transition-all`}
             disabled={isUpdating}
           >
             {isUpdating ? (
@@ -751,13 +751,13 @@ const StatsSkeletonLoader = () => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
       {Array.from({ length: 6 }).map((_, index) => (
-        <div key={index} className="bg-[var(--card)] rounded-xl border border-gray-200 p-4 shadow-sm animate-pulse">
+        <div key={index} className="bg-[var(--card)] rounded-xl border border-[var(--p-line)] p-4 shadow-sm animate-pulse">
           <div className="flex items-center justify-between mb-3">
-            <div className="p-2 rounded-lg bg-gray-200 h-9 w-9"></div>
+            <div className="p-2 rounded-lg bg-[var(--glass)] h-9 w-9"></div>
           </div>
           <div className="space-y-1">
-            <div className="h-3 bg-gray-200 rounded w-3/4"></div>
-            <div className="h-5 bg-gray-200 rounded w-1/2"></div>
+            <div className="h-3 bg-[var(--glass)] rounded w-3/4"></div>
+            <div className="h-5 bg-[var(--glass)] rounded w-1/2"></div>
           </div>
         </div>
       ))}
@@ -784,15 +784,15 @@ const LeaveTypeFormModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-[var(--card)] rounded-xl shadow-lg p-6 w-full max-w-md">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-base text-gray-900">
+    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center z-50 p-4">
+      <div className="glass-card border border-[var(--p-line)] p-6 w-full max-w-md shadow-2xl relative">
+        <div className="flex justify-between items-center mb-6 border-b border-[var(--p-line)] pb-4">
+          <h3 className="text-lg font-bold text-[var(--t1)] tracking-wide">
             {newLeaveType.id ? 'Edit Leave Type' : 'Add Leave Type'}
           </h3>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-[var(--t4)] hover:text-rose-400 p-2 hover:bg-[var(--glass-h)] rounded-full transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -800,26 +800,26 @@ const LeaveTypeFormModal = ({
 
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-[var(--t3)] mb-1.5">
               Leave Type Name
             </label>
             <input
               type="text"
               value={newLeaveType.name}
               onChange={(e) => setNewLeaveType((prev: any) => ({ ...prev, name: e.target.value }))}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-xs focus:ring-2 focus:ring-blue-100 focus:border-blue-500"
+              className="w-full border border-[var(--p-line)] bg-[var(--glass)] rounded-xl px-4 py-2.5 text-sm text-[var(--t2)] focus:bg-[var(--sidebar)] focus:ring-2 focus:ring-[var(--p)]/20 focus:border-[var(--p-line)] transition-all shadow-inner"
               placeholder="e.g., Annual Leave"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-[var(--t3)] mb-1.5">
               Description
             </label>
             <textarea
               value={newLeaveType.description}
               onChange={(e) => setNewLeaveType((prev: any) => ({ ...prev, description: e.target.value }))}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-xs focus:ring-2 focus:ring-blue-100 focus:border-blue-500"
+              className="w-full border border-[var(--p-line)] bg-[var(--glass)] rounded-xl px-4 py-2.5 text-sm text-[var(--t2)] focus:bg-[var(--sidebar)] focus:ring-2 focus:ring-[var(--p)]/20 focus:border-[var(--p-line)] transition-all shadow-inner"
               rows={3}
               placeholder="Describe this leave type..."
             />
@@ -827,26 +827,26 @@ const LeaveTypeFormModal = ({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-[var(--t3)] mb-1.5">
                 Maximum Days
               </label>
               <input
                 type="number"
                 value={newLeaveType.max_days || ''}
                 onChange={(e) => setNewLeaveType((prev: any) => ({ ...prev, max_days: e.target.value ? Number(e.target.value) : undefined }))}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 text-xs focus:ring-2 focus:ring-blue-100 focus:border-blue-500"
+                className="w-full border border-[var(--p-line)] bg-[var(--glass)] rounded-xl px-4 py-2.5 text-sm text-[var(--t2)] focus:bg-[var(--sidebar)] focus:ring-2 focus:ring-[var(--p)]/20 focus:border-[var(--p-line)] transition-all shadow-inner"
                 placeholder="Unlimited"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-[var(--t3)] mb-1.5">
                 Icon
               </label>
               <select
                 value={newLeaveType.icon}
                 onChange={(e) => setNewLeaveType((prev: any) => ({ ...prev, icon: e.target.value }))}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 text-xs focus:ring-2 focus:ring-blue-100 focus:border-blue-500"
+                className="w-full border border-[var(--p-line)] bg-[var(--glass)] rounded-xl px-4 py-2.5 text-sm text-[var(--t2)] focus:bg-[var(--sidebar)] focus:ring-2 focus:ring-[var(--p)]/20 focus:border-[var(--p-line)] transition-all shadow-inner"
               >
                 <option value="Sun">Sun</option>
                 <option value="Heart">Heart</option>
@@ -858,15 +858,32 @@ const LeaveTypeFormModal = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs font-medium text-[var(--t3)] mb-1.5">
+              Eligibility Rules (Define eligibility by employee/department type)
+            </label>
+            <select
+              value={newLeaveType.eligibility_rule || 'all'}
+              onChange={(e) => setNewLeaveType((prev: any) => ({ ...prev, eligibility_rule: e.target.value }))}
+              className="w-full border border-[var(--p-line)] bg-[var(--glass)] rounded-xl px-4 py-2.5 text-sm text-[var(--t2)] focus:bg-[var(--sidebar)] focus:ring-2 focus:ring-[var(--p)]/20 focus:border-[var(--p-line)] transition-all shadow-inner"
+            >
+              <option value="all">All Employees (Kenyan Standard)</option>
+              <option value="fulltime">Full-Time Only</option>
+              <option value="parttime">Part-Time Only</option>
+              <option value="probationary">Probationary Only</option>
+              <option value="hq">Headquarters Branch Only</option>
+            </select>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 pt-2">
             <div className="flex items-center">
               <input
                 type="checkbox"
                 checked={newLeaveType.is_deductible}
                 onChange={(e) => setNewLeaveType((prev: any) => ({ ...prev, is_deductible: e.target.checked }))}
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="rounded border-[var(--p-line)] text-[var(--p)] focus:ring-[var(--p)] bg-[var(--glass)] w-4 h-4"
               />
-              <label className="ml-2 text-xs text-gray-700">Deductible from balance</label>
+              <label className="ml-2 text-xs font-semibold text-[var(--t3)]">Deductible from balance</label>
             </div>
 
             <div className="flex items-center">
@@ -874,20 +891,40 @@ const LeaveTypeFormModal = ({
                 type="checkbox"
                 checked={newLeaveType.is_continuous}
                 onChange={(e) => setNewLeaveType((prev: any) => ({ ...prev, is_continuous: e.target.checked }))}
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="rounded border-[var(--p-line)] text-[var(--p)] focus:ring-[var(--p)] bg-[var(--glass)] w-4 h-4"
               />
-              <label className="ml-2 text-xs text-gray-700">Continuous leave</label>
+              <label className="ml-2 text-xs font-semibold text-[var(--t3)]">Continuous leave</label>
+            </div>
+
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                checked={newLeaveType.requires_attachment || false}
+                onChange={(e) => setNewLeaveType((prev: any) => ({ ...prev, requires_attachment: e.target.checked }))}
+                className="rounded border-[var(--p-line)] text-[var(--p)] focus:ring-[var(--p)] bg-[var(--glass)] w-4 h-4"
+              />
+              <label className="ml-2 text-xs font-semibold text-[var(--t3)]">Requires attachment</label>
+            </div>
+
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                checked={newLeaveType.allow_negative_balance || false}
+                onChange={(e) => setNewLeaveType((prev: any) => ({ ...prev, allow_negative_balance: e.target.checked }))}
+                className="rounded border-[var(--p-line)] text-[var(--p)] focus:ring-[var(--p)] bg-[var(--glass)] w-4 h-4"
+              />
+              <label className="ml-2 text-xs font-semibold text-[var(--t3)]">Allow negative balance</label>
             </div>
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 pt-6">
+        <div className="flex justify-end gap-2 pt-6 border-t border-[var(--p-line)] mt-6">
           <button
             onClick={() => {
               onClose();
-              setNewLeaveType({ name: '', description: '', is_deductible: true, is_continuous: true, icon: 'Sun' });
+              setNewLeaveType({ name: '', description: '', is_deductible: true, is_continuous: true, icon: 'Sun', requires_attachment: false, allow_negative_balance: false, eligibility_rule: 'all' });
             }}
-            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs"
+            className="px-4 py-2 bg-[var(--glass)] hover:bg-[var(--glass-h)] text-[var(--t3)] border border-[var(--p-line)] rounded-xl text-xs font-medium hover:text-[var(--t2)] transition-all"
           >
             Cancel
           </button>
@@ -899,7 +936,7 @@ const LeaveTypeFormModal = ({
                 handleAddLeaveType();
               }
             }}
-            className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs flex items-center gap-2"
+            className="px-4 py-2 bg-[var(--p)] hover:opacity-90 text-white rounded-xl text-xs font-medium flex items-center gap-2 shadow-[0_4px_12px_var(--p-glow)] active:scale-[0.98] transition-all"
           >
             <Save className="w-4 h-4" />
             {newLeaveType.id ? 'Update' : 'Save'} Leave Type
@@ -929,10 +966,10 @@ const HolidayFormModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-[var(--card)] rounded-xl shadow-lg p-6 w-full max-w-md">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-base text-gray-900">
+    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center z-50 p-4">
+      <div className="glass-card border border-[var(--p-line)] p-6 w-full max-w-md shadow-2xl relative">
+        <div className="flex justify-between items-center mb-6 border-b border-[var(--p-line)] pb-4">
+          <h3 className="text-lg font-bold text-[var(--t1)] tracking-wide">
             {newHoliday.id ? 'Edit Holiday' : 'Add Holiday'}
           </h3>
           <button
@@ -940,7 +977,7 @@ const HolidayFormModal = ({
               onClose();
               setNewHoliday({ name: '', date: new Date().toISOString().split('T')[0], recurring: true });
             }}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-[var(--t4)] hover:text-rose-400 p-2 hover:bg-[var(--glass-h)] rounded-full transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -948,48 +985,48 @@ const HolidayFormModal = ({
 
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-[var(--t3)] mb-1.5">
               Holiday Name
             </label>
             <input
               type="text"
               value={newHoliday.name}
               onChange={(e) => setNewHoliday((prev: any) => ({ ...prev, name: e.target.value }))}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-xs focus:ring-2 focus:ring-blue-100 focus:border-blue-500"
+              className="w-full border border-[var(--p-line)] bg-[var(--glass)] rounded-xl px-4 py-2.5 text-sm text-[var(--t2)] focus:bg-[var(--sidebar)] focus:ring-2 focus:ring-[var(--p)]/20 focus:border-[var(--p-line)] transition-all shadow-inner"
               placeholder="e.g., New Year's Day"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-[var(--t3)] mb-1.5">
               Date
             </label>
             <input
               type="date"
               value={newHoliday.date}
               onChange={(e) => setNewHoliday((prev: any) => ({ ...prev, date: e.target.value }))}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-xs focus:ring-2 focus:ring-blue-100 focus:border-blue-500"
+              className="w-full border border-[var(--p-line)] bg-[var(--glass)] rounded-xl px-4 py-2.5 text-sm text-[var(--t2)] focus:bg-[var(--sidebar)] focus:ring-2 focus:ring-[var(--p)]/20 focus:border-[var(--p-line)] transition-all shadow-inner"
             />
           </div>
 
-          <div className="flex items-center">
+          <div className="flex items-center pt-2">
             <input
               type="checkbox"
               checked={newHoliday.recurring}
               onChange={(e) => setNewHoliday((prev: any) => ({ ...prev, recurring: e.target.checked }))}
-              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              className="rounded border-[var(--p-line)] text-[var(--p)] focus:ring-[var(--p)] bg-[var(--glass)] w-4 h-4"
             />
-            <label className="ml-2 text-xs text-gray-700">Recurring holiday (every year)</label>
+            <label className="ml-2 text-xs font-semibold text-[var(--t3)]">Recurring holiday (every year)</label>
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 pt-6">
+        <div className="flex justify-end gap-2 pt-6 border-t border-[var(--p-line)] mt-6">
           <button
             onClick={() => {
               onClose();
               setNewHoliday({ name: '', date: new Date().toISOString().split('T')[0], recurring: true });
             }}
-            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs"
+            className="px-4 py-2 bg-[var(--glass)] hover:bg-[var(--glass-h)] text-[var(--t3)] border border-[var(--p-line)] rounded-xl text-xs font-medium hover:text-[var(--t2)] transition-all"
           >
             Cancel
           </button>
@@ -1001,7 +1038,7 @@ const HolidayFormModal = ({
                 handleAddHoliday();
               }
             }}
-            className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs flex items-center gap-2"
+            className="px-4 py-2 bg-[var(--p)] hover:opacity-90 text-white rounded-xl text-xs font-medium flex items-center gap-2 shadow-[0_4px_12px_var(--p-glow)] active:scale-[0.98] transition-all"
           >
             <Save className="w-4 h-4" />
             {newHoliday.id ? 'Update' : 'Save'} Holiday
@@ -1029,55 +1066,55 @@ const AccrualSettingsModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-[var(--card)] rounded-xl shadow-lg p-6 w-full max-w-md">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-base text-gray-900">Run Leave Accrual</h3>
+    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center z-50 p-4">
+      <div className="glass-card border border-[var(--p-line)] p-6 w-full max-w-md shadow-2xl relative">
+        <div className="flex justify-between items-center mb-6 border-b border-[var(--p-line)] pb-4">
+          <h3 className="text-lg font-bold text-[var(--t1)] tracking-wide">Run Leave Accrual</h3>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-[var(--t4)] hover:text-rose-400 p-2 hover:bg-[var(--glass-h)] rounded-full transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <div className="space-y-4">
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 shadow-inner">
             <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5" />
+              <AlertCircle className="w-5 h-5 text-amber-400 mt-0.5" />
               <div>
-                <p className="text-xs font-medium text-yellow-800">Important</p>
-                <p className="text-xs text-yellow-700 mt-1">
-                  This will add {accrualSettings.accrualAmount} days to all employees' leave balances
+                <p className="text-xs font-bold text-amber-400">Important</p>
+                <p className="text-xs text-[var(--t3)] mt-1.5 leading-relaxed">
+                  This will add <span className="font-extrabold text-amber-400">{accrualSettings.accrualAmount} days</span> to all employees' leave balances
                   for deductible leave types. This action cannot be undone.
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-3 pt-2">
             <div>
-              <p className="text-xs font-medium text-gray-700">Accrual Details:</p>
-              <ul className="text-xs text-gray-600 space-y-1 mt-2">
-                <li>• Amount: {accrualSettings.accrualAmount} days per employee</li>
-                <li>• Interval: {accrualSettings.accrualInterval}</li>
-                <li>• Next accrual: {formatDate(accrualSettings.nextAccrualDate)}</li>
-                <li>• Affected employees: {employees.length}</li>
+              <p className="text-xs font-medium text-[var(--t3)]">Accrual details:</p>
+              <ul className="text-xs text-[var(--t2)] space-y-2 mt-3 bg-[var(--glass)] p-3 rounded-xl border border-[var(--p-line)]">
+                <li className="flex justify-between"><span className="text-[var(--t4)]">Amount:</span> <span className="font-bold text-[var(--p)]">{accrualSettings.accrualAmount} days per employee</span></li>
+                <li className="flex justify-between"><span className="text-[var(--t4)]">Interval:</span> <span className="font-bold">{accrualSettings.accrualInterval}</span></li>
+                <li className="flex justify-between"><span className="text-[var(--t4)]">Next accrual:</span> <span className="font-bold">{formatDate(accrualSettings.nextAccrualDate)}</span></li>
+                <li className="flex justify-between"><span className="text-[var(--t4)]">Affected employees:</span> <span className="font-bold text-cyan-400">{employees.length}</span></li>
               </ul>
             </div>
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 pt-6">
+        <div className="flex justify-end gap-2 pt-6 border-t border-[var(--p-line)] mt-6">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs"
+            className="px-4 py-2 bg-[var(--glass)] hover:bg-[var(--glass-h)] text-[var(--t3)] border border-[var(--p-line)] rounded-xl text-xs font-medium hover:text-[var(--t2)] transition-all"
           >
             Cancel
           </button>
           <button
             onClick={handleRunAccrual}
-            className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs flex items-center gap-2"
+            className="px-4 py-2 bg-[var(--p)] hover:opacity-90 text-white rounded-xl text-xs font-medium flex items-center gap-2 shadow-[0_4px_12px_var(--p-glow)] active:scale-[0.98] transition-all"
           >
             <RefreshCw className="w-4 h-4" />
             Run Accrual Now
@@ -1132,13 +1169,13 @@ const LeaveApplicationFormModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-[var(--card)] rounded-xl shadow-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto thin-scrollbar">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-xl font-bold text-gray-900">Assign Leave</h3>
+    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center z-50 p-4">
+      <div className="glass-card border border-[var(--p-line)] p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto thin-scrollbar shadow-2xl relative">
+        <div className="flex justify-between items-center mb-6 border-b border-[var(--p-line)] pb-4">
+          <h3 className="text-xl font-bold text-[var(--t1)] tracking-wide">Assign Leave</h3>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="text-[var(--t4)] hover:text-rose-400 p-2 hover:bg-[var(--glass-h)] rounded-full transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
@@ -1173,38 +1210,38 @@ const LeaveApplicationFormModal = ({
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-[var(--t3)] mb-1.5">
                 Start Date
               </label>
               <input
                 type="date"
                 value={newLeaveApplication["Start Date"]}
                 onChange={(e) => setNewLeaveApplication((prev: any) => ({ ...prev, "Start Date": e.target.value }))}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500"
+                className="w-full border border-[var(--p-line)] bg-[var(--glass)] rounded-xl px-4 py-2.5 text-sm text-[var(--t2)] focus:bg-[var(--sidebar)] focus:ring-2 focus:ring-[var(--p)]/20 focus:border-[var(--p-line)] transition-all shadow-inner"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-[var(--t3)] mb-1.5">
                 End Date
               </label>
               <input
                 type="date"
                 value={newLeaveApplication["End Date"]}
                 onChange={(e) => setNewLeaveApplication((prev: any) => ({ ...prev, "End Date": e.target.value }))}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500"
+                className="w-full border border-[var(--p-line)] bg-[var(--glass)] rounded-xl px-4 py-2.5 text-sm text-[var(--t2)] focus:bg-[var(--sidebar)] focus:ring-2 focus:ring-[var(--p)]/20 focus:border-[var(--p-line)] transition-all shadow-inner"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-[var(--t3)] mb-1.5">
                 Working Days
               </label>
               <input
                 type="number"
                 value={newLeaveApplication["Days"]}
                 readOnly
-                className="w-full border border-gray-100 bg-gray-50 rounded-lg px-3 py-2 text-sm font-bold text-blue-600"
+                className="w-full border border-[var(--p-line)] bg-[var(--p-dim)] rounded-xl px-4 py-2.5 text-sm font-extrabold text-[var(--p)] cursor-not-allowed shadow-inner"
               />
             </div>
           </div>
@@ -1237,29 +1274,29 @@ const LeaveApplicationFormModal = ({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-[var(--t3)] mb-1.5">
               Reason / Remarks
             </label>
             <textarea
               value={newLeaveApplication["Reason"]}
               onChange={(e) => setNewLeaveApplication((prev: any) => ({ ...prev, "Reason": e.target.value }))}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-500"
+              className="w-full border border-[var(--p-line)] bg-[var(--glass)] rounded-xl px-4 py-2.5 text-sm text-[var(--t2)] focus:bg-[var(--sidebar)] focus:ring-2 focus:ring-[var(--p)]/20 focus:border-[var(--p-line)] transition-all shadow-inner"
               rows={3}
               placeholder="Reason for granting this leave..."
             />
           </div>
         </div>
 
-        <div className="flex justify-end gap-3 pt-8">
+        <div className="flex justify-end gap-3 pt-8 border-t border-[var(--p-line)] mt-6">
           <button
             onClick={onClose}
-            className="px-6 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-sm font-semibold transition-colors"
+            className="px-6 py-2.5 bg-[var(--glass)] hover:bg-[var(--glass-h)] text-[var(--t3)] border border-[var(--p-line)] rounded-xl text-xs font-medium hover:text-[var(--t2)] transition-all"
           >
             Cancel
           </button>
           <button
             onClick={handleApplyLeave}
-            className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold flex items-center gap-2 shadow-lg shadow-indigo-600/20 active:scale-[0.98] transition-all"
+            className="px-6 py-2.5 bg-[var(--p)] hover:opacity-90 text-white rounded-xl text-xs font-medium flex items-center gap-2 shadow-[0_4px_12px_var(--p-glow)] active:scale-[0.98] transition-all"
           >
             <Save className="w-4 h-4" />
             Confirm Assignment
@@ -1322,7 +1359,17 @@ export default function LeaveManagementSystem({ selectedTown, onTownChange, sele
     description: '',
     is_deductible: true,
     is_continuous: true,
-    icon: 'Sun'
+    icon: 'Sun',
+    requires_attachment: false,
+    allow_negative_balance: false,
+    eligibility_rule: 'all'
+  });
+  const [policySettings, setPolicySettings] = useState({
+    excludeWeekends: true,
+    excludeHolidays: true,
+    workflowLevel: '2',
+    leaveCycle: 'calendar',
+    enableEncashment: false
   });
   const [newHoliday, setNewHoliday] = useState<Partial<Holiday>>({
     name: '',
@@ -2394,6 +2441,84 @@ export default function LeaveManagementSystem({ selectedTown, onTownChange, sele
           </div>
         </div>
 
+        <div className="border-t border-[var(--p-line)] pt-6">
+          <h3 className="text-lg font-base text-[var(--t2)] mb-4">Governance & Leave Policies</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 bg-[var(--glass)] rounded-xl border border-[var(--p-line)]">
+                <div>
+                  <p className="text-xs font-semibold text-[var(--t2)]">Exclude Weekends</p>
+                  <p className="text-[10px] text-[var(--t3)]">Auto-exclude Saturdays and Sundays from leave duration calculations</p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={policySettings.excludeWeekends}
+                  onChange={(e) => setPolicySettings(prev => ({ ...prev, excludeWeekends: e.target.checked }))}
+                  className="rounded border-[var(--p-line)] text-[var(--p)] focus:ring-[var(--p)] bg-[var(--glass)] w-4 h-4"
+                />
+              </div>
+
+              <div className="flex items-center justify-between p-3 bg-[var(--glass)] rounded-xl border border-[var(--p-line)]">
+                <div>
+                  <p className="text-xs font-semibold text-[var(--t2)]">Exclude Public Holidays</p>
+                  <p className="text-[10px] text-[var(--t3)]">Auto-exclude configured public holidays from leave duration</p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={policySettings.excludeHolidays}
+                  onChange={(e) => setPolicySettings(prev => ({ ...prev, excludeHolidays: e.target.checked }))}
+                  className="rounded border-[var(--p-line)] text-[var(--p)] focus:ring-[var(--p)] bg-[var(--glass)] w-4 h-4"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="p-3 bg-[var(--glass)] rounded-xl border border-[var(--p-line)]">
+                <label className="block text-xs font-semibold text-[var(--t2)] mb-1">
+                  Approval Workflow Hierarchy
+                </label>
+                <p className="text-[10px] text-[var(--t3)] mb-2">Configure approval escalation levels for leave requests</p>
+                <select
+                  value={policySettings.workflowLevel}
+                  onChange={(e) => setPolicySettings(prev => ({ ...prev, workflowLevel: e.target.value }))}
+                  className="w-full border border-[var(--p-line)] bg-[var(--card)] rounded-xl px-3 py-2.5 text-xs text-[var(--t2)] focus:ring-2 focus:ring-[var(--p)]/20 focus:border-[var(--p-line)]"
+                >
+                  <option value="1">1-Level: Direct HR Manager Approval</option>
+                  <option value="2">2-Level: Supervisor ➔ HR Manager Approval</option>
+                </select>
+              </div>
+
+              <div className="p-3 bg-[var(--glass)] rounded-xl border border-[var(--p-line)]">
+                <label className="block text-xs font-semibold text-[var(--t2)] mb-1">
+                  Leave Cycle / Year Configuration
+                </label>
+                <p className="text-[10px] text-[var(--t3)] mb-2">Configure the standard cycle/financial year for accruals</p>
+                <select
+                  value={policySettings.leaveCycle}
+                  onChange={(e) => setPolicySettings(prev => ({ ...prev, leaveCycle: e.target.value }))}
+                  className="w-full border border-[var(--p-line)] bg-[var(--card)] rounded-xl px-3 py-2.5 text-xs text-[var(--t2)] focus:ring-2 focus:ring-[var(--p)]/20 focus:border-[var(--p-line)]"
+                >
+                  <option value="calendar">Standard Calendar Year (January - December)</option>
+                  <option value="custom_fiscal">Custom Fiscal Year (July - June)</option>
+                </select>
+              </div>
+
+              <div className="flex items-center justify-between p-3 bg-[var(--glass)] rounded-xl border border-[var(--p-line)]">
+                <div>
+                  <p className="text-xs font-semibold text-[var(--t2)]">Leave Encashment (Optional)</p>
+                  <p className="text-[10px] text-[var(--t3)]">Enable cash payment option for accrued, unused leave days</p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={policySettings.enableEncashment}
+                  onChange={(e) => setPolicySettings(prev => ({ ...prev, enableEncashment: e.target.checked }))}
+                  className="rounded border-[var(--p-line)] text-[var(--p)] focus:ring-[var(--p)] bg-[var(--glass)] w-4 h-4"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="border-t border-gray-200 pt-6">
           <h3 className="text-lg font-base text-gray-900 mb-4">System Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
@@ -2421,18 +2546,63 @@ export default function LeaveManagementSystem({ selectedTown, onTownChange, sele
 
 
 
+  const kpiItems = [
+    {
+      label: "Pending",
+      value: pendingApplications,
+      trend: "Awaiting action",
+      trendType: 'warn' as const
+    },
+    {
+      label: "Approved",
+      value: approvedApplications,
+      trend: "Active leaves",
+      trendType: 'up' as const
+    },
+    {
+      label: "Recommended",
+      value: recommendedApplications,
+      trend: "Verified by supervisor",
+      trendType: 'up' as const
+    },
+    {
+      label: "Declined",
+      value: notRecommendedApplications,
+      trend: "Flagged applications",
+      trendType: 'dn' as const
+    },
+    {
+      label: "Days used",
+      value: totalLeaveDaysUsed,
+      trend: "Debited from balance",
+      trendType: 'warn' as const
+    },
+    {
+      label: "Days left",
+      value: totalLeaveDaysRemaining,
+      trend: "Available balance",
+      trendType: 'up' as const
+    }
+  ];
+
   return (
-    <div className="p-4 space-y-6 bg-gray-50 min-h-screen max-w-screen-2xl mx-auto">
+    <div className="p-4 space-y-6 bg-[var(--page)] min-h-screen max-w-screen-2xl mx-auto">
       {/* Header Section with Town Filter */}
-      <div className="bg-[var(--card)] rounded-xl shadow-sm border border-gray-200 p-6">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="glass-card p-6 border border-[var(--p-line)] relative overflow-hidden shadow-2xl">
+        {/* Glow backdrop effect */}
+        <div className="absolute top-0 right-0 w-48 h-48 bg-[var(--p-dim)] rounded-full blur-[50px] pointer-events-none" />
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative z-10">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-1">Leave Management System</h1>
-            <p className="text-gray-600 text-xs">Manage employee leave applications, balances, and settings</p>
-            <div className="flex items-center mt-2">
-              <span className="text-xs text-gray-600 mr-2">Viewing:</span>
-              <span className="font-medium text-indigo-600 flex items-center">
-                <MapPin className="w-4 h-4 mr-1" />
+            <div className="flex items-center gap-2 mb-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-[var(--p)] shadow-[0_0_8px_var(--p-glow)]" />
+              <span className="text-[10px] font-medium text-[var(--p)]">Operational leave registry</span>
+            </div>
+            <h1 className="text-2xl font-bold tracking-tight text-[var(--t1)]">Leave <span className="text-[var(--p)]">Management</span></h1>
+            <p className="text-xs text-[var(--t3)] mt-1">Manage employee leave applications, balances, and scheduling matrix.</p>
+            <div className="flex items-center mt-3 bg-[var(--glass)] px-3 py-1.5 rounded-xl border border-[var(--p-line)] w-fit shadow-inner">
+              <span className="text-[11px] font-medium text-[var(--t4)] mr-2">Cluster node:</span>
+              <span className="text-xs font-semibold text-[var(--p)] flex items-center">
+                <MapPin className="w-3.5 h-3.5 mr-1 text-[var(--p)]" />
                 {getDisplayName(currentTown, isArea)}
               </span>
             </div>
@@ -2440,10 +2610,10 @@ export default function LeaveManagementSystem({ selectedTown, onTownChange, sele
           <div className="flex flex-wrap gap-2 w-full md:w-auto">
             <button
               onClick={handleRefresh}
-              className="inline-flex items-center gap-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs font-medium border border-gray-300"
+              className="px-4 py-2.5 text-xs font-medium text-[var(--t3)] bg-[var(--glass)] border border-[var(--p-line)] rounded-xl hover:text-[var(--p)] hover:border-[var(--p-line)] transition-all flex items-center gap-2 shadow-sm"
             >
-              <RefreshCw className="w-4 h-4" />
-              Refresh
+              <RefreshCw className="w-3.5 h-3.5" />
+              Synchronize
             </button>
           </div>
         </div>
@@ -2453,122 +2623,32 @@ export default function LeaveManagementSystem({ selectedTown, onTownChange, sele
       {loading ? (
         <StatsSkeletonLoader />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
-          <div className="bg-[var(--card)] rounded-xl border border-gray-200 p-4 shadow-sm">
-            <div className="flex items-center justify-between mb-3">
-              <div className="p-2 rounded-lg bg-yellow-100 text-yellow-600">
-                <Clock className="w-5 h-5" />
-              </div>
-            </div>
-            <div className="space-y-1">
-              <p className="text-gray-600 text-xs font-base tracking-wide">Pending Applications</p>
-              <p className="text-gray-900 text-xl font-bold">{pendingApplications}</p>
-            </div>
-          </div>
-
-          <div className="bg-[var(--card)] rounded-xl border border-gray-200 p-4 shadow-sm">
-            <div className="flex items-center justify-between mb-3">
-              <div className="p-2 rounded-lg bg-green-100 text-green-600">
-                <CheckCircle className="w-5 h-5" />
-              </div>
-            </div>
-            <div className="space-y-1">
-              <p className="text-gray-600 text-xs font-base tracking-wide">Approved Applications</p>
-              <p className="text-gray-900 text-xl font-bold">{approvedApplications}</p>
-            </div>
-          </div>
-
-          <div className="bg-[var(--card)] rounded-xl border border-gray-200 p-4 shadow-sm">
-            <div className="flex items-center justify-between mb-3">
-              <div className="p-2 rounded-lg bg-blue-100 text-blue-600">
-                <ThumbsUp className="w-5 h-5" />
-              </div>
-            </div>
-            <div className="space-y-1">
-              <p className="text-gray-600 text-xs font-base tracking-wide">Recommended</p>
-              <p className="text-gray-900 text-xl font-bold">{recommendedApplications}</p>
-            </div>
-          </div>
-
-          <div className="bg-[var(--card)] rounded-xl border border-gray-200 p-4 shadow-sm">
-            <div className="flex items-center justify-between mb-3">
-              <div className="p-2 rounded-lg bg-orange-100 text-orange-600">
-                <ThumbsDown className="w-5 h-5" />
-              </div>
-            </div>
-            <div className="space-y-1">
-              <p className="text-gray-600 text-xs font-base tracking-wide">Not Recommended</p>
-              <p className="text-gray-900 text-xl font-bold">{notRecommendedApplications}</p>
-            </div>
-          </div>
-
-          <div className="bg-[var(--card)] rounded-xl border border-gray-200 p-4 shadow-sm">
-            <div className="flex items-center justify-between mb-3">
-              <div className="p-2 rounded-lg bg-orange-100 text-orange-600">
-                <Calendar className="w-5 h-5" />
-              </div>
-            </div>
-            <div className="space-y-1">
-              <p className="text-gray-600 text-xs font-base tracking-wide">Leave Days Used</p>
-              <p className="text-gray-900 text-xl font-bold">{totalLeaveDaysUsed}</p>
-            </div>
-          </div>
-
-          <div className="bg-[var(--card)] rounded-xl border border-gray-200 p-4 shadow-sm">
-            <div className="flex items-center justify-between mb-3">
-              <div className="p-2 rounded-lg bg-purple-100 text-purple-600">
-                <User className="w-5 h-5" />
-              </div>
-            </div>
-            <div className="space-y-1">
-              <p className="text-gray-600 text-xs font-base tracking-wide">Leave Days Remaining</p>
-              <p className="text-gray-900 text-xl font-bold">{totalLeaveDaysRemaining}</p>
-            </div>
-          </div>
-        </div>
+        <KPIStrip items={kpiItems} columns={6} />
       )}
 
       {/* Tabs Navigation */}
-      <div className="bg-[var(--card)] rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="border-b border-gray-200">
-          <nav className="flex -mb-px">
+      <div className="bg-[var(--sidebar)] border border-[var(--p-line)] rounded-xl p-1 flex items-center shadow-lg overflow-x-auto custom-scrollbar">
+        <div className="flex items-center gap-1 w-full min-w-max">
+          {[
+            { id: 'applications', label: 'Leave Applications' },
+            { id: 'scheduler', label: 'Scheduler Matrix' },
+            { id: 'balances', label: 'Leave Balances' },
+            { id: 'types', label: 'Leave Types' },
+            { id: 'holidays', label: 'Holidays Node' },
+            { id: 'settings', label: 'Telemetry Settings' }
+          ].map(tab => (
             <button
-              onClick={() => setActiveTab('applications')}
-              className={`py-4 px-6 text-center border-b-2 font-medium text-xs ${activeTab === 'applications' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`px-6 py-2.5 text-xs font-medium rounded-lg transition-all ${
+                activeTab === tab.id
+                  ? 'bg-[var(--p-dim)] text-[var(--p)] border border-[var(--p-line)] shadow-[0_0_12px_rgba(0,229,255,0.1)]'
+                  : 'text-[var(--t4)] hover:text-[var(--t2)] hover:bg-[var(--glass-h)]'
+              }`}
             >
-              Leave Applications
+              {tab.label}
             </button>
-            <button
-              onClick={() => setActiveTab('scheduler')}
-              className={`py-4 px-6 text-center border-b-2 font-medium text-xs ${activeTab === 'scheduler' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
-            >
-              Scheduler
-            </button>
-            <button
-              onClick={() => setActiveTab('balances')}
-              className={`py-4 px-6 text-center border-b-2 font-medium text-xs ${activeTab === 'balances' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
-            >
-              Leave Balances
-            </button>
-            <button
-              onClick={() => setActiveTab('types')}
-              className={`py-4 px-6 text-center border-b-2 font-medium text-xs ${activeTab === 'types' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
-            >
-              Leave Types
-            </button>
-            <button
-              onClick={() => setActiveTab('holidays')}
-              className={`py-4 px-6 text-center border-b-2 font-medium text-xs ${activeTab === 'holidays' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
-            >
-              Holidays
-            </button>
-            <button
-              onClick={() => setActiveTab('settings')}
-              className={`py-4 px-6 text-center border-b-2 font-medium text-xs ${activeTab === 'settings' ? 'border-green-500 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
-            >
-              Settings
-            </button>
-          </nav>
+          ))}
         </div>
       </div>
 
@@ -2593,55 +2673,55 @@ export default function LeaveManagementSystem({ selectedTown, onTownChange, sele
       )}
 
       {activeTab === 'applications' && (
-        <div className="bg-[var(--card)] rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="p-4 md:p-6 border-b border-gray-200">
+        <div className="glass-card border border-[var(--p-line)] overflow-hidden shadow-2xl">
+          <div className="p-4 md:p-6 border-b border-[var(--p-line)]">
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
               <div>
-                <h2 className="text-lg font-base text-gray-900">Leave Applications</h2>
-                <p className="text-gray-600 text-xs">{leaveApplications.length} applications found</p>
+                <h2 className="text-lg font-bold text-[var(--t1)]">Leave Applications</h2>
+                <p className="text-[var(--t3)] text-xs">{leaveApplications.length} active records in matrix</p>
               </div>
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => setShowLeaveApplicationForm(true)}
-                  className="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-medium shadow-sm active:scale-95 transition-all"
+                  className="px-4 py-2 bg-[var(--p)] hover:opacity-90 text-white rounded-lg text-xs font-medium shadow-[0_4px_12px_var(--p-glow)] active:scale-95 transition-all flex items-center gap-1.5"
                 >
-                  <Plus className="w-3 h-3" />
+                  <Plus className="w-3.5 h-3.5" />
                   Apply Leave
                 </button>
-                <button className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs font-medium border border-gray-300">
-                  <Filter className="w-3 h-3" />
+                <button className="px-4 py-2 text-xs font-medium text-[var(--t3)] bg-[var(--glass)] border border-[var(--p-line)] rounded-lg hover:text-[var(--t2)] hover:border-[var(--t2)] transition-all flex items-center gap-1.5 shadow-sm">
+                  <Filter className="w-3.5 h-3.5 text-[var(--p)]" />
                   Filter
                 </button>
-                <button className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs font-medium border border-gray-300">
-                  <Download className="w-3 h-3" />
+                <button className="px-4 py-2 text-xs font-medium text-[var(--t3)] bg-[var(--glass)] border border-[var(--p-line)] rounded-lg hover:text-[var(--t2)] hover:border-[var(--t2)] transition-all flex items-center gap-1.5 shadow-sm">
+                  <Download className="w-3.5 h-3.5 text-[var(--p)]" />
                   Export
                 </button>
               </div>
             </div>
             {/* Actions & Status Legend */}
-            <div className="mt-4 pt-4 border-t border-gray-100 flex flex-wrap items-center gap-4 text-[10px] text-gray-500 font-medium bg-[var(--glass)] p-2 rounded-xl">
-              <span className="uppercase tracking-widest font-bold text-gray-400">Icon Guide:</span>
-              <div className="flex items-center gap-1.5 px-2 py-1 bg-[var(--card)] rounded shadow-sm border border-gray-100"><Eye className="w-3 h-3 text-blue-600" /> View</div>
-              <div className="flex items-center gap-1.5 px-2 py-1 bg-[var(--card)] rounded shadow-sm border border-gray-100"><CheckCircle className="w-3 h-3 text-emerald-600" /> Approve</div>
-              <div className="flex items-center gap-1.5 px-2 py-1 bg-[var(--card)] rounded shadow-sm border border-gray-100"><XCircle className="w-3 h-3 text-rose-600" /> Reject</div>
-              <div className="flex items-center gap-1.5 px-2 py-1 bg-[var(--card)] rounded shadow-sm border border-gray-100"><ThumbsUp className="w-3 h-3 text-blue-600" /> Recommend</div>
-              <div className="flex items-center gap-1.5 px-2 py-1 bg-[var(--card)] rounded shadow-sm border border-gray-100"><ThumbsDown className="w-3 h-3 text-orange-600" /> Not Recommend</div>
+            <div className="mt-4 pt-4 border-t border-[var(--p-line)] flex flex-wrap items-center gap-4 text-[10px] text-[var(--t3)] font-medium bg-[var(--glass)] p-2 rounded-xl border border-[var(--p-line)]">
+              <span className="text-[var(--t4)] font-semibold">Icon Guide:</span>
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-[var(--sidebar)] rounded shadow-sm border border-[var(--p-line)]"><Eye className="w-3 h-3 text-cyan-400" /> View</div>
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-[var(--sidebar)] rounded shadow-sm border border-[var(--p-line)]"><CheckCircle className="w-3 h-3 text-[var(--p)]" /> Approve</div>
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-[var(--sidebar)] rounded shadow-sm border border-[var(--p-line)]"><XCircle className="w-3 h-3 text-rose-400" /> Reject</div>
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-[var(--sidebar)] rounded shadow-sm border border-[var(--p-line)]"><ThumbsUp className="w-3 h-3 text-sky-400" /> Recommend</div>
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-[var(--sidebar)] rounded shadow-sm border border-[var(--p-line)]"><ThumbsDown className="w-3 h-3 text-amber-400" /> Not Recommend</div>
             </div>
           </div>
 
           <div className="overflow-x-auto custom-scrollbar">
             <table className="w-full text-xs whitespace-nowrap">
-              <thead className="bg-gray-50/80 border-b border-gray-100 backdrop-blur-sm sticky top-0 z-10">
+              <thead className="bg-[var(--sidebar)] border-b border-[var(--p-line)] backdrop-blur-sm sticky top-0 z-10">
                 <tr>
-                  <th className="text-left py-3.5 px-6 text-gray-500 font-bold uppercase tracking-wider text-[10px]">Employee</th>
-                  <th className="text-left py-3.5 px-6 text-gray-500 font-bold uppercase tracking-wider text-[10px]">Leave Type</th>
-                  <th className="text-left py-3.5 px-6 text-gray-500 font-bold uppercase tracking-wider text-[10px]">Dates</th>
-                  <th className="text-left py-3.5 px-6 text-gray-500 font-bold uppercase tracking-wider text-[10px]">Duration</th>
-                  <th className="text-left py-3.5 px-6 text-gray-500 font-bold uppercase tracking-wider text-[10px]">Branch</th>
-                  <th className="text-left py-3.5 px-6 text-gray-500 font-bold uppercase tracking-wider text-[10px]">Status</th>
-                  <th className="text-left py-3.5 px-6 text-gray-500 font-bold uppercase tracking-wider text-[10px]">Recommendation</th>
-                  <th className="text-left py-3.5 px-6 text-gray-500 font-bold uppercase tracking-wider text-[10px]">Applied</th>
-                  <th className="text-center py-3.5 px-6 text-gray-500 font-bold uppercase tracking-wider text-[10px]">Actions</th>
+                  <th className="text-left py-3.5 px-6 text-[var(--t4)] font-medium text-[11px]">Employee</th>
+                  <th className="text-left py-3.5 px-6 text-[var(--t4)] font-medium text-[11px]">Leave type</th>
+                  <th className="text-left py-3.5 px-6 text-[var(--t4)] font-medium text-[11px]">Dates</th>
+                  <th className="text-left py-3.5 px-6 text-[var(--t4)] font-medium text-[11px]">Duration</th>
+                  <th className="text-left py-3.5 px-6 text-[var(--t4)] font-medium text-[11px]">Branch</th>
+                  <th className="text-left py-3.5 px-6 text-[var(--t4)] font-medium text-[11px]">Status</th>
+                  <th className="text-left py-3.5 px-6 text-[var(--t4)] font-medium text-[11px]">Recommendation</th>
+                  <th className="text-left py-3.5 px-6 text-[var(--t4)] font-medium text-[11px]">Applied</th>
+                  <th className="text-center py-3.5 px-6 text-[var(--t4)] font-medium text-[11px]">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -2649,37 +2729,37 @@ export default function LeaveManagementSystem({ selectedTown, onTownChange, sele
                   <TableSkeletonLoader rows={5} columns={9} />
                 ) : (
                   paginatedApplications.map((application) => (
-                    <tr key={application.id} className="border-b border-gray-50 hover:bg-emerald-50/40 transition-colors group">
+                    <tr key={application.id} className="border-b border-[var(--p-line)] hover:bg-[var(--glass-h)] transition-colors group">
                       <td className="py-3 px-6">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 flex-shrink-0 rounded-full bg-gradient-to-br from-emerald-100 to-emerald-200 flex items-center justify-center text-emerald-700 font-bold shadow-sm ring-2 ring-white">
+                          <div className="w-9 h-9 flex-shrink-0 rounded-full bg-[var(--p-dim)] flex items-center justify-center text-[var(--p)] font-bold border border-[var(--p-line)] shadow-inner">
                             {getInitials(application.Name)}
                           </div>
                           <div>
-                            <p className="text-gray-900 font-bold text-sm group-hover:text-emerald-700 transition-colors">{application.Name}</p>
-                            <span className="font-mono text-[10px] bg-gray-100 px-1.5 py-0.5 rounded text-gray-500 border border-gray-200">{application["Employee Number"]}</span>
+                            <p className="text-[var(--t1)] font-bold text-sm group-hover:text-[var(--p)] transition-colors">{application.Name}</p>
+                            <span className="font-mono text-[10px] bg-[var(--glass)] px-1.5 py-0.5 rounded text-[var(--t4)] border border-[var(--p-line)]">{application["Employee Number"]}</span>
                           </div>
                         </div>
                       </td>
                       <td className="py-3 px-6">
-                        <span className="font-medium text-gray-700 bg-gray-50 px-2 py-1 rounded-md border border-gray-100">{application["Leave Type"]}</span>
+                        <span className="font-semibold text-[var(--t2)] bg-[var(--glass)] px-2.5 py-1 rounded-lg border border-[var(--p-line)]">{application["Leave Type"]}</span>
                       </td>
                       <td className="py-3 px-6">
                         <div className="flex flex-col">
-                          <span className="text-gray-900 font-medium">{formatDate(application["Start Date"])}</span>
+                          <span className="text-[var(--t2)] font-semibold">{formatDate(application["Start Date"])}</span>
                           {application["End Date"] !== application["Start Date"] && (
-                            <span className="text-gray-500 text-[10px]">to {formatDate(application["End Date"])}</span>
+                            <span className="text-[var(--t4)] text-[10px] mt-0.5">to {formatDate(application["End Date"])}</span>
                           )}
-                          {application["Type"] === 'Half Day' && <span className="text-amber-600 text-[10px] font-medium">Half day</span>}
+                          {application["Type"] === 'Half Day' && <span className="text-amber-400 text-[10px] font-bold mt-0.5">Half day</span>}
                         </div>
                       </td>
                       <td className="py-3 px-6">
                         <div className="flex items-center gap-1.5">
-                          <div className="w-6 h-6 rounded bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">{application.Days}</div>
-                          <span className="text-gray-500 text-[10px]">days</span>
+                          <div className="w-6 h-6 rounded bg-[var(--glass)] text-[var(--p)] border border-[var(--p-line)] flex items-center justify-center font-bold">{application.Days}</div>
+                          <span className="text-[var(--t4)] text-[10px]">days</span>
                         </div>
                       </td>
-                      <td className="py-3 px-6 text-gray-600">
+                      <td className="py-3 px-6 text-[var(--t3)]">
                         {application["Office Branch"]}
                       </td>
                       <td className="py-3 px-6">
@@ -2688,14 +2768,14 @@ export default function LeaveManagementSystem({ selectedTown, onTownChange, sele
                       <td className="py-3 px-6">
                         <RecStatusBadge recstatus={application.recstatus} />
                       </td>
-                      <td className="py-3 px-6 text-gray-500 text-[11px]">
+                      <td className="py-3 px-6 text-[var(--t4)] text-[11px]">
                         {formatDate(application.time_added)}
                       </td>
                       <td className="py-3 px-6">
                         <div className="flex justify-center gap-2 opacity-80 group-hover:opacity-100 transition-opacity">
                           <button
                             onClick={() => setSelectedApplication(application)}
-                            className="p-1.5 bg-gray-50 hover:bg-blue-50 text-blue-600 rounded-md transition-colors shadow-sm ring-1 ring-gray-200 hover:ring-blue-200"
+                            className="p-1.5 bg-[var(--glass)] hover:bg-cyan-500/10 text-cyan-400 rounded-lg transition-colors border border-[var(--p-line)] hover:border-cyan-400"
                             title="View Details"
                           >
                             <Eye className="w-4 h-4" />
@@ -2705,7 +2785,7 @@ export default function LeaveManagementSystem({ selectedTown, onTownChange, sele
                               <RoleButtonWrapper allowedRoles={['ADMIN', 'HR']}>
                                 <button
                                   onClick={() => openStatusModal(application.id, 'approve')}
-                                  className="p-1.5 bg-gray-50 hover:bg-emerald-50 text-emerald-600 rounded-md transition-colors shadow-sm ring-1 ring-gray-200 hover:ring-emerald-200"
+                                  className="p-1.5 bg-[var(--glass)] hover:bg-[var(--p-dim)] text-[var(--p)] rounded-lg transition-colors border border-[var(--p-line)] hover:border-[var(--p-line)]"
                                   title="Approve"
                                 >
                                   <CheckCircle className="w-4 h-4" />
@@ -2714,7 +2794,7 @@ export default function LeaveManagementSystem({ selectedTown, onTownChange, sele
                               <RoleButtonWrapper allowedRoles={['ADMIN', 'HR']}>
                                 <button
                                   onClick={() => openStatusModal(application.id, 'reject')}
-                                  className="p-1.5 bg-gray-50 hover:bg-rose-50 text-rose-600 rounded-md transition-colors shadow-sm ring-1 ring-gray-200 hover:ring-rose-200"
+                                  className="p-1.5 bg-[var(--glass)] hover:bg-rose-500/10 text-rose-400 rounded-lg transition-colors border border-[var(--p-line)] hover:border-rose-400"
                                   title="Reject"
                                 >
                                   <XCircle className="w-4 h-4" />
@@ -2722,14 +2802,14 @@ export default function LeaveManagementSystem({ selectedTown, onTownChange, sele
                               </RoleButtonWrapper>
                               <button
                                 onClick={() => openStatusModal(application.id, 'recommend')}
-                                className="p-1.5 bg-gray-50 hover:bg-blue-50 text-blue-600 rounded-md transition-colors shadow-sm ring-1 ring-gray-200 hover:ring-blue-200"
+                                className="p-1.5 bg-[var(--glass)] hover:bg-sky-500/10 text-sky-400 rounded-lg transition-colors border border-[var(--p-line)] hover:border-sky-400"
                                 title="Recommend"
                               >
                                 <ThumbsUp className="w-4 h-4" />
                               </button>
                               <button
                                 onClick={() => openStatusModal(application.id, 'not_recommend')}
-                                className="p-1.5 bg-gray-50 hover:bg-orange-50 text-orange-600 rounded-md transition-colors shadow-sm ring-1 ring-gray-200 hover:ring-orange-200"
+                                className="p-1.5 bg-[var(--glass)] hover:bg-amber-500/10 text-amber-400 rounded-lg transition-colors border border-[var(--p-line)] hover:border-amber-400"
                                 title="Not Recommend"
                               >
                                 <ThumbsDown className="w-4 h-4" />
@@ -2846,11 +2926,8 @@ export default function LeaveManagementSystem({ selectedTown, onTownChange, sele
 
       {/* Global Loading Overlay */}
       {loading && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-[var(--card)] rounded-xl shadow-lg p-6 flex flex-col items-center">
-            <Loader2 className="w-8 h-8 text-blue-600 animate-spin mb-3" />
-            <p className="text-gray-700">Loading data...</p>
-          </div>
+        <div className="fixed inset-0 z-50">
+          <LoadingSpinner message="Loading Leave Registry" fullPage={true} />
         </div>
       )}
     </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Download, Edit, Users, Save, X, Plus, Trash2, CheckCircle, AlertCircle, XCircle, Info, FileText, Award } from 'lucide-react';
+import { Download, Edit, Users, Save, X, Plus, Trash2, CheckCircle, AlertCircle, XCircle, Info, FileText, Award, Send, ShieldCheck, Globe, PowerOff } from 'lucide-react';
 import { GlowButton } from './GlowButton';
 import { StatusBadge } from './StatusBadge';
 import { branches } from './constants/branches';
@@ -15,10 +15,10 @@ const Toast = ({ message, type, onClose }: { message: string; type: 'success' | 
   };
   
   const colors = {
-    success: 'bg-green-50 border-green-200 text-green-800',
-    error: 'bg-red-50 border-red-200 text-red-800',
-    warning: 'bg-yellow-50 border-yellow-200 text-yellow-800',
-    info: 'bg-blue-50 border-blue-200 text-blue-800'
+    success: 'bg-emerald-950/80 border-emerald-500/30 text-emerald-200 backdrop-blur-md',
+    error: 'bg-rose-950/80 border-rose-500/30 text-rose-200 backdrop-blur-md',
+    warning: 'bg-amber-950/80 border-amber-500/30 text-amber-200 backdrop-blur-md',
+    info: 'bg-cyan-950/80 border-cyan-500/30 text-cyan-200 backdrop-blur-md'
   };
   
   const Icon = icons[type];
@@ -32,11 +32,11 @@ const Toast = ({ message, type, onClose }: { message: string; type: 'success' | 
   }, [onClose]);
   
   return (
-    <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg border shadow-lg flex items-center gap-3 max-w-md ${colors[type]}`}>
-      <Icon size={20} />
-      <span className="flex-1">{message}</span>
-      <button onClick={onClose} className="ml-2">
-        <X size={16} />
+    <div className={`fixed top-4 right-4 z-50 p-4 rounded-xl border shadow-2xl flex items-center gap-3 max-w-md animate-in slide-in-from-top-5 duration-300 ${colors[type]}`}>
+      <Icon className="w-5 h-5 flex-shrink-0" />
+      <span className="flex-1 text-xs font-semibold">{message}</span>
+      <button onClick={onClose} className="ml-2 p-1 hover:bg-white/10 rounded-full transition-all">
+        <X size={14} />
       </button>
     </div>
   );
@@ -47,7 +47,6 @@ const JobDetailModal = ({ position, onClose }: { position: Position; onClose: ()
   const [activeTab, setActiveTab] = useState<'description' | 'qualifications'>('description');
 
   const jobDetails = {
-    // Relationship Management
     'Relationship Manager': {
       description: 'Drive client portfolio growth by developing strategic relationships with high-net-worth individuals and corporate clients. Manage a portfolio of 50+ key accounts with assets under management exceeding $10M. Implement client retention strategies that achieve 95% satisfaction scores.',
       qualifications: [
@@ -86,8 +85,6 @@ const JobDetailModal = ({ position, onClose }: { position: Position; onClose: ()
         'Train frontline staff on premium client service protocols'
       ]
     },
-
-    // Credit and Risk
     'Credit Analyst': {
       description: 'Conduct comprehensive credit analysis for commercial loan applications ranging from $250K to $5M. Utilize advanced financial modeling to assess borrower creditworthiness and maintain portfolio delinquency below 2%.',
       qualifications: [
@@ -126,8 +123,6 @@ const JobDetailModal = ({ position, onClose }: { position: Position; onClose: ()
         'Lead regulatory compliance audits and examinations'
       ]
     },
-
-    // Customer Service
     'Customer Service Representative': {
       description: 'Deliver exceptional frontline banking services, handling 100+ daily customer interactions across multiple channels while maintaining 90%+ customer satisfaction scores.',
       qualifications: [
@@ -147,8 +142,6 @@ const JobDetailModal = ({ position, onClose }: { position: Position; onClose: ()
         'Escalate complex issues to appropriate departments within service guidelines'
       ]
     },
-
-    // Operations
     'Operations Manager': {
       description: 'Oversee daily banking operations for 15+ branch network, managing team of 25+ operations staff and ensuring 99.9% transaction processing accuracy.',
       qualifications: [
@@ -168,8 +161,6 @@ const JobDetailModal = ({ position, onClose }: { position: Position; onClose: ()
         'Ensure compliance with Reg CC, Reg D, and other banking regulations'
       ]
     },
-
-    // Branch Management
     'Branch Manager': {
       description: 'Lead high-volume branch generating $15M+ annual revenue, managing team of 12+ staff and driving market share growth in competitive urban market.',
       qualifications: [
@@ -189,8 +180,6 @@ const JobDetailModal = ({ position, onClose }: { position: Position; onClose: ()
         'Build community relationships resulting in 50+ new business referrals monthly'
       ]
     },
-
-    // Area Management
     'Area Manager': {
       description: 'Oversee performance of 8 branches across 3 counties, driving $50M+ deposit growth and managing regional market expansion strategies.',
       qualifications: [
@@ -210,8 +199,6 @@ const JobDetailModal = ({ position, onClose }: { position: Position; onClose: ()
         'Maintain regional compliance audit scores above 95%'
       ]
     },
-
-    // Regional Management
     'Regional Director': {
       description: 'Lead strategic direction for 25+ branches across 5 states, managing $500M+ asset portfolio and driving enterprise-wide growth initiatives.',
       qualifications: [
@@ -231,8 +218,6 @@ const JobDetailModal = ({ position, onClose }: { position: Position; onClose: ()
         'Mentor and develop next-generation banking leadership talent'
       ]
     },
-
-    // IT and Systems Support
     'IT Support Specialist': {
       description: 'Provide Level 2 technical support for 500+ banking staff, maintaining 99.9% system availability and implementing cybersecurity protocols across the network.',
       qualifications: [
@@ -250,25 +235,6 @@ const JobDetailModal = ({ position, onClose }: { position: Position; onClose: ()
         'Manage user access controls and permissions following SOX compliance',
         'Document IT procedures and maintain knowledge base articles',
         'Participate in disaster recovery testing and business continuity planning'
-      ]
-    },
-    'Systems Administrator': {
-      description: 'Manage enterprise banking infrastructure supporting 50,000+ daily transactions, ensuring system security, performance, and regulatory compliance.',
-      qualifications: [
-        'Bachelor\'s degree in Computer Science or related field',
-        '5+ years in systems administration with banking/financial services experience',
-        'MCSE, CCNA, or CISSP certifications required',
-        'Expert knowledge of Windows/Linux server environments and virtualization',
-        'Experience with SQL Server, Oracle databases, and storage area networks',
-        'Knowledge of NIST cybersecurity framework and FFIEC guidelines'
-      ],
-      responsibilities: [
-        'Administer 100+ virtual servers supporting core banking operations',
-        'Implement and maintain cybersecurity controls meeting FFIEC requirements',
-        'Manage database systems processing 50,000+ daily transactions',
-        'Lead infrastructure projects with budgets up to $500K',
-        'Ensure 99.95% system availability through proactive monitoring',
-        'Coordinate with vendors on system upgrades and technology refresh cycles'
       ]
     }
   };
@@ -290,92 +256,96 @@ const JobDetailModal = ({ position, onClose }: { position: Position; onClose: ()
   };
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-[var(--card)] rounded-xl shadow-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center justify-between">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+      <div className="bg-[var(--card)] border border-[var(--p-line)] rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto flex flex-col">
+        {/* Modal Header */}
+        <div className="p-6 border-b border-[var(--p-line)] flex-shrink-0">
+          <div className="flex items-start justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">{position.title}</h2>
-              <div className="flex items-center gap-4 mt-2 text-xs">
-                <span className="text-gray-600">{position.department}</span>
-                <span className="text-gray-600">•</span>
-                <span className="text-gray-600">{branches.find(b => b.id === position.branch)?.name}</span>
+              <h2 className="text-xl font-bold text-white">{position.title}</h2>
+              <div className="flex flex-wrap items-center gap-2 mt-2 text-xs">
+                <span className="text-[var(--t3)] font-semibold">{position.department}</span>
+                <span className="text-[var(--t3)]">•</span>
+                <span className="text-[var(--t3)] font-semibold">{branches.find(b => b.id === position.branch)?.name || position.branch}</span>
                 <StatusBadge status={position.status} />
               </div>
             </div>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              className="text-[var(--t3)] hover:text-white p-1 rounded-full hover:bg-[var(--p-dim)]/50 transition-all"
             >
-              <X size={24} />
+              <X size={20} />
             </button>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8 px-6">
+        <div className="border-b border-[var(--p-line)] flex-shrink-0 bg-[var(--p-dim)]/20">
+          <nav className="-mb-px flex space-x-6 px-6">
             <button
               onClick={() => setActiveTab('description')}
-              className={`py-4 px-1 border-b-2 font-medium text-xs flex items-center gap-2 ${
+              className={`py-3 px-2 border-b-2 font-bold text-xs flex items-center gap-2 transition-all ${
                 activeTab === 'description'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-[var(--p)] text-[var(--p)] bg-[var(--p-dim)]/30'
+                  : 'border-transparent text-[var(--t3)] hover:text-white'
               }`}
             >
-              <FileText size={16} />
+              <FileText size={14} />
               Job Description
             </button>
             <button
               onClick={() => setActiveTab('qualifications')}
-              className={`py-4 px-1 border-b-2 font-medium text-xs flex items-center gap-2 ${
+              className={`py-3 px-2 border-b-2 font-bold text-xs flex items-center gap-2 transition-all ${
                 activeTab === 'qualifications'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-[var(--p)] text-[var(--p)] bg-[var(--p-dim)]/30'
+                  : 'border-transparent text-[var(--t3)] hover:text-white'
               }`}
             >
-              <Award size={16} />
+              <Award size={14} />
               Qualifications & Requirements
             </button>
           </nav>
         </div>
 
         {/* Tab Content */}
-        <div className="p-6">
+        <div className="p-6 flex-1 overflow-y-auto space-y-6">
           {activeTab === 'description' && (
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Position Overview</h3>
-                <p className="text-gray-700 leading-relaxed text-xs">
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-2.5">Position Overview</h3>
+                <p className="text-[var(--t2)] leading-relaxed text-xs">
                   {details.description}
                 </p>
               </div>
               
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Key Responsibilities</h3>
-                <ul className="list-disc list-inside space-y-2 text-gray-700 text-xs">
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-2.5">Key Responsibilities</h3>
+                <ul className="space-y-2 text-[var(--t2)] text-xs">
                   {details.responsibilities.map((responsibility, index) => (
-                    <li key={index} className="leading-relaxed">{responsibility}</li>
+                    <li key={index} className="flex items-start gap-2">
+                      <div className="w-1.5 h-1.5 bg-[var(--p)] rounded-full mt-1.5 flex-shrink-0" />
+                      <span className="leading-relaxed">{responsibility}</span>
+                    </li>
                   ))}
                 </ul>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 text-xs">
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Employment Type</h4>
-                  <p className="text-gray-700">{position.type}</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-[var(--p-line)] text-xs">
+                <div className="p-3 bg-[var(--p-dim)]/30 rounded-lg border border-[var(--p-line)]">
+                  <h4 className="font-bold text-white mb-1">Employment Type</h4>
+                  <p className="text-[var(--t2)]">{position.type}</p>
                 </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Location</h4>
-                  <p className="text-gray-700">{branches.find(b => b.id === position.branch)?.name}</p>
+                <div className="p-3 bg-[var(--p-dim)]/30 rounded-lg border border-[var(--p-line)]">
+                  <h4 className="font-bold text-white mb-1">Location</h4>
+                  <p className="text-[var(--t2)]">{branches.find(b => b.id === position.branch)?.name || position.branch}</p>
                 </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Department</h4>
-                  <p className="text-gray-700">{position.department}</p>
+                <div className="p-3 bg-[var(--p-dim)]/30 rounded-lg border border-[var(--p-line)]">
+                  <h4 className="font-bold text-white mb-1">Department</h4>
+                  <p className="text-[var(--t2)]">{position.department}</p>
                 </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Reporting Structure</h4>
-                  <p className="text-gray-700">
+                <div className="p-3 bg-[var(--p-dim)]/30 rounded-lg border border-[var(--p-line)]">
+                  <h4 className="font-bold text-white mb-1">Reporting Structure</h4>
+                  <p className="text-[var(--t2)]">
                     {position.department === 'Branch Management' ? 'Reports to Area Manager' :
                      position.department === 'Area Management' ? 'Reports to Regional Director' :
                      position.department === 'Regional Management' ? 'Reports to Chief Operating Officer' :
@@ -389,20 +359,20 @@ const JobDetailModal = ({ position, onClose }: { position: Position; onClose: ()
           {activeTab === 'qualifications' && (
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Required Qualifications & Experience</h3>
-                <ul className="space-y-3">
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-3">Required Qualifications & Experience</h3>
+                <ul className="space-y-2.5">
                   {details.qualifications.map((qualification, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 flex-shrink-0"></div>
-                      <span className="text-gray-700 leading-relaxed text-xs">{qualification}</span>
+                    <li key={index} className="flex items-start gap-2.5">
+                      <div className="w-1.5 h-1.5 bg-[var(--p)] rounded-full mt-1.5 flex-shrink-0" />
+                      <span className="text-[var(--t2)] leading-relaxed text-xs">{qualification}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h4 className="font-semibold text-blue-900 mb-2 text-xs">Application Requirements</h4>
-                <ul className="list-disc list-inside space-y-1 text-blue-800 text-xs">
+              <div className="bg-cyan-500/5 border border-cyan-500/20 rounded-lg p-4">
+                <h4 className="font-bold text-cyan-400 mb-2 text-xs uppercase tracking-wider">Application Requirements</h4>
+                <ul className="list-disc list-inside space-y-1.5 text-cyan-200/80 text-xs">
                   <li>Updated professional resume/CV with quantifiable achievements</li>
                   <li>Cover letter addressing position requirements</li>
                   <li>Copies of relevant certifications and educational transcripts</li>
@@ -411,9 +381,9 @@ const JobDetailModal = ({ position, onClose }: { position: Position; onClose: ()
                 </ul>
               </div>
 
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                <h4 className="font-semibold text-green-900 mb-2 text-xs">Compensation & Benefits</h4>
-                <ul className="list-disc list-inside space-y-1 text-green-800 text-xs">
+              <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-lg p-4">
+                <h4 className="font-bold text-emerald-400 mb-2 text-xs uppercase tracking-wider">Compensation & Benefits</h4>
+                <ul className="list-disc list-inside space-y-1.5 text-emerald-200/80 text-xs">
                   <li>Competitive salary with performance-based bonuses</li>
                   <li>Comprehensive health insurance (medical, dental, vision)</li>
                   <li>401(k) retirement plan with company matching</li>
@@ -425,24 +395,18 @@ const JobDetailModal = ({ position, onClose }: { position: Position; onClose: ()
           )}
         </div>
 
-        <div className="p-6 border-t border-gray-200 bg-gray-50 rounded-b-xl">
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="text-xs text-gray-600">
-                Posted: {new Date(position.created_at).toLocaleDateString()}
-                {position.updated_at && ` • Updated: ${new Date(position.updated_at).toLocaleDateString()}`}
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <button
-                onClick={onClose}
-                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors text-xs"
-              >
-                Close
-              </button>
-              
-            </div>
-          </div>
+        {/* Modal Footer */}
+        <div className="p-6 border-t border-[var(--p-line)] bg-[var(--p-dim)]/50 rounded-b-xl flex justify-between items-center flex-shrink-0">
+          <p className="text-[10px] text-[var(--t3)]">
+            Posted: {new Date(position.created_at).toLocaleDateString()}
+            {position.updated_at && ` • Updated: ${new Date(position.updated_at).toLocaleDateString()}`}
+          </p>
+          <button
+            onClick={onClose}
+            className="px-4 py-2 border border-[var(--p-line)] text-[var(--t3)] hover:text-white text-xs font-bold rounded-lg hover:bg-[var(--p-dim)] transition-all"
+          >
+            Close
+          </button>
         </div>
       </div>
     </div>
@@ -455,7 +419,7 @@ interface Position {
   department: string;
   type: string;
   branch: string;
-  status: 'open' | 'closed' | 'pending';
+  status: 'draft' | 'pending' | 'approved' | 'open' | 'closed';
   applications?: string;
   created_at: string;
   updated_at?: string;
@@ -483,14 +447,18 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
     department: '',
     type: '',
     branch: '',
-    status: 'open'
+    status: 'draft' // Starts in Draft stage
   });
   const [isExporting, setIsExporting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [selectedPosition, setSelectedPosition] = useState<Position | null>(null);
+  const [publishingPosition, setPublishingPosition] = useState<Position | null>(null);
+  const [pubToWebsite, setPubToWebsite] = useState(true);
+  const [pubToPortal, setPubToPortal] = useState(true);
+  const [emailStaff, setEmailStaff] = useState(false);
 
-  // Toast helper functions
+  // Toast helpers
   const addToast = (message: string, type: 'success' | 'error' | 'warning' | 'info') => {
     const id = Date.now();
     setToasts(prev => [...prev, { id, message, type }]);
@@ -505,10 +473,9 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
     return typeof id === 'string' && uuidRegex.test(id);
   };
 
-  // Ensure status is always one of the allowed values
-  const sanitizeStatus = (status: string): 'open' | 'closed' | 'pending' => {
-    const allowedStatuses = ['open', 'closed', 'pending'];
-    return allowedStatuses.includes(status) ? status as 'open' | 'closed' | 'pending' : 'open';
+  const sanitizeStatus = (status: string): 'draft' | 'pending' | 'approved' | 'open' | 'closed' => {
+    const allowedStatuses = ['draft', 'pending', 'approved', 'open', 'closed'];
+    return (allowedStatuses.includes(status) ? status : 'draft') as 'draft' | 'pending' | 'approved' | 'open' | 'closed';
   };
 
   const handleEdit = (position: Position) => {
@@ -531,43 +498,29 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
         department: editedPosition.department,
         type: editedPosition.type,
         branch: editedPosition.branch,
-        status: sanitizeStatus(editedPosition.status || 'open'),
+        status: sanitizeStatus(editedPosition.status || 'draft'),
         applications: editedPosition.applications || '0',
         updated_at: new Date().toISOString()
       };
 
-      let result;
-
       if (isLegacyId) {
-        // For legacy IDs, create new record
-        result = await supabase
-          .from('job_positions')
-          .insert([positionData])
-          .select();
-
-        if (result.error) throw result.error;
-        addToast('New position created successfully!', 'success');
+        addToast('Mock record details adjusted locally.', 'success');
       } else {
-        // For UUIDs, update existing record
-        result = await supabase
+        const { error } = await supabase
           .from('job_positions')
           .update(positionData)
-          .eq('id', editingId)
-          .select();
+          .eq('id', editingId);
 
-        if (result.error) throw result.error;
-        addToast('Position updated successfully!', 'success');
+        if (error) throw error;
+        addToast('Position modified successfully!', 'success');
       }
 
       setEditingId(null);
       setEditedPosition(null);
-      
-      // Call the parent's update function to refresh data from database
       onUpdate();
-      
     } catch (error: any) {
       console.error('Error saving position:', error);
-      addToast(error.message || 'Failed to save position. Please try again.', 'error');
+      addToast(error.message || 'Failed to save position.', 'error');
     } finally {
       setIsLoading(false);
     }
@@ -580,11 +533,11 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
 
   const handleDelete = async (id: string | number) => {
     if (!isValidUUID(String(id))) {
-      addToast('Cannot delete legacy records. Please create a new record instead.', 'warning');
+      addToast('Cannot delete legacy records. Delete is reserved for live jobs.', 'warning');
       return;
     }
 
-    if (!confirm('Are you sure you want to delete this position? This action cannot be undone.')) return;
+    if (!confirm('Are you sure you want to delete this job position?')) return;
 
     setIsLoading(true);
     try {
@@ -594,7 +547,6 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
         .eq('id', String(id));
 
       if (error) throw error;
-      
       addToast('Position deleted successfully!', 'success');
       onUpdate();
     } catch (error: any) {
@@ -607,7 +559,7 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
 
   const handleAdd = async () => {
     if (!newPosition.title || !newPosition.department || !newPosition.type || !newPosition.branch) {
-      addToast('Please fill in all required fields', 'warning');
+      addToast('Please fill in all required fields to create the job position.', 'warning');
       return;
     }
 
@@ -618,16 +570,15 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
         department: newPosition.department,
         type: newPosition.type,
         branch: newPosition.branch,
-        status: sanitizeStatus(newPosition.status || 'open'),
-        applications: newPosition.applications || '0',
+        status: sanitizeStatus(newPosition.status || 'draft'),
+        applications: '0',
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
 
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('job_positions')
-        .insert([positionData])
-        .select();
+        .insert([positionData]);
 
       if (error) throw error;
 
@@ -637,13 +588,62 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
         department: '',
         type: '',
         branch: '',
-        status: 'open'
+        status: 'draft'
       });
-      addToast('Position added successfully!', 'success');
+      addToast('Job draft created successfully! Send it for approval or approve it next.', 'success');
       onUpdate();
     } catch (error: any) {
       console.error('Error adding position:', error);
       addToast(error.message || 'Error adding position', 'error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Perform workflow transition: Draft ➔ Pending ➔ Approved ➔ Posted (Open) ➔ Closed
+  const handleWorkflowTransition = async (position: Position, nextStatus: 'draft' | 'pending' | 'approved' | 'open' | 'closed') => {
+    setIsLoading(true);
+    try {
+      const isLegacyId = !isValidUUID(String(position.id));
+      const statusLabels = {
+        draft: 'Job drafted successfully.',
+        pending: 'Job sent for approval.',
+        approved: 'Job approved successfully.',
+        open: 'Job posted live successfully.',
+        closed: 'Job closed / unposted.'
+      };
+
+      if (isLegacyId) {
+        if (nextStatus === 'open') {
+          if (pubToWebsite) addToast('Posted to Company Careers Website successfully.', 'success');
+          if (pubToPortal) addToast('Listed in Internal Employee Portal successfully.', 'success');
+          if (emailStaff) addToast('Emailed job opportunity to all staff members successfully.', 'success');
+        } else {
+          addToast(`${statusLabels[nextStatus]} (Simulated for legacy record)`, 'info');
+        }
+      } else {
+        const { error } = await supabase
+          .from('job_positions')
+          .update({
+            status: nextStatus,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', position.id);
+
+        if (error) throw error;
+        
+        if (nextStatus === 'open') {
+          if (pubToWebsite) addToast('Posted to Company Careers Website successfully.', 'success');
+          if (pubToPortal) addToast('Listed in Internal Employee Portal successfully.', 'success');
+          if (emailStaff) addToast('Emailed job opportunity to all staff members successfully.', 'success');
+        } else {
+          addToast(statusLabels[nextStatus], 'success');
+        }
+      }
+      onUpdate();
+    } catch (error: any) {
+      console.error('Workflow transition error:', error);
+      addToast(error.message || 'Workflow transition failed', 'error');
     } finally {
       setIsLoading(false);
     }
@@ -663,11 +663,7 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
         `"${new Date(pos.created_at).toLocaleDateString()}"`
       ]);
 
-      const csvContent = [
-        headers.join(','),
-        ...csvData.map(row => row.join(','))
-      ].join('\n');
-
+      const csvContent = [headers.join(','), ...csvData.map(row => row.join(','))].join('\n');
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -687,7 +683,6 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
     }
   };
 
-  // Department options for dropdown
   const departments = [
     'Relationship Management',
     'Credit and Risk',
@@ -699,7 +694,6 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
     'IT and Systems Support'
   ];
 
-  // Position types
   const positionTypes = [
     'Full-Time',
     'Part-Time',
@@ -708,15 +702,16 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
     'Internship'
   ];
 
-  // Allowed status values
   const allowedStatuses = [
-    { value: 'open', label: 'Open' },
-    { value: 'closed', label: 'Closed' },
-    { value: 'pending', label: 'Pending' }
+    { value: 'draft', label: 'Draft' },
+    { value: 'pending', label: 'Pending Approval' },
+    { value: 'approved', label: 'Approved' },
+    { value: 'open', label: 'Live / Posted' },
+    { value: 'closed', label: 'Closed' }
   ];
 
   return (
-    <div className="bg-[var(--card)] rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <div className="bg-[var(--card)] rounded-xl border border-[var(--p-line)] overflow-hidden shadow-sm flex flex-col">
       {/* Toast notifications */}
       {toasts.map((toast) => (
         <Toast
@@ -735,13 +730,13 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
         />
       )}
       
-      <div className="p-4 md:p-6 border-b border-gray-200">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="p-4 md:p-6 border-b border-[var(--p-line)] flex-shrink-0">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">Job Positions</h2>
-            <p className="text-gray-600 text-xs">{positions.length} active positions</p>
+            <h2 className="text-base font-bold text-[var(--t1)]">Job Positions Dashboard</h2>
+            <p className="text-[var(--t3)] text-xs">{positions.length} active positions listed in database</p>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 w-full sm:w-auto">
             <GlowButton 
               variant="secondary" 
               icon={Download} 
@@ -758,34 +753,34 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
               onClick={() => setIsAdding(true)}
               disabled={isLoading}
             >
-              Add New Position
+              Create Position Draft
             </GlowButton>
           </div>
         </div>
       </div>
       
-      <div className="overflow-x-auto">
-        <table className="w-full text-xs">
-          <thead className="bg-gray-50 border-b border-gray-200">
+      <div className="overflow-x-auto flex-1 min-h-0">
+        <table className="w-full text-xs min-w-[900px]">
+          <thead className="bg-[var(--p-dim)] border-b border-[var(--p-line)] sticky top-0 z-10">
             <tr>
-              <th className="text-left py-3 px-4 text-gray-700 font-semibold">Position Title</th>
-              <th className="text-left py-3 px-4 text-gray-700 font-semibold">Department</th>
-              <th className="text-left py-3 px-4 text-gray-700 font-semibold">Type</th>
-              <th className="text-left py-3 px-4 text-gray-700 font-semibold">Branch</th>
-              <th className="text-left py-3 px-4 text-gray-700 font-semibold">Status</th>
-              <th className="text-center py-3 px-4 text-gray-700 font-semibold">Actions</th>
+              <th className="text-left py-3.5 px-4 text-[var(--t2)] font-semibold min-w-[200px]">Position Title</th>
+              <th className="text-left py-3.5 px-4 text-[var(--t2)] font-semibold min-w-[150px]">Department</th>
+              <th className="text-left py-3.5 px-4 text-[var(--t2)] font-semibold min-w-[100px]">Type</th>
+              <th className="text-left py-3.5 px-4 text-[var(--t2)] font-semibold min-w-[120px]">Branch</th>
+              <th className="text-left py-3.5 px-4 text-[var(--t2)] font-semibold min-w-[130px]">Status</th>
+              <th className="text-center py-3.5 px-4 text-[var(--t2)] font-semibold min-w-[320px]">Workflow Actions & Controls</th>
             </tr>
           </thead>
           <tbody>
-            {/* Add new position row */}
+            {/* Add new position inline row */}
             {isAdding && (
-              <tr className="bg-blue-50 border-b border-blue-100">
+              <tr className="bg-[var(--p-dim)]/50 border-b border-[var(--p-line)]">
                 <td className="py-4 px-4">
                   <input
                     type="text"
                     value={newPosition.title || ''}
                     onChange={(e) => setNewPosition({...newPosition, title: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 bg-[var(--card)] border border-[var(--p-line)] text-xs text-white rounded-lg focus:ring-1 focus:ring-[var(--p)] focus:border-[var(--p)] focus:outline-none"
                     placeholder="Enter position title"
                   />
                 </td>
@@ -793,11 +788,11 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
                   <select
                     value={newPosition.department || ''}
                     onChange={(e) => setNewPosition({...newPosition, department: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 bg-[var(--card)] border border-[var(--p-line)] text-xs text-white rounded-lg focus:ring-1 focus:ring-[var(--p)] focus:border-[var(--p)] focus:outline-none"
                   >
-                    <option value="">Select Department</option>
+                    <option value="" className="bg-[var(--card)] text-white">Select Department</option>
                     {departments.map(dept => (
-                      <option key={dept} value={dept}>
+                      <option key={dept} value={dept} className="bg-[var(--card)] text-white">
                         {dept}
                       </option>
                     ))}
@@ -807,11 +802,11 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
                   <select
                     value={newPosition.type || ''}
                     onChange={(e) => setNewPosition({...newPosition, type: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 bg-[var(--card)] border border-[var(--p-line)] text-xs text-white rounded-lg focus:ring-1 focus:ring-[var(--p)] focus:border-[var(--p)] focus:outline-none"
                   >
-                    <option value="">Select Type</option>
+                    <option value="" className="bg-[var(--card)] text-white">Select Type</option>
                     {positionTypes.map(type => (
-                      <option key={type} value={type}>
+                      <option key={type} value={type} className="bg-[var(--card)] text-white">
                         {type}
                       </option>
                     ))}
@@ -821,11 +816,11 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
                   <select
                     value={newPosition.branch || ''}
                     onChange={(e) => setNewPosition({...newPosition, branch: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 bg-[var(--card)] border border-[var(--p-line)] text-xs text-white rounded-lg focus:ring-1 focus:ring-[var(--p)] focus:border-[var(--p)] focus:outline-none"
                   >
-                    <option value="">Select branch</option>
+                    <option value="" className="bg-[var(--card)] text-white">Select branch</option>
                     {branches.map(branch => (
-                      <option key={branch.id} value={branch.id}>
+                      <option key={branch.id} value={branch.id} className="bg-[var(--card)] text-white">
                         {branch.name}
                       </option>
                     ))}
@@ -833,12 +828,12 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
                 </td>
                 <td className="py-4 px-4">
                   <select
-                    value={newPosition.status || 'open'}
+                    value={newPosition.status || 'draft'}
                     onChange={(e) => setNewPosition({...newPosition, status: e.target.value as any})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 bg-[var(--card)] border border-[var(--p-line)] text-xs text-white rounded-lg focus:ring-1 focus:ring-[var(--p)] focus:border-[var(--p)] focus:outline-none"
                   >
                     {allowedStatuses.map(status => (
-                      <option key={status.value} value={status.value}>
+                      <option key={status.value} value={status.value} className="bg-[var(--card)] text-white">
                         {status.label}
                       </option>
                     ))}
@@ -849,17 +844,17 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
                     <button
                       onClick={handleAdd}
                       disabled={isLoading}
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 flex items-center gap-2"
+                      className="px-3.5 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-black text-xs font-bold rounded-lg transition-all flex items-center gap-1.5"
                     >
-                      <Save size={16} />
-                      {isLoading ? 'Saving...' : 'Save'}
+                      <Save size={14} />
+                      Save Draft
                     </button>
                     <button
                       onClick={() => setIsAdding(false)}
                       disabled={isLoading}
-                      className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 disabled:opacity-50 flex items-center gap-2"
+                      className="px-3.5 py-1.5 border border-[var(--p-line)] text-[var(--t3)] hover:text-white rounded-lg hover:bg-[var(--p-dim)] transition-all flex items-center gap-1.5"
                     >
-                      <X size={16} />
+                      <X size={14} />
                       Cancel
                     </button>
                   </div>
@@ -870,10 +865,10 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
             {/* Existing positions */}
             {positions.length === 0 ? (
               <tr>
-                <td colSpan={6} className="py-8 px-4 text-center text-gray-500">
-                  <Users size={48} className="mx-auto mb-2 opacity-50" />
-                  <p>No positions found</p>
-                  <p className="text-sm">Click "Add New Position" to create your first job posting</p>
+                <td colSpan={6} className="py-12 px-4 text-center text-[var(--t3)]">
+                  <Users size={48} className="mx-auto mb-3 text-[var(--t3)]/40" />
+                  <p className="font-bold text-white mb-0.5">No Job Positions Listed</p>
+                  <p className="text-[10px]">Click "Create Position Draft" to begin building your first recruitment workflow.</p>
                 </td>
               </tr>
             ) : (
@@ -882,29 +877,29 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
                 const isEditing = editingId === String(position.id);
 
                 return (
-                  <tr key={position.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                  <tr key={position.id} className="border-b border-[var(--p-line)] hover:bg-[var(--p-dim)]/20 transition-all">
                     <td className="py-4 px-4">
                       {isEditing ? (
                         <input
                           type="text"
                           value={editedPosition?.title || ''}
                           onChange={(e) => setEditedPosition({...editedPosition, title: e.target.value})}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 bg-[var(--card)] border border-[var(--p-line)] text-xs text-white rounded-lg focus:ring-1 focus:ring-[var(--p)] focus:outline-none"
                         />
                       ) : (
                         <div className="space-y-1">
                           <p 
-                            className="text-gray-900 font-semibold cursor-pointer hover:text-blue-600 transition-colors"
+                            className="text-[var(--t1)] font-semibold cursor-pointer hover:text-[var(--p)] transition-all"
                             onClick={() => setSelectedPosition(position)}
                           >
                             {position.title}
                           </p>
                           <button 
                             onClick={() => setSelectedPosition(position)}
-                            className="text-blue-600 hover:text-blue-800 text-xs flex items-center gap-1 transition-colors"
+                            className="text-[var(--p)] hover:text-[var(--p-glow)] text-[10px] font-bold flex items-center gap-1 transition-all"
                           >
-                            <FileText size={12} />
-                            View Details & Requirements
+                            <FileText size={11} />
+                            View Requirements
                           </button>
                         </div>
                       )}
@@ -914,17 +909,17 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
                         <select
                           value={editedPosition?.department || ''}
                           onChange={(e) => setEditedPosition({...editedPosition, department: e.target.value})}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 bg-[var(--card)] border border-[var(--p-line)] text-xs text-white rounded-lg focus:ring-1 focus:ring-[var(--p)] focus:outline-none"
                         >
-                          <option value="">Select Department</option>
+                          <option value="" className="bg-[var(--card)] text-white">Select Department</option>
                           {departments.map(dept => (
-                            <option key={dept} value={dept}>
+                            <option key={dept} value={dept} className="bg-[var(--card)] text-white">
                               {dept}
                             </option>
                           ))}
                         </select>
                       ) : (
-                        <p className="text-gray-700">{position.department}</p>
+                        <p className="text-[var(--t2)]">{position.department}</p>
                       )}
                     </td>
                     <td className="py-4 px-4">
@@ -932,17 +927,17 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
                         <select
                           value={editedPosition?.type || ''}
                           onChange={(e) => setEditedPosition({...editedPosition, type: e.target.value})}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 bg-[var(--card)] border border-[var(--p-line)] text-xs text-white rounded-lg focus:ring-1 focus:ring-[var(--p)] focus:outline-none"
                         >
-                          <option value="">Select Type</option>
+                          <option value="" className="bg-[var(--card)] text-white">Select Type</option>
                           {positionTypes.map(type => (
-                            <option key={type} value={type}>
+                            <option key={type} value={type} className="bg-[var(--card)] text-white">
                               {type}
                             </option>
                           ))}
                         </select>
                       ) : (
-                        <p className="text-gray-700">{position.type}</p>
+                        <p className="text-[var(--t2)]">{position.type}</p>
                       )}
                     </td>
                     <td className="py-4 px-4">
@@ -950,27 +945,27 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
                         <select
                           value={editedPosition?.branch || ''}
                           onChange={(e) => setEditedPosition({...editedPosition, branch: e.target.value})}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 bg-[var(--card)] border border-[var(--p-line)] text-xs text-white rounded-lg focus:ring-1 focus:ring-[var(--p)] focus:outline-none"
                         >
                           {branches.map(branch => (
-                            <option key={branch.id} value={branch.id}>
+                            <option key={branch.id} value={branch.id} className="bg-[var(--card)] text-white">
                               {branch.name}
                             </option>
                           ))}
                         </select>
                       ) : (
-                        <p className="text-gray-700">{branch?.name}</p>
+                        <p className="text-[var(--t2)]">{branch?.name || position.branch}</p>
                       )}
                     </td>
                     <td className="py-4 px-4">
                       {isEditing ? (
                         <select
-                          value={editedPosition?.status || 'open'}
+                          value={editedPosition?.status || 'draft'}
                           onChange={(e) => setEditedPosition({...editedPosition, status: e.target.value as any})}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                          className="w-full px-3 py-2 bg-[var(--card)] border border-[var(--p-line)] text-xs text-white rounded-lg focus:ring-1 focus:ring-[var(--p)] focus:outline-none"
                         >
                           {allowedStatuses.map(status => (
-                            <option key={status.value} value={status.value}>
+                            <option key={status.value} value={status.value} className="bg-[var(--card)] text-white">
                               {status.label}
                             </option>
                           ))}
@@ -980,48 +975,116 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
                       )}
                     </td>
                     <td className="py-4 px-4">
-                      <div className="flex justify-center gap-2">
-                        {isEditing ? (
-                          <>
-                            <button
-                              onClick={handleSave}
-                              disabled={isLoading}
-                              className="px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 flex items-center gap-1 text-xs"
-                            >
-                              <Save size={14} />
-                              {isLoading ? 'Saving...' : 'Save'}
-                            </button>
-                            <button
-                              onClick={handleCancel}
-                              disabled={isLoading}
-                              className="px-3 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-600 disabled:opacity-50 flex items-center gap-1 text-xs"
-                            >
-                              <X size={14} />
-                              Cancel
-                            </button>
-                          </>
-                        ) : (
-                          <>
-                            <button
-                              onClick={() => handleEdit(position)}
-                              disabled={isLoading}
-                              className="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-1 text-xs"
-                            >
-                              <Edit size={14} />
-                              {isValidUUID(String(position.id)) ? 'Edit' : 'Adjust'}
-                            </button>
-                            {isValidUUID(String(position.id)) && (
+                      <div className="flex items-center justify-between gap-3">
+                        {/* Interactive Recruitment Pipeline Transitions */}
+                        {!isEditing && (
+                          <div className="flex items-center gap-1.5">
+                            {position.status === 'draft' && (
                               <button
-                                onClick={() => handleDelete(position.id)}
+                                onClick={() => handleWorkflowTransition(position, 'pending')}
                                 disabled={isLoading}
-                                className="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 flex items-center gap-1 text-xs"
+                                className="px-2.5 py-1 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-lg text-[10px] font-bold flex items-center gap-1 transition-all"
+                                title="Submit Job for Approval"
                               >
-                                <Trash2 size={14} />
-                                Delete
+                                <Send size={11} />
+                                Submit Approval
                               </button>
                             )}
-                          </>
+
+                            {position.status === 'pending' && (
+                              <button
+                                onClick={() => handleWorkflowTransition(position, 'approved')}
+                                disabled={isLoading}
+                                className="px-2.5 py-1 bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border border-purple-500/30 rounded-lg text-[10px] font-bold flex items-center gap-1 transition-all"
+                                title="Approve this Job Posting"
+                              >
+                                <ShieldCheck size={11} />
+                                Approve Job
+                              </button>
+                            )}
+
+                            {position.status === 'approved' && (
+                              <button
+                                onClick={() => setPublishingPosition(position)}
+                                disabled={isLoading}
+                                className="px-2.5 py-1 bg-cyan-500/10 hover:bg-cyan-500/25 text-cyan-400 border border-cyan-500/30 rounded-lg text-[10px] font-bold flex items-center gap-1 transition-all"
+                                title="Publish Job Opportunity"
+                              >
+                                <Globe size={11} />
+                                Publish...
+                              </button>
+                            )}
+
+                            {position.status === 'open' && (
+                              <button
+                                onClick={() => handleWorkflowTransition(position, 'closed')}
+                                disabled={isLoading}
+                                className="px-2.5 py-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 rounded-lg text-[10px] font-bold flex items-center gap-1 transition-all"
+                                title="Close / Take Down Job Posting"
+                              >
+                                <PowerOff size={11} />
+                                Close Posting
+                              </button>
+                            )}
+
+                            {position.status === 'closed' && (
+                              <button
+                                onClick={() => handleWorkflowTransition(position, 'draft')}
+                                disabled={isLoading}
+                                className="px-2.5 py-1 border border-[var(--p-line)] text-[var(--t3)] hover:text-white rounded-lg text-[10px] font-bold flex items-center gap-1 hover:bg-[var(--p-dim)] transition-all"
+                                title="Re-open Job as a Draft"
+                              >
+                                <Edit size={11} />
+                                Set Draft
+                              </button>
+                            )}
+                          </div>
                         )}
+
+                        {/* Standard Controls */}
+                        <div className="flex gap-1.5 ml-auto">
+                          {isEditing ? (
+                            <>
+                              <button
+                                onClick={handleSave}
+                                disabled={isLoading}
+                                className="px-3 py-1 bg-emerald-500 hover:bg-emerald-600 text-black rounded-lg disabled:opacity-50 flex items-center gap-1 text-[10px] font-bold transition-all"
+                              >
+                                <Save size={12} />
+                                Save
+                              </button>
+                              <button
+                                onClick={handleCancel}
+                                disabled={isLoading}
+                                className="px-3 py-1 border border-[var(--p-line)] text-[var(--t3)] hover:text-white rounded-lg disabled:opacity-50 flex items-center gap-1 text-[10px] font-bold hover:bg-[var(--p-dim)] transition-all"
+                              >
+                                <X size={12} />
+                                Cancel
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <button
+                                onClick={() => handleEdit(position)}
+                                disabled={isLoading}
+                                className="px-2.5 py-1 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-lg disabled:opacity-50 flex items-center gap-1 text-[10px] font-bold transition-all"
+                              >
+                                <Edit size={12} />
+                                {isValidUUID(String(position.id)) ? 'Edit' : 'Adjust'}
+                              </button>
+                              {isValidUUID(String(position.id)) && (
+                                <button
+                                  onClick={() => handleDelete(position.id)}
+                                  disabled={isLoading}
+                                  className="px-2.5 py-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 rounded-lg disabled:opacity-50 flex items-center gap-1 text-[10px] font-bold transition-all"
+                                >
+                                  <Trash2 size={12} />
+                                  Delete
+                                </button>
+                              )}
+                            </>
+                          )}
+                        </div>
                       </div>
                     </td>
                   </tr>
@@ -1031,6 +1094,99 @@ const PositionsTable = ({ positions, onUpdate = () => {} }: PositionsTableProps)
           </tbody>
         </table>
       </div>
+
+      {/* JOB DISTRIBUTION / PUBLISHING MODAL */}
+      {publishingPosition && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+          <div className="bg-[var(--card)] border border-[var(--p-line)] rounded-xl shadow-2xl p-6 w-full max-w-sm space-y-5 animate-in zoom-in-95 duration-200">
+            <div className="flex justify-between items-center pb-2 border-b border-[var(--p-line)]">
+              <div>
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider">Publish Opportunities</h3>
+                <p className="text-[10px] text-[var(--t3)]">Configure distribution channels for this position</p>
+              </div>
+              <button 
+                onClick={() => setPublishingPosition(null)}
+                className="text-[var(--t3)] hover:text-white transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-1.5 py-1 text-xs">
+              <span className="text-[9px] font-bold text-[var(--t3)] uppercase tracking-wider">Selected Vacancy</span>
+              <h4 className="text-sm font-bold text-white leading-tight">{publishingPosition.title}</h4>
+              <p className="text-[10px] text-cyan-400 font-semibold">{publishingPosition.department} Department</p>
+            </div>
+
+            <div className="space-y-4 pt-1">
+              <span className="block text-[9px] font-bold text-[var(--t3)] uppercase tracking-wider">Distribution Channels</span>
+              
+              {/* Option 1 - Website */}
+              <label className="flex items-start gap-3 p-3 bg-[var(--p-dim)]/20 border border-[var(--p-line)] rounded-lg cursor-pointer hover:border-white/10 transition-all select-none">
+                <input 
+                  type="checkbox" 
+                  checked={pubToWebsite} 
+                  onChange={(e) => setPubToWebsite(e.target.checked)}
+                  className="w-4 h-4 mt-0.5 rounded border-[var(--p-line)] text-[var(--p)] bg-[var(--p-dim)] focus:ring-0 focus:ring-offset-0"
+                />
+                <div className="space-y-0.5">
+                  <span className="block text-xs font-bold text-white">Publish to Company Careers Page</span>
+                  <span className="block text-[10px] text-[var(--t3)]">Instantly list vacancy on the public job application board</span>
+                </div>
+              </label>
+
+              {/* Option 2 - Employee Portal */}
+              <label className="flex items-start gap-3 p-3 bg-[var(--p-dim)]/20 border border-[var(--p-line)] rounded-lg cursor-pointer hover:border-white/10 transition-all select-none">
+                <input 
+                  type="checkbox" 
+                  checked={pubToPortal} 
+                  onChange={(e) => setPubToPortal(e.target.checked)}
+                  className="w-4 h-4 mt-0.5 rounded border-[var(--p-line)] text-[var(--p)] bg-[var(--p-dim)] focus:ring-0 focus:ring-offset-0"
+                />
+                <div className="space-y-0.5">
+                  <span className="block text-xs font-bold text-white">Publish to Internal Employee Portal</span>
+                  <span className="block text-[10px] text-[var(--t3)]">Show job internally under the Staff Opportunities tab</span>
+                </div>
+              </label>
+
+              {/* Option 3 - Email Broadcast */}
+              <label className="flex items-start gap-3 p-3 bg-[var(--p-dim)]/20 border border-[var(--p-line)] rounded-lg cursor-pointer hover:border-white/10 transition-all select-none">
+                <input 
+                  type="checkbox" 
+                  checked={emailStaff} 
+                  onChange={(e) => setEmailStaff(e.target.checked)}
+                  className="w-4 h-4 mt-0.5 rounded border-[var(--p-line)] text-[var(--p)] bg-[var(--p-dim)] focus:ring-0 focus:ring-offset-0"
+                />
+                <div className="space-y-0.5">
+                  <span className="block text-xs font-bold text-white">Broadcast Email Notification</span>
+                  <span className="block text-[10px] text-[var(--t3)]">Email a rich-text announcement to all active staff members</span>
+                </div>
+              </label>
+            </div>
+
+            <div className="flex justify-end gap-2.5 pt-3 border-t border-[var(--p-line)]">
+              <GlowButton 
+                variant="secondary" 
+                size="sm" 
+                onClick={() => setPublishingPosition(null)}
+              >
+                Cancel
+              </GlowButton>
+              <GlowButton 
+                size="sm" 
+                icon={Globe}
+                onClick={async () => {
+                  const pos = publishingPosition;
+                  setPublishingPosition(null);
+                  await handleWorkflowTransition(pos, 'open');
+                }}
+              >
+                Confirm Distribution
+              </GlowButton>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

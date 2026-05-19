@@ -26,7 +26,7 @@
     position: absolute;
     top: 0;
     left: 50%;
-    border-left: 1.5px solid #C8A84B !important;
+    border-left: 1.5px solid #00E5FF !important;
     width: 0;
     height: 50px;
     transform: translateX(-50%);
@@ -38,7 +38,7 @@
     position: absolute;
     top: 50px;
     right: 50%;
-    border-top: 1.5px solid #C8A84B !important;
+    border-top: 1.5px solid #00E5FF !important;
     width: 50%;
     height: 50px;
 }
@@ -46,7 +46,7 @@
 .org-tree li::after {
     right: auto;
     left: 50%;
-    border-left: 1.5px solid #C8A84B !important;
+    border-left: 1.5px solid #00E5FF !important;
 }
 
 /* THE SWOOP: Massive curves with !important to force the design */
@@ -55,13 +55,13 @@
 }
 
 .org-tree li:last-child::before {
-    border-right: 1.5px solid #C8A84B !important;
+    border-right: 1.5px solid #00E5FF !important;
     border-top-right-radius: 80px !important;
 }
 
 /* Middle children vertical line */
 .org-tree li:not(:first-child):not(:last-child)::after {
-    border-left: 1.5px solid #C8A84B !important;
+    border-left: 1.5px solid #00E5FF !important;
 }
 
 /* Clean up */
@@ -76,7 +76,7 @@
     position: absolute;
     top: 0;
     left: 50%;
-    border-left: 1.5px solid #C8A84B !important;
+    border-left: 1.5px solid #00E5FF !important;
     width: 0;
     height: 100px;
     display: block !important;
@@ -98,7 +98,7 @@
     position: absolute;
     bottom: -100px;
     left: 50%;
-    border-left: 1.5px solid #C8A84B !important;
+    border-left: 1.5px solid #00E5FF !important;
     height: 100px;
     transform: translateX(-50%);
 }

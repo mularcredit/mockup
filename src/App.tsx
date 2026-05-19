@@ -20,6 +20,7 @@ import StaffSignupRequests from './pages/admin';
 import StaffPortalLanding from './components/staff portal/StaffPortal';
 import RecruitmentDashboard from './components/Recruitment/RecruitmentDashboard';
 import LeaveManagementSystem from './components/Leave/LeaveManagement';
+import TimeAttendance from './components/Attendance/TimeAttendance';
 import PerformanceDashboard from './components/Perfomance/PerfomanceDashboard';
 import AddEmployeePage from './components/Add Form/AddEmployeePage';
 import ViewEmployeePage from './components/view_form/EmployeeDetails';
@@ -186,6 +187,16 @@ function App() {
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     return (localStorage.getItem('theme') as 'light' | 'dark') || 'dark';
   });
+
+  const [sspMode, setSspMode] = useState<boolean>(() => {
+    return localStorage.getItem('sspMode') === 'true';
+  });
+
+  const handleToggleSSP = () => {
+    const newValue = !sspMode;
+    setSspMode(newValue);
+    localStorage.setItem('sspMode', String(newValue));
+  };
 
   // Apply theme to body
   useEffect(() => {
@@ -943,7 +954,7 @@ function App() {
             <Route path="/teams" element={<ChatLayout />} />
             <Route
               path="/staff"
-              element={session ? <StaffPortalLanding /> : <Login onLoginSuccess={handleLoginSuccess} />}
+              element={session ? <StaffPortalLanding userRole={user?.role} onBackToAdmin={handleToggleSSP} /> : <Login onLoginSuccess={handleLoginSuccess} />}
             />
 
             <Route
@@ -951,8 +962,8 @@ function App() {
               element={
                 !session || !user ? (
                   <Login onLoginSuccess={handleLoginSuccess} />
-                ) : user.role === 'STAFF' ? (
-                  <StaffPortalLanding />
+                ) : (user.role === 'STAFF' || sspMode) ? (
+                  <StaffPortalLanding userRole={user.role} onBackToAdmin={handleToggleSSP} />
                 ) : (
                   <div className="flex flex-col min-h-screen bg-[var(--page)] transition-colors duration-300">
                     <div className="relative flex flex-1 w-full overflow-x-hidden">
@@ -975,6 +986,7 @@ function App() {
                           allTowns={branches}
                           theme={theme}
                           onThemeToggle={() => setTheme(prev => prev === 'light' ? 'dark' : 'light')}
+                          onSSPToggle={handleToggleSSP}
                         />
                         <main className="flex-1 overflow-x-hidden pt-[22px] px-[26px] pb-[52px]">
                           <AnimatePresence mode="wait">
@@ -990,8 +1002,8 @@ function App() {
                                 <Route
                                   path="/"
                                   element={
-                                    user?.role === 'STAFF' ?
-                                      <StaffPortalLanding /> :
+                                    (user?.role === 'STAFF' || sspMode) ?
+                                      <StaffPortalLanding userRole={user?.role} onBackToAdmin={handleToggleSSP} /> :
                                       <AuthRoute allowedRoles={['ADMIN', 'MANAGER', 'HR', 'CHECKER']}>
                                         <Dashboard selectedTown={selectedTown} selectedRegion={selectedRegion} onTownChange={handleTownChange} onRegionChange={handleRegionChange} />
                                       </AuthRoute>
@@ -1120,6 +1132,7 @@ function App() {
                                   />
                                 } />
                                 <Route path="/leaves" element={<LeaveManagementSystem selectedTown={selectedTown} selectedRegion={selectedRegion} onTownChange={handleTownChange} onRegionChange={handleRegionChange} />} />
+                                <Route path="/attendance" element={<TimeAttendance />} />
                                 <Route path="/training" element={<AdminVideoUpload />} />
                                 <Route path="/ai-assistant" element={<AIAssistantPage selectedTown={selectedTown} selectedRegion={selectedRegion} onTownChange={handleTownChange} onRegionChange={handleRegionChange} />} />
 

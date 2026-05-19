@@ -82,14 +82,14 @@ const mockOrgData: OrgNode = {
 };
 
 function getDotColor(dept?: string): string {
-  if (!dept) return '#C8A84B';
+  if (!dept) return '#00E5FF';
   const d = dept.toLowerCase();
   if (d.includes('executive')) return '#8B5A2B';
   if (d.includes('operations')) return '#6B8E23';
   if (d.includes('finance')) return '#CD853F';
   if (d.includes('human resources') || d.includes('hr')) return '#7B68EE';
   if (d.includes('credit') || d.includes('risk')) return '#BC8F8F';
-  return '#C8A84B';
+  return '#00E5FF';
 }
 
 // Layout computation
@@ -184,7 +184,7 @@ export default function OrgChart() {
                 key={i}
                 d={`M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`}
                 fill="none"
-                stroke="#C8A84B"
+                stroke="#00E5FF"
                 strokeWidth="1.5"
                 strokeOpacity="0.7"
               />
@@ -207,7 +207,7 @@ export default function OrgChart() {
                   rx={10}
                   ry={10}
                   fill="#1A1F1C"
-                  stroke="#C8A84B"
+                  stroke="#00E5FF"
                   strokeOpacity="0.3"
                   strokeWidth="1"
                 />

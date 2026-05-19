@@ -1,5 +1,4 @@
 import { StatusBadge } from '../StatusBadge';
-import { GlowButton } from '../GlowButton';
 
 interface BranchCardProps {
   branch: any;
@@ -11,29 +10,27 @@ export const BranchCard = ({ branch, positions }: BranchCardProps) => {
   const urgentPositions = positions.filter((p) => p.status === 'Urgent').length;
   
   return (
-    <div className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+    <div className="bg-[var(--card)] border border-[var(--p-line)] rounded-xl p-5 hover:border-[var(--p)] hover:shadow-[0_0_15px_rgba(0,229,255,0.06)] transition-all duration-300">
       <div className="flex justify-between items-start mb-2">
-        <h3 className="text-lg font-semibold text-gray-900">{branch.name}</h3>
+        <h3 className="text-base font-bold text-white">{branch.name}</h3>
         <StatusBadge status={branch.hiringStatus} />
       </div>
-      <p className="text-gray-600 text-xs mb-3">{branch.location}</p>
+      <p className="text-[var(--t3)] text-xs mb-4 font-semibold">{branch.location}</p>
       
-      <div className="space-y-2">
+      <div className="space-y-2 border-t border-[var(--p-line)] pt-3">
         <div className="flex justify-between text-xs">
-          <span className="text-gray-600">Total Open Positions:</span>
-          <span className="font-medium">{positions.length}</span>
+          <span className="text-[var(--t3)]">Total Open Positions:</span>
+          <span className="font-bold text-white">{positions.length}</span>
         </div>
         <div className="flex justify-between text-xs">
-          <span className="text-red-600">Critically Needed:</span>
-          <span className="font-medium">{criticalPositions}</span>
+          <span className="text-red-400 font-bold">Critically Needed:</span>
+          <span className="font-bold text-white">{criticalPositions}</span>
         </div>
         <div className="flex justify-between text-xs">
-          <span className="text-orange-600">Urgent Positions:</span>
-          <span className="font-medium">{urgentPositions}</span>
+          <span className="text-amber-400 font-bold">Urgent Positions:</span>
+          <span className="font-bold text-white">{urgentPositions}</span>
         </div>
       </div>
-      
-      
     </div>
   );
 };

@@ -370,9 +370,14 @@ export default function MFAVerification() {
               <button
                 onClick={() => handleVerification(codes.join(''))}
                 disabled={loading || isLocked || codes.some(code => code === '')}
-                className="btn-login-main"
+                className="btn-login-main flex items-center justify-center gap-2"
               >
-                {loading ? <CircleNotch className="animate-spin" size={18} /> : (
+                {loading ? (
+                  <>
+                    <ArrowsClockwise className="animate-spin" size={18} />
+                    <span>Verifying Secure Access Node...</span>
+                  </>
+                ) : (
                   <>
                     <span>Verify code</span>
                     <ShieldCheck size={18} />

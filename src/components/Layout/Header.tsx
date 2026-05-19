@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import UserAvatar from '../UI/UserAvatar';
-import { Bell, LogOut, X, Trash2, CheckCircle, UserPlus, Calendar, Image, Upload, MapPin, ChevronDown, AlertTriangle, Clock, Search, Sun, Moon } from 'lucide-react';
+import { Bell, LogOut, X, Trash2, CheckCircle, UserPlus, UserCheck, Calendar, Image, Upload, MapPin, ChevronDown, AlertTriangle, Clock, Search, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
@@ -19,6 +19,7 @@ interface HeaderProps {
   allTowns?: string[];
   theme?: 'light' | 'dark';
   onThemeToggle?: () => void;
+  onSSPToggle?: () => void;
 }
 
 interface NotificationItem {
@@ -119,7 +120,7 @@ const HeaderDropdown = ({ value, options, onChange, placeholder, icon: Icon }: {
   );
 };
 // ...
-export default function Header({ user, onLogout, selectedTown, onTownChange, selectedRegion, onRegionChange, towns, regions, theme, onThemeToggle }: HeaderProps) {
+export default function Header({ user, onLogout, selectedTown, onTownChange, selectedRegion, onRegionChange, towns, regions, theme, onThemeToggle, onSSPToggle }: HeaderProps) {
   const [notifications, setNotifications] = useState<NotificationState>({
     staff: 0,
     leave: 0,
@@ -515,6 +516,18 @@ export default function Header({ user, onLogout, selectedTown, onTownChange, sel
       <header className="sticky top-0 z-40 bg-[var(--sidebar)] border-b border-[var(--p-line)] h-[56px] flex items-center px-[26px] justify-end">
         {/* Action Controls */}
         <div className="flex items-center gap-3">
+
+          {/* SSP Toggle Button (Only for Admin/Manager/Checker/HR roles) */}
+          {user?.role && user.role !== 'STAFF' && onSSPToggle && (
+            <button
+              onClick={onSSPToggle}
+              className="px-3 py-1.5 bg-[var(--p-dim)] hover:bg-[var(--p)] hover:text-white border border-[var(--p-line)] text-[var(--p)] text-[11px] font-bold rounded-xl transition-all duration-300 flex items-center gap-1.5 shadow-sm active:scale-95 mr-1"
+              title="Access Staff Self-Service Portal"
+            >
+              <UserCheck className="w-3.5 h-3.5" />
+              <span>Self-Service Portal (SSP)</span>
+            </button>
+          )}
 
           {/* Notifications */}
           <button

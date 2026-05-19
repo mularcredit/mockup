@@ -4078,8 +4078,8 @@ export default function PayrollDashboard() {
           </div>
 
           {/* ── PAY RUN WORKFLOW STATUS (LifecycleMap style) ── */}
-          <div className="border border-[#C8A84B]/20 rounded-[20px] px-6 py-4 bg-white/[0.01] backdrop-blur-sm">
-            <div className="text-[10px] font-bold text-[#C8A84B]/60 uppercase tracking-widest mb-4">Pay Run Pipeline</div>
+          <div className="border border-[#00E5FF]/20 rounded-[20px] px-6 py-4 bg-white/[0.01] backdrop-blur-sm">
+            <div className="text-[10px] font-bold text-[#00E5FF]/60 uppercase tracking-widest mb-4">Pay Run Pipeline</div>
             <div className="relative grid grid-cols-4 gap-2">
               {[
                 { number: '01', label: 'Draft', sublabel: 'Payroll computed & staged', icon: PenLine, active: true },
@@ -4091,23 +4091,23 @@ export default function PayrollDashboard() {
                   {/* Connector line */}
                   {index < 3 && (
                     <>
-                      <div className="absolute top-[20px] left-[calc(50%+24px)] w-[calc(100%-48px)] h-px bg-[#C8A84B]/40 z-0" />
-                      <div className="absolute top-[20px] left-[100%] w-1.5 h-1.5 rounded-full bg-[#C8A84B]/80 -translate-y-1/2 -translate-x-1/2 z-0" />
+                      <div className="absolute top-[20px] left-[calc(50%+24px)] w-[calc(100%-48px)] h-px bg-[#00E5FF]/40 z-0" />
+                      <div className="absolute top-[20px] left-[100%] w-1.5 h-1.5 rounded-full bg-[#00E5FF]/80 -translate-y-1/2 -translate-x-1/2 z-0" />
                     </>
                   )}
                   {/* Icon circle */}
                   <div className={`h-[40px] w-[40px] rounded-full border flex items-center justify-center mb-3 transition-all duration-500 ${
                     stage.active
-                      ? 'border-[#C8A84B]/50 bg-[#C8A84B]/10 group-hover:border-[#C8A84B] group-hover:bg-[#C8A84B]/15'
-                      : 'border-[#C8A84B]/15 bg-white/[0.02] group-hover:border-[#C8A84B]/30'
+                      ? 'border-[#00E5FF]/50 bg-[#00E5FF]/10 group-hover:border-[#00E5FF] group-hover:bg-[#00E5FF]/15'
+                      : 'border-[#00E5FF]/15 bg-white/[0.02] group-hover:border-[#00E5FF]/30'
                   }`}>
                     <stage.icon
-                      className={`w-4 h-4 transition-colors duration-500 ${stage.active ? 'text-[#C8A84B]' : 'text-[#C8A84B]/30 group-hover:text-[#C8A84B]/60'}`}
+                      className={`w-4 h-4 transition-colors duration-500 ${stage.active ? 'text-[#00E5FF]' : 'text-[#00E5FF]/30 group-hover:text-[#00E5FF]/60'}`}
                       strokeWidth={1.2}
                     />
                   </div>
                   {/* Step number */}
-                  <span className="text-[7px] font-medium tracking-[0.2em] text-[#C8A84B]/60 mb-1 block">{stage.number}</span>
+                  <span className="text-[7px] font-medium tracking-[0.2em] text-[#00E5FF]/60 mb-1 block">{stage.number}</span>
                   {/* Label */}
                   <h3 className={`text-[12px] font-medium tracking-tight mb-0.5 ${stage.active ? 'text-white/90' : 'text-white/35'}`}>{stage.label}</h3>
                   {/* Sublabel */}

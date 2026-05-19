@@ -53,7 +53,8 @@ import {
   Fingerprint,
   FolderClosed,
   ShieldAlert,
-  BriefcaseBusiness
+  BriefcaseBusiness,
+  ChevronDown
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { supabase } from '../../lib/supabase';
@@ -212,68 +213,50 @@ function PortalCard({ icon, title, description, onClick, color = 'green', active
   color?: 'green' | 'blue' | 'purple' | 'amber' | 'rose' | 'indigo' | 'cyan',
   active?: boolean
 }) {
-  const themes = {
-    green: { avatarBg: 'bg-gradient-to-br from-green-600 to-emerald-700', headerBg: 'bg-gradient-to-r from-green-600/80 to-green-500/80', iconText: 'text-green-600', rowHover: 'group-hover:border-green-100 group-hover:bg-green-50/10', dot: 'bg-emerald-500' },
-    blue: { avatarBg: 'bg-gradient-to-br from-blue-600 to-blue-700', headerBg: 'bg-gradient-to-r from-blue-600/80 to-blue-500/80', iconText: 'text-blue-600', rowHover: 'group-hover:border-blue-100 group-hover:bg-blue-50/10', dot: 'bg-blue-500' },
-    purple: { avatarBg: 'bg-gradient-to-br from-purple-600 to-purple-700', headerBg: 'bg-gradient-to-r from-purple-600/80 to-purple-500/80', iconText: 'text-purple-600', rowHover: 'group-hover:border-purple-100 group-hover:bg-purple-50/10', dot: 'bg-purple-500' },
-    amber: { avatarBg: 'bg-gradient-to-br from-amber-500 to-amber-700', headerBg: 'bg-gradient-to-r from-amber-600/80 to-amber-500/80', iconText: 'text-amber-600', rowHover: 'group-hover:border-amber-100 group-hover:bg-amber-50/10', dot: 'bg-amber-500' },
-    rose: { avatarBg: 'bg-gradient-to-br from-rose-500 to-rose-700', headerBg: 'bg-gradient-to-r from-rose-600/80 to-rose-500/80', iconText: 'text-rose-600', rowHover: 'group-hover:border-rose-100 group-hover:bg-rose-50/10', dot: 'bg-rose-500' },
-    indigo: { avatarBg: 'bg-gradient-to-br from-indigo-600 to-indigo-700', headerBg: 'bg-gradient-to-r from-indigo-600/80 to-indigo-500/80', iconText: 'text-indigo-600', rowHover: 'group-hover:border-indigo-100 group-hover:bg-indigo-50/10', dot: 'bg-indigo-500' },
-    cyan: { avatarBg: 'bg-gradient-to-br from-cyan-500 to-cyan-700', headerBg: 'bg-gradient-to-r from-cyan-600/80 to-cyan-500/80', iconText: 'text-cyan-600', rowHover: 'group-hover:border-cyan-100 group-hover:bg-cyan-50/10', dot: 'bg-cyan-500' },
-  };
-
-  const theme = themes[color];
-
   return (
     <motion.div
       whileHover={{ y: -4 }}
       whileTap={{ scale: 0.98 }}
-      className="group flex flex-col bg-white rounded-2xl border border-gray-200/60 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:border-green-500/20 transition-all duration-300 overflow-hidden cursor-pointer"
+      className="group flex flex-col bg-[var(--card)] rounded-2xl border border-[var(--p-line)] hover:border-[var(--p)] shadow-sm hover:shadow-[var(--p-glow)] transition-all duration-300 overflow-hidden cursor-pointer"
       onClick={onClick}
     >
       {/* Header */}
-      <div className="relative h-14 px-4 flex items-center bg-gradient-to-r from-[#1B185D]/10 to-white">
+      <div className="relative h-14 px-4 flex items-center bg-[var(--sidebar)] border-b border-[var(--p-line)]">
         <div className="flex items-center space-x-3 w-full">
           {/* Avatar-style icon circle */}
           <div className="relative">
-            <div className="w-8 h-8 bg-transparent rounded-full flex items-center justify-center text-black border border-black/20">
+            <div className="w-8 h-8 bg-[var(--glass)] rounded-full flex items-center justify-center text-[var(--p)] border border-[var(--p-line)]">
               <div className="[&_svg]:w-[18px] [&_svg]:h-[18px]">{icon}</div>
             </div>
-            <div className={`absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${theme.dot}`} />
+            <div className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-[var(--sidebar)] bg-[var(--p)] shadow-[0_0_8px_var(--p-glow)]" />
           </div>
           {/* Title & label */}
           <div className="space-y-0.5 min-w-0">
-            <h3 className="text-gray-900 font-normal text-[13px] leading-tight group-hover:text-green-700 transition-colors truncate">
+            <h3 className="text-[var(--t1)] font-semibold text-[13px] leading-tight group-hover:text-[var(--p)] transition-colors truncate">
               {title}
             </h3>
-            <span className="px-1.5 py-0.5 rounded-md bg-gray-50 text-gray-500 text-[9px] font-medium tracking-wide border border-gray-200">
+            <span className="px-1.5 py-0.5 rounded-md bg-[var(--glass)] text-[var(--t3)] text-[9px] font-medium tracking-wide border border-[var(--p-line)]">
               Staff Portal
             </span>
           </div>
         </div>
       </div>
 
-      {/* Slick Separator */}
-      <div className="h-px w-full bg-gray-200" />
-
       {/* Body */}
-      <div className="px-4 py-4 flex-grow bg-white">
-        <div className={`flex items-center p-2 rounded-lg bg-gray-50/50 border border-gray-100 ${theme.rowHover} transition-colors`}>
+      <div className="px-4 py-4 flex-grow bg-transparent">
+        <div className="flex items-center p-2 rounded-lg bg-[var(--glass)] border border-[var(--p-line)] transition-colors">
           <div className="ml-1 min-w-0">
-            <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">Description</p>
-            <p className="text-xs font-medium text-gray-700 truncate">{description}</p>
+            <p className="text-[10px] text-[var(--t4)] font-medium uppercase tracking-wider">Description</p>
+            <p className="text-xs font-medium text-[var(--t2)] truncate">{description}</p>
           </div>
         </div>
       </div>
 
-      {/* Separator */}
-      <div className="h-px w-full bg-gray-200" />
-
       {/* Footer */}
-      <div className="h-11 px-4 flex items-center bg-white">
+      <div className="h-11 px-4 flex items-center bg-[var(--sidebar)] border-t border-[var(--p-line)]">
         <div className="flex items-center justify-between w-full">
-          <span className="text-[10px] font-bold text-gray-500 group-hover:text-green-600 transition-colors">Open</span>
-          <div className={`w-6 h-6 rounded-full bg-gray-100 group-hover:bg-green-100 flex items-center justify-center ${theme.iconText} transition-colors`}>
+          <span className="text-[10px] font-bold text-[var(--t3)] group-hover:text-[var(--p)] transition-colors">Open</span>
+          <div className="w-6 h-6 rounded-full bg-[var(--glass)] group-hover:bg-[var(--p-dim)] flex items-center justify-center text-[var(--p)] transition-colors">
             <ChevronRight className="w-3.5 h-3.5" />
           </div>
         </div>
@@ -2715,13 +2698,19 @@ const DocumentUploadForm = ({
   );
 };
 
-// Enhanced DashboardHome with Payslip button
+// Enhanced Staff Dashboard Home
 const DashboardHome = ({ setActiveTab, userName }: { setActiveTab: (tab: string) => void, userName: string }) => {
   const currentHour = new Date().getHours();
   const greeting = currentHour < 12 ? "Good Morning" : currentHour < 17 ? "Good Afternoon" : "Good Evening";
 
+  // Mock analytics data for a premium experience
+  const leaveBalance = { used: 12, total: 30, remaining: 18 };
+  const attendanceScore = 98.4;
+  const trainingProgress = { completed: 4, active: 2 };
+  const financialSummary = { advanceDrawn: 15000, activeLoan: 45000 };
+
   return (
-    <div className="px-3 py-2 md:p-6 space-y-5 md:space-y-8">
+    <div className="w-full space-y-6 select-none">
       {/* Clean Welcome Banner */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
@@ -2730,21 +2719,21 @@ const DashboardHome = ({ setActiveTab, userName }: { setActiveTab: (tab: string)
       >
         <div className="flex-1 space-y-2">
           <div className="flex items-center gap-2">
-            <span className="px-1.5 py-0.5 bg-emerald-50 border border-emerald-100 rounded text-[9px] font-bold tracking-[0.2em] text-emerald-600 uppercase">
+            <span className="px-1.5 py-0.5 bg-[var(--p-dim)] border border-[var(--p-line)] rounded text-[9px] font-bold tracking-[0.2em] text-[var(--p)] uppercase">
               System Active
             </span>
-            <div className="h-px w-6 bg-gray-300" />
-            <span className="text-[9px] font-medium text-gray-500 lowercase tracking-wider">
+            <div className="h-px w-6 bg-[var(--p-line)]" />
+            <span className="text-[9px] font-medium text-[var(--t3)] lowercase tracking-wider">
               {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
             </span>
           </div>
 
           <div className="flex flex-col gap-0 shadow-sm leading-tight text-shadow-sm">
-            <h2 className="text-xl md:text-2xl font-light tracking-tight text-gray-900 leading-none pb-1">
-              {greeting}, <span className="font-bold text-gray-900 tracking-normal">{userName.split(' ')[0]}</span><span className="text-emerald-500">.</span>
+            <h2 className="text-xl md:text-2xl font-light tracking-tight text-[var(--t1)] leading-none pb-1">
+              {greeting}, <span className="font-bold text-[var(--t1)] tracking-normal">{userName.split(' ')[0]}</span><span className="text-[var(--p)]">.</span>
             </h2>
-            <p className="text-gray-500 text-[11px] md:text-xs font-medium max-w-md pt-0.5">
-              Your workspace is optimized and ready for deployment.
+            <p className="text-[var(--t3)] text-[11px] md:text-xs font-medium max-w-md pt-0.5">
+              Here is your professional performance and resources analytics dashboard.
             </p>
           </div>
         </div>
@@ -2754,7 +2743,7 @@ const DashboardHome = ({ setActiveTab, userName }: { setActiveTab: (tab: string)
             whileHover={{ scale: 1.02, y: -1 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => setActiveTab('details')}
-            className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 bg-gray-900 text-white rounded-lg text-xs font-medium hover:bg-gray-800 transition-all shadow-sm"
+            className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 bg-[var(--p)] text-[var(--sidebar)] hover:bg-[var(--p)]/90 rounded-lg text-xs font-semibold transition-all shadow-md shadow-[var(--p-glow)]"
           >
             <PhUserCircle size={14} weight="bold" />
             Profile
@@ -2763,7 +2752,7 @@ const DashboardHome = ({ setActiveTab, userName }: { setActiveTab: (tab: string)
             whileHover={{ scale: 1.02, y: -1 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => setActiveTab('VideoConf')}
-            className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 text-gray-700 rounded-lg text-xs font-medium hover:bg-[var(--glass-h)] transition-all shadow-sm"
+            className="flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 bg-[var(--glass)] border border-[var(--p-line)] text-[var(--t1)] rounded-lg text-xs font-semibold hover:bg-[var(--glass-h)] transition-all shadow-sm"
           >
             <PhChatCircleDots size={14} weight="bold" />
             Hub
@@ -2771,96 +2760,191 @@ const DashboardHome = ({ setActiveTab, userName }: { setActiveTab: (tab: string)
         </div>
       </motion.div>
 
-      {/* Services Grid */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between px-2">
-          <div>
-            <h3 className="text-base md:text-lg font-bold text-gray-900">Quick Services</h3>
-            <p className="text-[10px] md:text-xs text-gray-500 font-medium tracking-tight">Access your employee tools and resources</p>
+      {/* Analytics Summary Row */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Leave Balance Card */}
+        <div className="p-5 rounded-2xl bg-[var(--card)] border border-[var(--p-line)] flex items-center justify-between shadow-sm relative overflow-hidden group hover:border-[var(--p)]/40 transition-all duration-300">
+          <div className="space-y-2 relative z-10">
+            <p className="text-[10px] text-[var(--t3)] font-semibold uppercase tracking-wider">Leave Balance</p>
+            <h3 className="text-2xl font-bold text-[var(--t1)]">{leaveBalance.remaining} <span className="text-xs font-medium text-[var(--t3)]">/ {leaveBalance.total} Days</span></h3>
+            <p className="text-[10px] text-green-500 font-medium">{leaveBalance.used} Days Used</p>
+          </div>
+          <div className="relative w-14 h-14 flex items-center justify-center">
+            <svg className="w-full h-full transform -rotate-90">
+              <circle cx="28" cy="28" r="22" stroke="var(--p-line)" strokeWidth="4" fill="transparent" />
+              <circle cx="28" cy="28" r="22" stroke="var(--p)" strokeWidth="4" fill="transparent" strokeDasharray={138} strokeDashoffset={138 - (138 * leaveBalance.remaining) / leaveBalance.total} strokeLinecap="round" />
+            </svg>
+            <span className="absolute text-[10px] font-bold text-[var(--p)]">{Math.round((leaveBalance.remaining / leaveBalance.total) * 100)}%</span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-          <PortalCard
-            icon={<WalletCards className="w-5 h-5" strokeWidth={1.5} />}
-            title="Salary Advance"
-            description="Emergency financial support"
-            onClick={() => setActiveTab('salary-advance')}
-            color="green"
-          />
-          <PortalCard
-            icon={<HandCoins className="w-5 h-5" strokeWidth={1.5} />}
-            title="Loan Request"
-            description="Affordable staff credit facilities"
-            onClick={() => setActiveTab('loan')}
-            color="green"
-          />
-          <PortalCard
-            icon={<ReceiptText className="w-5 h-5" strokeWidth={1.5} />}
-            title="Payslips"
-            description="Download salary breakdowns"
-            onClick={() => setActiveTab('payslips')}
-            color="green"
-          />
-          <PortalCard
-            icon={<MessageSquarePlus className="w-5 h-5" strokeWidth={1.5} />}
-            title="Comm Hub"
-            description="Collaborate with your team"
-            onClick={() => setActiveTab('VideoConf')}
-            color="green"
-          />
-          <PortalCard
-            icon={<CalendarClock className="w-5 h-5" strokeWidth={1.5} />}
-            title="Leave Request"
-            description="Plan your time off"
-            onClick={() => setActiveTab('leave')}
-            color="green"
-          />
-          <PortalCard
-            icon={<History className="w-5 h-5" strokeWidth={1.5} />}
-            title="Leave History"
-            description="Review previous applications"
-            onClick={() => setActiveTab('leave-history')}
-            color="green"
-          />
-          <PortalCard
-            icon={<FileSignature className="w-5 h-5" strokeWidth={1.5} />}
-            title="Contracts"
-            description="Review employment documents"
-            onClick={() => setActiveTab('contract')}
-            color="green"
-          />
-          <PortalCard
-            icon={<Fingerprint className="w-5 h-5" strokeWidth={1.5} />}
-            title="My Profile"
-            description="Manage your personal info"
-            onClick={() => setActiveTab('details')}
-            color="green"
-          />
-          <PortalCard
-            icon={<FolderClosed className="w-5 h-5" strokeWidth={1.5} />}
-            title="Documents"
-            description="Secure file storage"
-            onClick={() => setActiveTab('documents')}
-            color="green"
-          />
-          <PortalCard
-            icon={<ShieldAlert className="w-5 h-5" strokeWidth={1.5} />}
-            title="Report Incident"
-            description="Whistleblower protection"
-            onClick={() => setActiveTab('incident-report')}
-            color="green"
-          />
-          <PortalCard
-            icon={<BriefcaseBusiness className="w-5 h-5" strokeWidth={1.5} />}
-            title="Opportunities"
-            description="Career growth paths"
-            onClick={() => setActiveTab('job-applications')}
-            color="green"
-          />
+        {/* Attendance Score Card */}
+        <div className="p-5 rounded-2xl bg-[var(--card)] border border-[var(--p-line)] flex items-center justify-between shadow-sm relative overflow-hidden group hover:border-[var(--p)]/40 transition-all duration-300">
+          <div className="space-y-2 relative z-10">
+            <p className="text-[10px] text-[var(--t3)] font-semibold uppercase tracking-wider">Attendance Score</p>
+            <h3 className="text-2xl font-bold text-[var(--t1)]">{attendanceScore}%</h3>
+            <p className="text-[10px] text-green-500 font-medium">98.9% On-time punctuality</p>
+          </div>
+          <div className="p-3.5 rounded-xl bg-cyan-500/10 text-cyan-500">
+            <PhClock size={24} weight="duotone" />
+          </div>
+        </div>
+
+        {/* Active Advance & Loans */}
+        <div className="p-5 rounded-2xl bg-[var(--card)] border border-[var(--p-line)] flex items-center justify-between shadow-sm relative overflow-hidden group hover:border-[var(--p)]/40 transition-all duration-300">
+          <div className="space-y-2 relative z-10">
+            <p className="text-[10px] text-[var(--t3)] font-semibold uppercase tracking-wider">Outstanding Loan</p>
+            <h3 className="text-xl font-bold text-[var(--t1)]">KES {financialSummary.activeLoan.toLocaleString()}</h3>
+            <p className="text-[10px] text-[var(--t4)] font-medium">Advance: KES {financialSummary.advanceDrawn.toLocaleString()}</p>
+          </div>
+          <div className="p-3.5 rounded-xl bg-emerald-500/10 text-emerald-500">
+            <PhWallet size={24} weight="duotone" />
+          </div>
+        </div>
+
+        {/* Training Modules */}
+        <div className="p-5 rounded-2xl bg-[var(--card)] border border-[var(--p-line)] flex items-center justify-between shadow-sm relative overflow-hidden group hover:border-[var(--p)]/40 transition-all duration-300">
+          <div className="space-y-2 relative z-10">
+            <p className="text-[10px] text-[var(--t3)] font-semibold uppercase tracking-wider">Training Modules</p>
+            <h3 className="text-2xl font-bold text-[var(--t1)]">{trainingProgress.completed} <span className="text-xs font-medium text-[var(--t3)]">Completed</span></h3>
+            <p className="text-[10px] text-[var(--p)] font-medium">{trainingProgress.active} Active Courses</p>
+          </div>
+          <div className="p-3.5 rounded-xl bg-indigo-500/10 text-indigo-500">
+            <PhGraduationCap size={24} weight="duotone" />
+          </div>
         </div>
       </div>
-    </div >
+
+      {/* Graphical Insights Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Attendance Trends */}
+        <div className="lg:col-span-2 p-5 rounded-2xl bg-[var(--card)] border border-[var(--p-line)] space-y-4">
+          <div>
+            <h4 className="text-xs font-bold text-[var(--t1)] uppercase tracking-wider">Weekly Work Hours Trend</h4>
+            <p className="text-[10px] text-[var(--t3)] font-medium">Visualizing checked-in hours per day compared to 8-hour target</p>
+          </div>
+          {/* Custom SVG Line Chart */}
+          <div className="h-44 w-full relative pt-2">
+            <svg viewBox="0 0 500 150" className="w-full h-full overflow-visible">
+              {/* Grid Lines */}
+              <line x1="0" y1="30" x2="500" y2="30" stroke="var(--p-line)" strokeDasharray="4 4" strokeWidth="1" />
+              <line x1="0" y1="80" x2="500" y2="80" stroke="var(--p-line)" strokeDasharray="4 4" strokeWidth="1" />
+              <line x1="0" y1="130" x2="500" y2="130" stroke="var(--p-line)" strokeDasharray="4 4" strokeWidth="1" />
+              
+              {/* Hours target line */}
+              <line x1="0" y1="50" x2="500" y2="50" stroke="#EF4444" strokeDasharray="3 3" strokeWidth="1.5" />
+              <text x="495" y="45" fill="#EF4444" className="text-[8px] font-bold text-right" textAnchor="end">8 hr target</text>
+
+              {/* Sparkline gradient fill */}
+              <defs>
+                <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#00E5FF" stopOpacity="0.25" />
+                  <stop offset="100%" stopColor="#00E5FF" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+              
+              {/* Path area */}
+              <path d="M 0 130 L 100 45 L 200 35 L 300 65 L 400 30 L 500 50 L 500 130 Z" fill="url(#areaGrad)" />
+              
+              {/* Hours line path */}
+              <path d="M 0 130 L 100 45 L 200 35 L 300 65 L 400 30 L 500 50" fill="none" stroke="#00E5FF" strokeWidth="3" strokeLinecap="round" />
+              
+              {/* Daily circles */}
+              <circle cx="100" cy="45" r="4.5" fill="#00E5FF" stroke="var(--card)" strokeWidth="2" />
+              <circle cx="200" cy="35" r="4.5" fill="#00E5FF" stroke="var(--card)" strokeWidth="2" />
+              <circle cx="300" cy="65" r="4.5" fill="#00E5FF" stroke="var(--card)" strokeWidth="2" />
+              <circle cx="400" cy="30" r="4.5" fill="#00E5FF" stroke="var(--card)" strokeWidth="2" />
+              <circle cx="500" cy="50" r="4.5" fill="#00E5FF" stroke="var(--card)" strokeWidth="2" />
+            </svg>
+            {/* Weekdays Labels */}
+            <div className="flex justify-between px-2 text-[9px] text-[var(--t3)] font-semibold pt-2">
+              <span>Mon (8.2h)</span>
+              <span>Tue (8.5h)</span>
+              <span>Wed (7.8h)</span>
+              <span>Thu (8.8h)</span>
+              <span>Fri (8.0h)</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Leave Category Distribution */}
+        <div className="p-5 rounded-2xl bg-[var(--card)] border border-[var(--p-line)] space-y-4">
+          <div>
+            <h4 className="text-xs font-bold text-[var(--t1)] uppercase tracking-wider">Leave Allocation</h4>
+            <p className="text-[10px] text-[var(--t3)] font-medium">Distribution of leave days applied vs available</p>
+          </div>
+          {/* Custom visual breakdown bars */}
+          <div className="space-y-3 pt-2">
+            <div className="space-y-1">
+              <div className="flex justify-between text-[10px] font-semibold text-[var(--t1)]">
+                <span>Annual Leave</span>
+                <span>8 / 20 Days Used</span>
+              </div>
+              <div className="h-1.5 w-full bg-[var(--p-line)] rounded-full overflow-hidden">
+                <div className="h-full bg-cyan-400 rounded-full" style={{ width: '40%' }}></div>
+              </div>
+            </div>
+            
+            <div className="space-y-1">
+              <div className="flex justify-between text-[10px] font-semibold text-[var(--t1)]">
+                <span>Sick Leave</span>
+                <span>3 / 7 Days Used</span>
+              </div>
+              <div className="h-1.5 w-full bg-[var(--p-line)] rounded-full overflow-hidden">
+                <div className="h-full bg-emerald-400 rounded-full" style={{ width: '42%' }}></div>
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <div className="flex justify-between text-[10px] font-semibold text-[var(--t1)]">
+                <span>Compassionate</span>
+                <span>1 / 3 Days Used</span>
+              </div>
+              <div className="h-1.5 w-full bg-[var(--p-line)] rounded-full overflow-hidden">
+                <div className="h-full bg-indigo-400 rounded-full" style={{ width: '33%' }}></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Activity Timeline Feed */}
+      <div className="p-5 rounded-2xl bg-[var(--card)] border border-[var(--p-line)] space-y-4">
+        <div>
+          <h4 className="text-xs font-bold text-[var(--t1)] uppercase tracking-wider">Live System Activity Log</h4>
+          <p className="text-[10px] text-[var(--t3)] font-medium">Realtime record of your actions and corporate responses</p>
+        </div>
+        
+        <div className="relative border-l border-[var(--p-line)] pl-5 space-y-4 ml-2">
+          {/* Item 1 */}
+          <div className="relative">
+            <div className="absolute -left-[25.5px] top-1 w-2.5 h-2.5 rounded-full bg-emerald-500 border border-[var(--sidebar)] shadow-md"></div>
+            <div className="space-y-1">
+              <span className="text-[10px] font-bold text-[var(--t1)]">Shift Clock-In Complete</span>
+              <p className="text-[9px] text-[var(--t3)]">Successfully clocked-in for Shift A at 07:54 AM (On Time)</p>
+            </div>
+          </div>
+          
+          {/* Item 2 */}
+          <div className="relative">
+            <div className="absolute -left-[25.5px] top-1 w-2.5 h-2.5 rounded-full bg-cyan-500 border border-[var(--sidebar)] shadow-md"></div>
+            <div className="space-y-1">
+              <span className="text-[10px] font-bold text-[var(--t1)]">Salary Advance Approved</span>
+              <p className="text-[9px] text-[var(--t3)]">Your salary advance request of KES 15,000 was approved by HR Administration</p>
+            </div>
+          </div>
+
+          {/* Item 3 */}
+          <div className="relative">
+            <div className="absolute -left-[25.5px] top-1 w-2.5 h-2.5 rounded-full bg-indigo-500 border border-[var(--sidebar)] shadow-md"></div>
+            <div className="space-y-1">
+              <span className="text-[10px] font-bold text-[var(--t1)]">Assigned Training Module</span>
+              <p className="text-[9px] text-[var(--t3)]">Enrolled in professional competency course: "ISO 9001 Quality Management Standards"</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -2894,30 +2978,31 @@ interface MenuItem {
   id: string;
   label: string;
   icon?: any;
-  hasSubmenu?: boolean;
-  submenu?: {
-    id: string;
-    label: string;
-    isExternal?: boolean;
-    path?: string;
-  }[];
+  isExternal?: boolean;
+  path?: string;
 }
 
 interface MenuGroup {
+  id: string;
   title: string;
+  icon?: any;
   items: MenuItem[];
 }
 
 // Staff Menu Groups
 const staffMenuGroups: MenuGroup[] = [
   {
+    id: 'overview',
     title: "Overview",
+    icon: PhSquaresFour,
     items: [
       { id: 'home', label: 'Dashboard', icon: PhSquaresFour },
     ]
   },
   {
+    id: 'work-dev',
     title: "Work & Development",
+    icon: PhGraduationCap,
     items: [
       { id: 'training', label: 'Training', icon: PhGraduationCap },
       { id: 'job-applications', label: 'Job Opportunities', icon: PhTrendUp },
@@ -2925,49 +3010,31 @@ const staffMenuGroups: MenuGroup[] = [
     ]
   },
   {
+    id: 'finance',
     title: "Finance",
+    icon: PhWallet,
     items: [
-      {
-        id: 'financial',
-        label: 'Financial',
-        icon: PhWallet,
-        hasSubmenu: true,
-        submenu: [
-          { id: 'salary-advance', label: 'Salary Advance' },
-          { id: 'loan', label: 'Loan Request' }
-        ]
-      },
+      { id: 'salary-advance', label: 'Salary Advance', icon: PhCoins },
+      { id: 'loan', label: 'Loan Request', icon: PhCoins },
       { id: 'payslips', label: 'Payslips', icon: PhFileText },
     ]
   },
   {
+    id: 'communication',
     title: "Communication",
+    icon: PhPhone,
     items: [
-      {
-        id: 'communication',
-        label: 'Communication',
-        icon: PhPhone,
-        hasSubmenu: true,
-        submenu: [
-          { id: 'chat', label: 'Chat', isExternal: true, path: '/teams' },
-          { id: 'VideoConf', label: 'Video Conference' }
-        ]
-      }
+      { id: 'chat', label: 'Chat', icon: PhChatCircleDots, isExternal: true, path: '/teams' },
+      { id: 'VideoConf', label: 'Video Conference', icon: PhPhone }
     ]
   },
   {
+    id: 'personal-hr',
     title: "Personal & HR",
+    icon: PhUserCircle,
     items: [
-      {
-        id: 'leave',
-        label: 'Leave',
-        icon: PhCalendarBlank,
-        hasSubmenu: true,
-        submenu: [
-          { id: 'leave', label: 'Apply for Leave' },
-          { id: 'leave-history', label: 'Leave History' }
-        ]
-      },
+      { id: 'leave', label: 'Apply for Leave', icon: PhCalendarBlank },
+      { id: 'leave-history', label: 'Leave History', icon: PhClock },
       { id: 'contract', label: 'Contracts', icon: PhFile },
       { id: 'details', label: 'Profile', icon: PhUserCircle },
       { id: 'biodata', label: 'Bio Data', icon: PhBriefcase },
@@ -2977,7 +3044,7 @@ const staffMenuGroups: MenuGroup[] = [
 ];
 
 // Main StaffPortal Component with Time Tracking
-const StaffPortal = () => {
+const StaffPortal = ({ userRole, onBackToAdmin }: { userRole?: string; onBackToAdmin?: () => void }) => {
   const [isLightMode, setIsLightMode] = useState(document.body.classList.contains('light'));
 
   // Theme detection for logo
@@ -3001,18 +3068,37 @@ const StaffPortal = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [openGroups, setOpenGroups] = useState<string[]>(['overview']);
+
+  // Automatically open group with active tab
+  useEffect(() => {
+    const activeGroup = staffMenuGroups.find(group => 
+      group.items.some(item => activeTab === item.id)
+    );
+    if (activeGroup && !openGroups.includes(activeGroup.id)) {
+      setOpenGroups(prev => [...prev, activeGroup.id]);
+    }
+  }, [activeTab]);
+
+  const toggleGroup = (groupId: string) => {
+    setOpenGroups(prev => 
+      prev.includes(groupId) 
+        ? prev.filter(id => id !== groupId) 
+        : [...prev, groupId]
+    );
+  };
 
   const sidebarVariants = {
     expanded: {
-      width: 260,
-      transition: { type: "spring", stiffness: 300, damping: 30 }
+      width: 220,
+      transition: { type: "tween", ease: [0.16, 1, 0.3, 1], duration: 0.3 }
     },
     collapsed: {
-      width: 68,
-      transition: { type: "spring", stiffness: 300, damping: 30 }
+      width: 88,
+      transition: { type: "tween", ease: [0.16, 1, 0.3, 1], duration: 0.3 }
     }
   };
-  const isExpanded = isHovered || !isCollapsed;
+  const isExpanded = !isCollapsed;
 
   const [loginStatus, setLoginStatus] = useState({
     isLoggedIn: false,
@@ -3240,12 +3326,7 @@ const StaffPortal = () => {
 
   return (
     <div className="min-h-screen bg-[var(--page)] relative flex font-sans text-[var(--t1)] transition-colors duration-300 overflow-hidden">
-      {/* Dynamic Background Blobs */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full bg-gray-200/30 blur-[130px] animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-gray-200/30 blur-[130px] animate-pulse" />
-        <div className="absolute top-[20%] right-[-5%] w-[40%] h-[40%] rounded-full bg-gray-100/20 blur-[110px]" />
-      </div>
+
 
       {/* Mobile Sidebar Backdrop */}
       {sidebarOpen && (
@@ -3256,66 +3337,26 @@ const StaffPortal = () => {
       )}
 
       {/* NEW SIDEBAR - Matches Main Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-50 md:relative md:z-0 md:flex ${sidebarOpen ? 'flex' : 'hidden md:flex'}`}>
+      <div className={`fixed inset-y-0 left-0 z-50 flex flex-col transition-all duration-300 ${sidebarOpen ? 'w-[220px]' : 'hidden md:flex'} ${isCollapsed ? 'md:w-[88px]' : 'md:w-[220px]'}`}>
         {/* Sidebar Container */}
-        <div className="relative h-screen flex flex-col select-none">
-          <motion.div
-            initial="expanded"
-            animate={isExpanded ? "expanded" : "collapsed"}
-            variants={sidebarVariants}
-            className="relative flex flex-col h-full border-r border-white/5 shadow-2xl overflow-hidden font-lexend"
-            style={{ background: '#0f1c5e' }}
+        <div className="relative h-screen w-full flex flex-col select-none">
+          <div
+            className="relative flex flex-col h-full border-r border-[var(--p-line)] shadow-2xl overflow-hidden bg-[var(--sidebar)] transition-all duration-300"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
-            {/* Glowy Background: Blue & Green */}
-            <div className="absolute inset-0 bg-emerald-950/50 z-[-2] backdrop-blur-2xl" />
-            <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none z-[-1]" />
-            <div className="absolute bottom-0 right-0 w-96 h-96 bg-green-500/10 rounded-full blur-[100px] pointer-events-none z-[-1]" />
+            {/* Glowy Background */}
+            <div className="absolute inset-0 bg-[var(--sidebar)] z-[-2]" />
 
 
 
-            {/* Brand Section */}
-            <div className={`relative z-10 px-5 pt-4 pb-6 flex items-center transition-all duration-300 ${isExpanded ? 'justify-between' : 'flex-col justify-center gap-6'}`}>
-              <div className="flex items-center gap-3">
-                <motion.div
-                  layout
-                  className="relative flex items-center justify-center group cursor-pointer"
-                  whileHover={{ rotate: 5, scale: 1.05 }}
-                  onClick={() => !isExpanded && setIsCollapsed(false)}
-                >
-                  <img 
-                    src={isLightMode ? "/zira-dark.png" : solo} 
-                    alt="Logo" 
-                    className={`relative w-10 h-10 object-contain transition-all duration-300 ${!isLightMode ? 'brightness-0 invert drop-shadow-md' : ''}`} 
-                  />
-                </motion.div>
-
-                <AnimatePresence>
-                  {isExpanded && (
-                    <motion.div
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -10 }}
-                      className="flex flex-col"
-                    >
-                      <h1 className="font-lexend font-bold text-xl text-white tracking-tight flex items-center">
-                        Zira<span className="text-white font-light ml-0.5">Pro</span>
-                      </h1>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {/* Hamburger Toggle */}
-              <motion.button
-                onClick={() => setIsCollapsed(!isCollapsed)}
-                className={`p-2 rounded-xl hover:bg-white/10 transition-all duration-300 group border border-transparent hover:border-white/10 hover:shadow-sm ${!isExpanded ? 'bg-white/5' : ''}`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Menu className={`w-4 h-4 transition-colors ${isExpanded ? 'text-slate-400 group-hover:text-[#03c04a]' : 'text-[#03c04a]'}`} />
-              </motion.button>
+            {/* sb-logo - Matches Main Sidebar Logo */}
+            <div className={`flex items-center gap-[10px] border-b border-[var(--p-line)] transition-all duration-300 ${!isExpanded ? 'p-5 justify-center' : 'p-[22px_12px_18px]'}`}>
+              <img 
+                src={isLightMode ? "/zira-dark.png" : "/ZIRA.png"} 
+                alt="ZiraHR" 
+                className={`transition-all object-contain duration-300 ${!isExpanded ? 'h-8 w-8' : 'h-12 w-auto'}`}
+              />
             </div>
 
             {/* Search Bar */}
@@ -3328,13 +3369,13 @@ const StaffPortal = () => {
                   className="px-5 mb-4 overflow-hidden"
                 >
                   <div className="relative group">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-[#03c04a] transition-colors" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--t4)] group-focus-within:text-[var(--p)] transition-colors" />
                     <input
                       type="text"
                       placeholder="Search..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full bg-slate-800/50 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-[#03c04a] focus:border-[#03c04a]/50 transition-all font-normal"
+                      className="w-full bg-[var(--glass)] border border-[var(--p-line)] rounded-xl py-2 pl-9 pr-3 text-xs text-[var(--t1)] placeholder-[var(--t4)] focus:outline-none focus:ring-1 focus:ring-[var(--p)] focus:border-[var(--p)] transition-all font-normal"
                     />
                   </div>
                 </motion.div>
@@ -3342,8 +3383,8 @@ const StaffPortal = () => {
             </AnimatePresence>
 
             {/* Navigation Area */}
-            <div className="relative z-10 flex-1 overflow-y-auto px-3 pb-4 sidebar-scroll hover:overflow-y-auto overflow-hidden">
-              <div className="space-y-6">
+            <div className="flex-1 py-4 overflow-y-auto scrollbar-hide px-0 relative z-10 select-none">
+              <div className="space-y-1">
                 {staffMenuGroups.map((group) => {
                   const filteredItems = group.items.filter(item =>
                     item.label.toLowerCase().includes(searchQuery.toLowerCase())
@@ -3351,160 +3392,130 @@ const StaffPortal = () => {
 
                   if (filteredItems.length === 0 && searchQuery) return null;
 
+                  const isGroupOpen = openGroups.includes(group.id);
+                  const hasActiveChild = filteredItems.some(item => activeTab === item.id);
+
                   return (
-                    <motion.div
-                      key={group.title}
-                    >
-                      {/* Section Header */}
-                      <AnimatePresence>
+                    <div key={group.id} className="mb-1">
+                      {/* Group Toggle Header */}
+                      <button
+                        onClick={() => !isExpanded ? setIsCollapsed(false) : toggleGroup(group.id)}
+                        className={`w-full flex items-center gap-3 py-2.5 transition-all duration-200 group px-6 relative
+                          ${hasActiveChild && !isGroupOpen
+                            ? 'text-[#00E5FF] font-bold'
+                            : 'text-[var(--t3)]'}
+                          hover:bg-[#00E5FF]/10 hover:text-[#00E5FF]`}
+                      >
+                        {/* Left accent bar */}
+                        <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-[#00E5FF] opacity-0 group-hover:opacity-60 transition-opacity duration-200" />
+                        
+                        {group.icon && (
+                          <group.icon 
+                            className={`w-4 h-4 shrink-0 transition-colors duration-200 ${hasActiveChild ? 'text-[#00E5FF]' : 'text-[var(--t3)] group-hover:text-[#00E5FF]'}`} 
+                          />
+                        )}
                         {isExpanded && (
+                          <>
+                            <span className="text-[11.5px] font-semibold flex-1 text-left tracking-tight">{group.title}</span>
+                            <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${isGroupOpen ? 'rotate-180' : ''} ${hasActiveChild ? 'text-[#00E5FF]' : ''}`} />
+                          </>
+                        )}
+                        {hasActiveChild && !isGroupOpen && (
+                          <div className="w-1 h-1 rounded-full bg-[#00E5FF] animate-pulse" />
+                        )}
+                      </button>
+
+                      {/* Collapsible Children */}
+                      <AnimatePresence>
+                        {isGroupOpen && isExpanded && (
                           <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="px-3 mb-2"
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.12, ease: "easeOut" }}
+                            className="overflow-hidden relative mt-0.5"
                           >
-                            <span className="text-[10px] font-normal text-cyan-400 tracking-wider font-sans pl-1">
-                              {group.title}
-                            </span>
+                            {/* Elegant Thin Line */}
+                            <div className="absolute left-[26px] top-0 bottom-3 w-[1px] bg-[var(--p-line)]" />
+                            
+                            <div className="flex flex-col">
+                              {filteredItems.map((item) => {
+                                const isActive = activeTab === item.id;
+                                return (
+                                  <button
+                                    key={item.id}
+                                    onClick={() => {
+                                      if (item.isExternal && item.path) {
+                                        window.location.href = item.path;
+                                      } else {
+                                        setActiveTab(item.id);
+                                        if (window.innerWidth < 768) setSidebarOpen(false);
+                                      }
+                                    }}
+                                    className={`flex items-center gap-3 py-2 transition-all duration-200 relative group px-6
+                                      ${isActive 
+                                        ? 'bg-[#00E5FF]/10 text-[#00E5FF] font-bold' 
+                                        : 'text-[var(--t3)] hover:bg-[#00E5FF]/10 hover:text-[var(--t2)]'}`}
+                                  >
+                                    {/* Left accent bar via absolute — no layout jump */}
+                                    <div className={`absolute left-0 top-0 bottom-0 w-[2px] bg-[#00E5FF] transition-opacity duration-200
+                                      ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-40'}`} />
+                                    {/* Elegant Dot */}
+                                    <div className={`absolute left-[22.5px] w-[8px] h-[8px] rounded-full border-2 border-[var(--sidebar)] transition-all z-10
+                                      ${isActive ? 'bg-[#00E5FF] scale-110 shadow-[0_0_8px_var(--p-glow)]' : 'bg-[var(--p-line)] group-hover:bg-[var(--t4)]'}`} 
+                                    />
+                                    
+                                    <div className="flex items-center gap-3 ml-5">
+                                      {item.icon && <item.icon className={`w-3 h-3 shrink-0 ${isActive ? 'text-[#00E5FF]' : 'text-[var(--t4)] group-hover:text-[var(--t2)]'}`} />}
+                                      <span className="text-[10.5px] truncate tracking-tight">{item.label}</span>
+                                    </div>
+                                  </button>
+                                );
+                              })}
+                            </div>
                           </motion.div>
                         )}
                       </AnimatePresence>
-
-                      {/* Items */}
-                      <div className="space-y-1">
-                        {filteredItems.map((item) => {
-                          const isActive = activeTab === item.id;
-                          const isMenuExpanded = expandedMenu === item.id;
-
-                          return (
-                            <div key={item.id}>
-                              <motion.button
-                                onClick={() => {
-                                  if (item.hasSubmenu) {
-                                    setExpandedMenu(isMenuExpanded ? null : item.id);
-                                  } else {
-                                    setActiveTab(item.id);
-                                    if (window.innerWidth < 768) setSidebarOpen(false);
-                                  }
-                                }}
-                                className={`relative w-full flex items-center px-3 py-2.5 rounded-xl transition-all duration-300 group overflow-hidden ${!isExpanded && 'justify-center px-0'} ${isActive || (item.hasSubmenu && isMenuExpanded)
-                                  ? 'bg-[#03c04a] text-white border border-white/20 ring-1 ring-white/10'
-                                  : 'text-white/80 hover:bg-white/5 hover:text-[#03c04a]'}`}
-                                whileTap={{ scale: 0.98 }}
-                              >
-                                {/* Icon */}
-                                <div className="relative z-10 flex items-center justify-center">
-                                  <item.icon
-                                    className={`w-4 h-4 transition-all duration-300 ${isActive || (item.hasSubmenu && isMenuExpanded)
-                                      ? 'text-white'
-                                      : 'text-white/80 group-hover:text-[#03c04a] group-hover:scale-110'
-                                      }`}
-                                    weight={isActive ? "fill" : "duotone"}
-                                  />
-                                </div>
-
-                                {/* Label */}
-                                <AnimatePresence>
-                                  {isExpanded && (
-                                    <>
-                                      <motion.span
-                                        initial={{ opacity: 0, x: -10 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        exit={{ opacity: 0, x: -10 }}
-                                        className={`ml-3 text-xs truncate font-sans relative z-10 tracking-wide font-normal flex-1 text-left ${isActive ? 'text-white' : 'text-white/80'}`}
-                                      >
-                                        {item.label}
-                                      </motion.span>
-                                      {item.hasSubmenu && (
-                                        <ChevronRight className={`w-3.5 h-3.5 ml-2 ${isActive || isMenuExpanded ? 'text-white/80' : 'text-slate-400'} transition-transform duration-200 ${isMenuExpanded ? 'rotate-90' : ''}`} />
-                                      )}
-                                    </>
-                                  )}
-                                </AnimatePresence>
-
-                                {/* Tooltip (Collapsed) */}
-                                {!isExpanded && !isHovered && (
-                                  <div className="absolute left-full ml-5 px-2.5 py-1.5 bg-slate-800 text-white text-[10px] font-semibold rounded-md opacity-0 group-hover:opacity-100 pointer-events-none transition-all z-50 whitespace-nowrap shadow-xl translate-x-2 group-hover:translate-x-0">
-                                    {item.label}
-                                    <div className="absolute left-0 top-1/2 -translate-x-1 -translate-y-1/2 w-2 h-2 bg-slate-800 rotate-45" />
-                                  </div>
-                                )}
-                              </motion.button>
-
-                              {/* Submenu Items */}
-                              <AnimatePresence>
-                                {isExpanded && item.hasSubmenu && isMenuExpanded && (
-                                  <motion.div
-                                    initial={{ height: 0, opacity: 0 }}
-                                    animate={{ height: 'auto', opacity: 1 }}
-                                    exit={{ height: 0, opacity: 0 }}
-                                    className="overflow-hidden ml-4 pl-3 border-l border-white/10 space-y-1 mt-1"
-                                  >
-                                    {item.submenu?.map((subItem: any) => (
-                                      <button
-                                        key={subItem.id}
-                                        onClick={() => {
-                                          if (subItem.isExternal && subItem.path) {
-                                            window.location.href = subItem.path;
-                                          } else {
-                                            setActiveTab(subItem.id);
-                                            if (window.innerWidth < 768) setSidebarOpen(false);
-                                          }
-                                        }}
-                                        className={`w-full flex items-center px-3 py-2 rounded-lg text-xs font-normal transition-all ${activeTab === subItem.id ? 'text-[#03c04a] bg-white/10' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
-                                      >
-                                        <span className={`w-1.5 h-1.5 rounded-full mr-2 ${activeTab === subItem.id ? 'bg-[#03c04a] shadow-[0_0_8px_rgba(3,192,74,0.6)]' : 'bg-slate-600'}`}></span>
-                                        {subItem.label}
-                                      </button>
-                                    ))}
-                                  </motion.div>
-                                )}
-                              </AnimatePresence>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </motion.div>
+                    </div>
                   );
                 })}
               </div>
             </div>
 
-            {/* Profile Section */}
-            <div className="relative z-10 p-3 mt-auto border-t border-white/10">
-              <div
-                className={`flex items-center gap-3 p-2 rounded-xl transition-all duration-300 hover:bg-white/5 cursor-pointer ${!isExpanded ? 'justify-center' : ''}`}
-                onClick={() => setActiveTab('details')}
-              >
-                <div className="relative">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#03c04a] to-emerald-600 flex items-center justify-center text-white font-bold text-xs shadow-lg shadow-emerald-500/20">
-                    {userName[0]?.toUpperCase() || 'S'}
-                  </div>
-                  <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-slate-900 rounded-full"></div>
-                </div>
-                <AnimatePresence>
-                  {isExpanded && (
-                    <motion.div
-                      initial={{ opacity: 0, width: 0 }}
-                      animate={{ opacity: 1, width: 'auto' }}
-                      exit={{ opacity: 0, width: 0 }}
-                      className="flex-1 overflow-hidden"
-                    >
-                      <p className="text-xs font-semibold text-white truncate">{userName}</p>
-                      <p className="text-[10px] text-slate-400 truncate">Staff Member</p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
+             {/* Profile Section */}
+             <div className="relative z-10 p-3 mt-auto border-t border-[var(--p-line)] bg-[var(--sidebar)]">
+               <div
+                 className={`flex items-center gap-3 p-2 rounded-xl transition-all duration-300 hover:bg-[var(--glass-h)] cursor-pointer ${!isExpanded ? 'justify-center' : ''}`}
+                 onClick={() => setActiveTab('details')}
+               >
+                 <div className="relative">
+                   <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--p)] to-teal-600 flex items-center justify-center text-white font-bold text-xs shadow-lg shadow-[var(--p-glow)]">
+                     {userName[0]?.toUpperCase() || 'S'}
+                   </div>
+                   <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[var(--green)] border-2 border-[var(--sidebar)] rounded-full"></div>
+                 </div>
+                 <AnimatePresence>
+                   {isExpanded && (
+                     <motion.div
+                       initial={{ opacity: 0, width: 0 }}
+                       animate={{ opacity: 1, width: 'auto' }}
+                       exit={{ opacity: 0, width: 0 }}
+                       className="flex-1 overflow-hidden"
+                     >
+                       <p className="text-xs font-semibold text-[var(--t1)] truncate">{userName}</p>
+                       <p className="text-[10px] text-[var(--t3)] truncate">Staff Member</p>
+                     </motion.div>
+                   )}
+                 </AnimatePresence>
+               </div>
+             </div>
 
-          </motion.div>
+          </div>
         </div>
       </div>
 
       {/* Main Content Wrapper */}
-      <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
+      <div className={`flex-1 min-w-0 flex flex-col h-screen overflow-hidden relative transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${isCollapsed ? 'md:ml-[88px]' : 'md:ml-[220px]'}`}>
 
         {/* Mobile Header Toggle */}
         <div className="md:hidden flex items-center justify-between p-4 bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-40">
@@ -3515,45 +3526,68 @@ const StaffPortal = () => {
             <span className="font-sans font-bold text-gray-900 tracking-tight">Staff Portal</span>
           </div>
           <div className="flex items-center gap-2">
+            {/* Switch back to Admin Console */}
+            {userRole && userRole !== 'STAFF' && onBackToAdmin && (
+              <button
+                onClick={onBackToAdmin}
+                className="px-2.5 py-1 bg-[var(--sidebar)] text-[var(--p)] rounded-lg text-[10px] font-bold border border-[var(--p-line)] flex items-center gap-1 active:scale-95 transition-all"
+              >
+                <ShieldAlert className="w-3 h-3 text-[var(--p)]" />
+                <span>Admin</span>
+              </button>
+            )}
+
             <button
               onClick={() => setActiveTab('details')}
-              className="w-8 h-8 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-xs"
+              className="w-8 h-8 rounded-full bg-[var(--p-dim)] border border-[var(--p-line)] flex items-center justify-center text-[var(--p)] font-bold text-xs"
             >
               {userName[0]?.toUpperCase()}
             </button>
-            <button onClick={() => setSidebarOpen(true)} className="p-2 text-gray-500 hover:text-emerald-600">
+            <button onClick={() => setSidebarOpen(true)} className="p-2 text-[var(--t3)] hover:text-[var(--p)]">
               <Menu className="w-6 h-6" />
             </button>
           </div>
         </div>
 
-        {/* Floating Header */}
+        {/* Sticky Header */}
         <motion.header
-          className="z-40 mx-6 mt-4 mb-6 relative hidden md:block"
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="sticky top-0 z-40 bg-[var(--sidebar)] border-b border-[var(--p-line)] h-[56px] flex items-center px-[26px] justify-between relative hidden md:flex"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
         >
-          <div className="px-6 py-3 bg-white/80 backdrop-blur-xl rounded-[24px] shadow-sm border border-white/50 flex items-center justify-between hover:shadow-md hover:bg-white/90 transition-all">
+          <div className="w-full flex items-center justify-between">
             {/* Left: Company Identity / Title */}
             <div className="flex items-center space-x-4 cursor-pointer group">
               <div className="relative">
                 {companyProfile?.image_url ? (
-                  <img src={companyProfile.image_url} alt="Logo" className="w-10 h-10 rounded-xl object-cover shadow-sm ring-2 ring-white group-hover:ring-offset-1 transition-all" />
+                  <img src={companyProfile.image_url} alt="Logo" className="w-10 h-10 rounded-xl object-cover shadow-sm ring-2 ring-[var(--sidebar)] group-hover:ring-offset-1 transition-all" />
                 ) : (
-                  <div className="w-10 h-10 bg-gradient-to-br from-green-600 to-teal-700 rounded-xl flex items-center justify-center shadow-md ring-2 ring-white text-white font-bold text-lg">
+                  <div className="w-10 h-10 bg-gradient-to-br from-[var(--p)] to-teal-600 rounded-xl flex items-center justify-center shadow-md ring-2 ring-[var(--sidebar)] text-white font-bold text-lg">
                     {companyProfile?.company_name?.[0] || 'Z'}
                   </div>
                 )}
               </div>
               <div className="flex flex-col">
-                <h1 className="text-sm font-bold text-gray-800 group-hover:text-green-600 transition-colors">{companyProfile?.company_name || 'Staff Portal'}</h1>
-                <p className="text-[10px] uppercase tracking-wider text-gray-400 font-medium">Employee Dashboard</p>
+                <h1 className="text-sm font-bold text-[var(--t1)] group-hover:text-[var(--p)] transition-colors">{companyProfile?.company_name || 'Staff Portal'}</h1>
+                <p className="text-[10px] uppercase tracking-wider text-[var(--t4)] font-medium">Employee Dashboard</p>
               </div>
             </div>
 
             {/* Right: Status & Actions */}
             <div className="flex items-center space-x-4">
+              {/* Switch back to Admin Console */}
+              {userRole && userRole !== 'STAFF' && onBackToAdmin && (
+                <button
+                  onClick={onBackToAdmin}
+                  className="px-3 py-1.5 bg-[var(--sidebar)] hover:bg-[var(--p)] hover:text-white text-[var(--p)] border border-[var(--p-line)] rounded-xl text-[11px] font-bold transition-all duration-300 flex items-center gap-1.5 shadow-md active:scale-95 mr-2"
+                  title="Switch Back to Admin Console"
+                >
+                  <ShieldAlert className="w-3.5 h-3.5" />
+                  <span>Admin Console</span>
+                </button>
+              )}
+
               <HeaderStatus
                 isLoggedIn={loginStatus.isLoggedIn}
                 lastLogin={loginStatus.lastLogin}
@@ -3564,12 +3598,12 @@ const StaffPortal = () => {
 
               <motion.button
                 onClick={() => setNotificationSidebarOpen(true)}
-                className="relative p-2.5 text-gray-400 hover:text-green-600 transition-colors rounded-full hover:bg-green-50/50"
+                className="relative p-2.5 text-[var(--t3)] hover:text-[var(--p)] transition-colors rounded-full hover:bg-[var(--glass-h)]"
                 whileTap={{ scale: 0.95 }}
               >
                 <Bell className="w-5 h-5 stroke-[1.5px]" />
                 {unreadNotifications.length > 0 && (
-                  <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white"></span>
+                  <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-[var(--sidebar)]"></span>
                 )}
               </motion.button>
 
@@ -3583,9 +3617,8 @@ const StaffPortal = () => {
           </div>
         </motion.header>
 
-        {/* Main Scrollable Area */}
-        <main className="flex-1 overflow-y-auto bg-transparent p-4 pt-0 md:p-6 md:pt-0 scrollbar-hide">
-          <div className="max-w-7xl mx-auto pb-10">
+        <main className="flex-1 overflow-y-auto bg-transparent pt-[22px] px-[26px] pb-[52px] scrollbar-hide">
+          <div className="w-full pb-10">
             {/* Warnings */}
 
 
@@ -3598,7 +3631,7 @@ const StaffPortal = () => {
             >
               {/* Render Active Tab */}
               {activeTab === 'home' && <DashboardHome setActiveTab={setActiveTab} userName={userName} />}
-              {activeTab === 'salary-advance' && <div className="p-6"><SalaryAdvanceForm /></div>}
+              {activeTab === 'salary-advance' && <SalaryAdvanceForm />}
               {activeTab === 'biodata' && <EmployeeBioPage />}
               {activeTab === 'payslips' && <PayslipViewer />}
               {activeTab === 'loan' && <LoanRequestForm />}

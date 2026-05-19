@@ -33,7 +33,7 @@ function SuccessPopup({ show, onClose, message }: SuccessPopupProps) {
             <motion.div
                 initial={{ opacity: 0, scale: 0.9, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
-                className="bg-[#08120D] border border-[#C8A84B] p-10 max-w-sm w-full text-center rounded-2xl shadow-[0_0_40px_rgba(200,168,75,0.1)]"
+                className="bg-[#08120D] border border-[#00E5FF] p-10 max-w-sm w-full text-center rounded-2xl shadow-[0_0_40px_rgba(0, 229, 255,0.1)]"
             >
                 <div className="w-16 h-16 bg-[rgba(29,158,117,0.1)] rounded-2xl flex items-center justify-center mx-auto mb-6 border border-[#1D9E75]">
                     <CheckCircle size={32} className="text-[#1D9E75]" weight="fill" />
@@ -42,7 +42,7 @@ function SuccessPopup({ show, onClose, message }: SuccessPopupProps) {
                 <p className="text-white/60 text-[12px] mb-8 font-medium leading-relaxed">{message}</p>
                 <button
                     onClick={onClose}
-                    className="w-full py-3 bg-[#C8A84B] text-[#07080d] rounded-xl font-bold text-xs uppercase tracking-wider"
+                    className="w-full py-3 bg-[#00E5FF] text-[#07080d] rounded-xl font-bold text-xs uppercase tracking-wider"
                 >
                     Got it
                 </button>
@@ -321,7 +321,7 @@ export default function Login({ onLoginSuccess }: LoginProps) {
                             <div className="label-container">
                                 <span>Password</span>
                                 <span 
-                                    className="label-link-gold"
+                                    className="label-link-aqua"
                                     onClick={() => setShowForgotPassword(true)}
                                 >
                                     Forgot password?
@@ -357,7 +357,7 @@ export default function Login({ onLoginSuccess }: LoginProps) {
                                         </span>
                                     )}
                                     {isFetchingBranches && (
-                                        <CircleNotch className="w-3 h-3 animate-spin text-[#C8A84B]/40" />
+                                        <CircleNotch className="w-3 h-3 animate-spin text-[#00E5FF]/40" />
                                     )}
                                 </div>
                                 <div className="input-group-relative">
@@ -407,7 +407,7 @@ export default function Login({ onLoginSuccess }: LoginProps) {
                     <div className="form-footer-bottom">
                         {isSignUp ? 'Already have an account? ' : 'No account? '}
                         <span 
-                            className="footer-link-gold"
+                            className="footer-link-aqua"
                             onClick={() => setIsSignUp(!isSignUp)}
                         >
                             {isSignUp ? 'Login now' : 'Request access'}
@@ -433,7 +433,7 @@ export default function Login({ onLoginSuccess }: LoginProps) {
                             initial={{ opacity: 0, scale: 0.9, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            className="bg-[#08120D] border border-[#C8A84B] p-8 max-w-md w-full rounded-2xl shadow-[0_0_50px_rgba(200,168,75,0.15)] relative overflow-hidden"
+                            className="bg-[#08120D] border border-[#00E5FF] p-8 max-w-md w-full rounded-2xl shadow-[0_0_50px_rgba(0, 229, 255,0.15)] relative overflow-hidden"
                         >
                             <div className="absolute top-0 right-0 p-4">
                                 <button 
@@ -445,8 +445,8 @@ export default function Login({ onLoginSuccess }: LoginProps) {
                             </div>
 
                             <div className="mb-6">
-                                <div className="w-12 h-12 bg-[rgba(200,168,75,0.1)] rounded-xl flex items-center justify-center mb-4 border border-[#C8A84B]/20">
-                                    <i className="ti-lock text-[#C8A84B] text-xl"></i>
+                                <div className="w-12 h-12 bg-[rgba(0, 229, 255,0.1)] rounded-xl flex items-center justify-center mb-4 border border-[#00E5FF]/20">
+                                    <i className="ti-lock text-[#00E5FF] text-xl"></i>
                                 </div>
                                 <h3 className="text-xl font-bold text-white mb-2 tracking-tight">Reset Password</h3>
                                 <p className="text-white/50 text-xs leading-relaxed">
@@ -482,7 +482,7 @@ export default function Login({ onLoginSuccess }: LoginProps) {
                                     <button
                                         type="submit"
                                         disabled={resetLoading}
-                                        className="flex-1 py-3 px-4 bg-[#C8A84B] text-[#07080d] rounded-xl text-xs font-bold hover:brightness-110 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
+                                        className="flex-1 py-3 px-4 bg-[#00E5FF] text-[#07080d] rounded-xl text-xs font-bold hover:brightness-110 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
                                     >
                                         {resetLoading ? (
                                             <CircleNotch className="w-4 h-4 animate-spin" />

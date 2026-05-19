@@ -852,7 +852,7 @@ export default function DashboardMain({ selectedTown, onTownChange, selectedRegi
               { label: 'Net Salaries to Pay', val: 'Kes 10.1m', sub: 'To Bank / M-Pesa', color: 'var(--green)' },
             ].map((ib, i) => (
               <div key={i} className="col-span-10 md:col-span-2 bg-[var(--card)] p-4 hover:bg-[var(--card-h)] transition-colors group">
-                <div className="text-[9px] font-bold text-[#ffffff] mb-2 tracking-widest">{ib.label}</div>
+                <div className="text-[9px] font-bold text-[var(--t2)] mb-2 tracking-widest">{ib.label}</div>
                 <div className="text-[17px] font-bold tracking-tight tabular-nums" style={{ color: ib.color }}>{ib.val}</div>
                 <div className="text-[9px] text-[var(--t3)] mt-1 font-medium">{ib.sub}</div>
               </div>
@@ -899,7 +899,7 @@ export default function DashboardMain({ selectedTown, onTownChange, selectedRegi
                 </div>
               </div>
               <div style={{ display: 'flex', gap: '12px', marginBottom: '8px' }}>
-                {[['var(--p)', 'Base Pay'], ['var(--green)', 'Bonuses'], ['rgba(200,168,75,0.8)', 'Overtime']].map(([c, l]) => (
+                {[['var(--p)', 'Base Pay'], ['var(--green)', 'Bonuses'], ['rgba(0, 229, 255,0.8)', 'Overtime']].map(([c, l]) => (
                   <div key={l} style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '10px', color: 'var(--t2)' }}>
                     <span style={{ width: 8, height: 8, borderRadius: 2, background: c, display: 'inline-block' }} />{l}
                   </div>
@@ -917,8 +917,8 @@ export default function DashboardMain({ selectedTown, onTownChange, selectedRegi
                       <stop offset="95%" stopColor="var(--green)" stopOpacity={0} />
                     </linearGradient>
                     <linearGradient id="gOvertime" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="rgba(200,168,75,0.8)" stopOpacity={0.2} />
-                      <stop offset="95%" stopColor="rgba(200,168,75,0.8)" stopOpacity={0} />
+                      <stop offset="5%" stopColor="rgba(0, 229, 255,0.8)" stopOpacity={0.2} />
+                      <stop offset="95%" stopColor="rgba(0, 229, 255,0.8)" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--glass)" vertical={false} opacity={0.4} />
@@ -927,7 +927,7 @@ export default function DashboardMain({ selectedTown, onTownChange, selectedRegi
                   <RechartsTooltip content={<CustomTooltip />} />
                   <Area type="monotone" dataKey="base" stroke="var(--p)" fill="url(#gBase)" strokeWidth={1.5} name="BASE PAY (M)" />
                   <Area type="monotone" dataKey="bonus" stroke="var(--green)" fill="url(#gBonus)" strokeWidth={1.5} name="BONUSES (M)" />
-                  <Area type="monotone" dataKey="overtime" stroke="rgba(200,168,75,0.8)" fill="url(#gOvertime)" strokeWidth={1.5} name="OVERTIME (M)" />
+                  <Area type="monotone" dataKey="overtime" stroke="rgba(0, 229, 255,0.8)" fill="url(#gOvertime)" strokeWidth={1.5} name="OVERTIME (M)" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -942,7 +942,7 @@ export default function DashboardMain({ selectedTown, onTownChange, selectedRegi
                   <RechartsTooltip content={<CustomTooltip />} cursor={{ fill: 'var(--glass)' }} />
                   <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={10}>
                     {loadData.map((_, idx) => {
-                      const cols = ['#FF4D4D', '#F5A623', '#FFB300', '#00F59B', '#F5A623'];
+                      const cols = ['#FF4D4D', '#00E5FF', '#FFB300', '#00F59B', '#00E5FF'];
                       return <Cell key={idx} fill={cols[idx % cols.length]} fillOpacity={0.8} />;
                     })}
                   </Bar>

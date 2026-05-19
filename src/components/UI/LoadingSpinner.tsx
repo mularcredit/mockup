@@ -6,43 +6,35 @@ interface LoadingSpinnerProps {
 }
 
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
-  message = "Loading", 
+  message = "Loading Telemetry", 
   fullPage = false 
 }) => {
   return (
-    <div className={`flex flex-col justify-center items-center gap-8 ${fullPage ? 'h-screen w-full' : 'h-[60vh] w-full'}`}>
-      <div className="relative w-12 h-12">
-        {/* Fade Loader Bars */}
-        {[...Array(8)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute left-1/2 top-0 w-[6%] h-[32%] bg-[var(--p)] rounded-full animate-fade -translate-x-1/2"
-            style={{
-              transform: `rotate(${i * 45}deg)`,
-              transformOrigin: '50% 155%',
-              animationDelay: `${i * 0.125}s`,
-              boxShadow: '0 0 10px var(--gold-glow)'
-            }}
-          />
-        ))}
+    <div className={`flex flex-col justify-center items-center gap-6 relative overflow-hidden backdrop-blur-sm ${fullPage ? 'h-screen w-full' : 'h-[50vh] w-full bg-[var(--card)]/10 rounded-2xl border border-white/[0.03]'}`}>
+      {/* Ambient Pulsing Glow */}
+      <div className="absolute w-64 h-64 rounded-full bg-cyan-500/10 blur-[80px] -z-10 animate-pulse" />
+      
+      {/* Multi-Ring Elegant Spinner */}
+      <div className="relative w-16 h-16">
+        {/* Outer Spin Ring */}
+        <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-cyan-500 border-r-cyan-500/35 animate-spin" style={{ animationDuration: '1.2s' }} />
+        {/* Inner Pulse Ring */}
+        <div className="absolute inset-2 rounded-full border border-dashed border-cyan-500/25 animate-pulse" />
+        {/* Inner Spin Ring Counter */}
+        <div className="absolute inset-3 rounded-full border border-transparent border-b-cyan-400 border-l-cyan-400/15 animate-spin" style={{ animationDuration: '0.8s', animationDirection: 'reverse' }} />
+        {/* Center Core Glow */}
+        <div className="absolute inset-5 rounded-full bg-cyan-500/20 animate-pulse" />
       </div>
       
-      <div className="flex flex-col items-center gap-2">
-        <span className="text-[10px] font-bold text-[var(--p)] tracking-[0.4em] animate-pulse">
+      <div className="flex flex-col items-center gap-1.5 z-10">
+        <span className="text-white font-bold text-xs uppercase tracking-[0.2em] animate-pulse">
           {message}
         </span>
-        <div className="w-10 h-[1px] bg-gradient-to-r from-transparent via-[var(--p-line)] to-transparent" />
+        <span className="text-[var(--t3)] text-[9px] font-medium tracking-[0.1em]">
+          Securing verification pathway...
+        </span>
+        <div className="w-12 h-[1px] bg-gradient-to-r from-transparent via-cyan-500/25 to-transparent mt-1" />
       </div>
-
-      <style>{`
-        @keyframes fade {
-          0% { opacity: 1; }
-          100% { opacity: 0.1; }
-        }
-        .animate-fade {
-          animation: fade 1s linear infinite;
-        }
-      `}</style>
     </div>
   );
 };

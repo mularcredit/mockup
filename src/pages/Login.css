@@ -44,17 +44,17 @@ html, body {
     position: absolute;
     inset: 0;
     background: 
-        radial-gradient(ellipse at 30% 20%, rgba(200,168,75,0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 30% 20%, rgba(0, 229, 255,0.15) 0%, transparent 50%),
         radial-gradient(ellipse at 80% 80%, rgba(29,158,117,0.1) 0%, transparent 45%),
-        radial-gradient(ellipse at 60% 50%, rgba(200,168,75,0.06) 0%, transparent 60%);
+        radial-gradient(ellipse at 60% 50%, rgba(0, 229, 255,0.06) 0%, transparent 60%);
 }
 
 .bg-custom-grid {
     position: absolute;
     inset: 0;
     background: 
-        repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(200,168,75,0.04) 60px),
-        repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(200,168,75,0.04) 60px);
+        repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(0, 229, 255,0.04) 60px),
+        repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(0, 229, 255,0.04) 60px);
 }
 
 .left-content-wrapper {
@@ -83,7 +83,7 @@ html, body {
 }
 
 .login-logo-main {
-    height: 60px;
+    height: 72px;
     width: auto;
     object-fit: contain;
 }
@@ -150,7 +150,7 @@ html, body {
 
 .headline-ultra-thin strong {
     font-weight: 600;
-    color: #C8A84B;
+    color: #00E5FF;
 }
 
 .subtext-light {
@@ -177,8 +177,8 @@ html, body {
     -webkit-mask-image: radial-gradient(150% 100% at 50% 0%, transparent 45%, black 45.5%);
 }
 
-.quote-icon-gold {
-    color: #C8A84B;
+.quote-icon-aqua {
+    color: #00E5FF;
     margin-bottom: 8px;
     opacity: 1;
 }
@@ -201,12 +201,12 @@ html, body {
 .author-hairline {
     width: 20px;
     height: 1px;
-    background: #C8A84B;
+    background: #00E5FF;
     opacity: 0.4;
 }
 
 .author-name {
-    color: #C8A84B;
+    color: #00E5FF;
     font-size: 11px;
     letter-spacing: 1px;
     font-weight: 600;
@@ -239,13 +239,13 @@ html, body {
 .eyebrow-hairline {
     width: 20px;
     height: 1.5px;
-    background: #C8A84B;
+    background: #00E5FF;
 }
 
 .eyebrow-title {
     font-size: 11px;
     letter-spacing: 2px;
-    color: #C8A84B;
+    color: #00E5FF;
     font-weight: 600;
 }
 
@@ -281,16 +281,16 @@ html, body {
     color: #ffffff;
 }
 
-.label-link-gold {
+.label-link-aqua {
     font-size: 11px;
     font-weight: 400;
-    color: rgba(200, 168, 75, 0.55);
+    color: rgba(0, 229, 255, 0.55);
     cursor: pointer;
     transition: color 0.2s;
 }
 
-.label-link-gold:hover {
-    color: #C8A84B;
+.label-link-aqua:hover {
+    color: #00E5FF;
 }
 
 .input-group-relative {
@@ -302,7 +302,7 @@ input.input-main-ctrl:not([type="radio"]):not([type="checkbox"]),
 select.input-main-ctrl {
     width: 100%;
     background: rgba(255, 255, 255, 0.03);
-    border: 0.5px solid rgba(200, 168, 75, 0.65) !important;
+    border: 0.5px solid rgba(0, 229, 255, 0.65) !important;
     border-radius: 8px;
     padding: 11px 44px 11px 48px;
     color: #fff;
@@ -314,8 +314,8 @@ select.input-main-ctrl {
 
 input.input-main-ctrl:not([type="radio"]):not([type="checkbox"]):focus,
 select.input-main-ctrl:focus {
-    border-color: #C8A84B !important;
-    background: rgba(200, 168, 75, 0.03) !important;
+    border-color: #00E5FF !important;
+    background: rgba(0, 229, 255, 0.03) !important;
 }
 
 .input-main-ctrl::placeholder {
@@ -328,7 +328,7 @@ select.input-main-ctrl:focus {
     top: 50%;
     transform: translateY(-50%);
     font-size: 16px;
-    color: rgba(200, 168, 75, 0.38);
+    color: rgba(0, 229, 255, 0.38);
     pointer-events: none;
 }
 
@@ -338,13 +338,13 @@ select.input-main-ctrl:focus {
     top: 50%;
     transform: translateY(-50%);
     font-size: 16px;
-    color: rgba(200, 168, 75, 0.28);
+    color: rgba(0, 229, 255, 0.28);
     cursor: pointer;
 }
 
 .btn-login-main {
     width: 100%;
-    background: #C8A84B;
+    background: #00E5FF;
     color: #07080d;
     border: none;
     border-radius: 8px;
@@ -362,7 +362,7 @@ select.input-main-ctrl:focus {
 }
 
 .btn-login-main:hover {
-    background: #d4b55a;
+    background: #33ecff;
     transform: translateY(-1px);
 }
 
@@ -396,14 +396,14 @@ select.input-main-ctrl:focus {
     margin-top: 16px;
 }
 
-.footer-link-gold {
-    color: rgba(200, 168, 75, 0.6);
+.footer-link-aqua {
+    color: rgba(0, 229, 255, 0.6);
     cursor: pointer;
     transition: color 0.2s;
 }
 
-.footer-link-gold:hover {
-    color: #C8A84B;
+.footer-link-aqua:hover {
+    color: #00E5FF;
 }
 
 /* MFA SPECIFIC */
@@ -421,7 +421,7 @@ select.input-main-ctrl:focus {
     font-size: 20px;
     font-weight: 700;
     background: rgba(255, 255, 255, 0.03);
-    border: 0.5px solid rgba(200, 168, 75, 0.65) !important;
+    border: 0.5px solid rgba(0, 229, 255, 0.65) !important;
     border-radius: 8px;
     color: #fff;
     outline: none;
@@ -429,9 +429,9 @@ select.input-main-ctrl:focus {
 }
 
 .mfa-otp-input:focus {
-    border-color: #C8A84B !important;
+    border-color: #00E5FF !important;
     background: rgba(255, 255, 255, 0.05);
-    box-shadow: 0 0 15px rgba(200, 168, 75, 0.1);
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
 }
 
 .mfa-action-row {
@@ -451,7 +451,7 @@ select.input-main-ctrl:focus {
 }
 
 .mfa-link-resend {
-    color: #C8A84B;
+    color: #00E5FF;
 }
 
 .mfa-link-back {

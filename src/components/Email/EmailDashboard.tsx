@@ -133,7 +133,7 @@ export default function EmailDashboard() {
                 );
             case 'opened':
                 return (
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold bg-[rgba(200,168,75,0.06)] text-[var(--gold)] border border-[rgba(200,168,75,0.15)] shadow-sm">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold bg-[rgba(0, 229, 255,0.06)] text-[var(--gold)] border border-[rgba(0, 229, 255,0.15)] shadow-sm">
                         <Eye className="w-3.5 h-3.5 mr-1.5 shrink-0" />
                         OPENED
                     </span>

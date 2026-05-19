@@ -75,9 +75,26 @@ export default function StaffSignupRequests() {
 
   if (loading && requests.length === 0) {
     return (
-      <div className="min-h-screen bg-[var(--page)] flex flex-col items-center justify-center">
-        <Loader2 className="w-8 h-8 text-[var(--p)] animate-spin mb-4 shadow-[0_0_15px_var(--p-glow)]" />
-        <p className="text-[var(--t3)] font-mono text-xs uppercase tracking-widest animate-blink">INITIALIZING_ADMIN_NODE...</p>
+      <div className="min-h-screen bg-[var(--page)] flex flex-col items-center justify-center relative overflow-hidden backdrop-blur-sm">
+        {/* Ambient Background Glow */}
+        <div className="absolute w-64 h-64 rounded-full bg-cyan-500/10 blur-[80px] -z-10 animate-pulse" />
+        
+        <div className="flex flex-col items-center justify-center">
+          {/* Multi-Ring Elegant Spinner */}
+          <div className="relative w-16 h-16 mb-6">
+            {/* Outer Spin Ring */}
+            <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-cyan-500 border-r-cyan-500/40 animate-spin" style={{ animationDuration: '1.2s' }} />
+            {/* Inner Pulse Ring */}
+            <div className="absolute inset-2 rounded-full border border-dashed border-cyan-500/30 animate-pulse" />
+            {/* Inner Spin Ring Counter */}
+            <div className="absolute inset-3 rounded-full border border-transparent border-b-cyan-400 border-l-cyan-400/20 animate-spin" style={{ animationDuration: '0.8s', animationDirection: 'reverse' }} />
+            {/* Center Glow */}
+            <div className="absolute inset-5 rounded-full bg-cyan-500/20 animate-pulse" />
+          </div>
+          
+          <p className="text-white font-bold text-xs uppercase tracking-[0.2em] mb-1">Initializing Admin Node</p>
+          <p className="text-[var(--t3)] text-[9px] font-medium tracking-[0.1em] font-mono">ESTABLISHING_OPERATIONAL_GATEWAY...</p>
+        </div>
       </div>
     );
   }
@@ -215,7 +232,7 @@ export default function StaffSignupRequests() {
               <motion.div 
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="flex items-center justify-between p-4 bg-[var(--p-dim)] border border-[var(--p-line)] rounded-xl text-[var(--p)] shadow-[0_0_20px_rgba(245,166,35,0.05)]"
+                className="flex items-center justify-between p-4 bg-[var(--p-dim)] border border-[var(--p-line)] rounded-xl text-[var(--p)] shadow-[0_0_20px_rgba(0, 229, 255,0.05)]"
               >
                 <div className="flex items-center gap-4">
                   <div className="w-8 h-8 rounded-lg bg-[var(--p)] text-[var(--sidebar)] flex items-center justify-center font-bold text-xs">

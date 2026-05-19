@@ -537,7 +537,7 @@ export default function SendEmail() {
             </div>
 
             {encryptAttachment && (
-              <div className="mt-3 text-[9px] text-[var(--gold)] bg-[rgba(200,168,75,0.06)] p-2.5 rounded border border-[rgba(200,168,75,0.2)] flex items-start gap-1.5">
+              <div className="mt-3 text-[9px] text-[var(--gold)] bg-[rgba(0, 229, 255,0.06)] p-2.5 rounded border border-[rgba(0, 229, 255,0.2)] flex items-start gap-1.5">
                 <Shield className="w-3.5 h-3.5 shrink-0 mt-0.5" />
                 <span>
                   <strong>DPA Standard Encryption Active:</strong> Recipient must unlock attachment using: <code>Year of Birth + KRA PIN digits</code>.

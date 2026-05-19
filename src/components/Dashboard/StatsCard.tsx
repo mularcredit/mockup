@@ -22,7 +22,7 @@ export default function StatsCard({
 }: StatsCardProps) {
   
   const typeClasses = {
-    primary: 'm-p bg-gradient-to-br from-[rgba(245,166,35,0.15)] to-[rgba(245,166,35,0.05)] border-[var(--p-glow)]',
+    primary: 'm-p bg-gradient-to-br from-[rgba(0, 229, 255,0.15)] to-[rgba(0, 229, 255,0.05)] border-[var(--p-glow)]',
     success: 'm-g bg-gradient-to-br from-[rgba(0,245,155,0.15)] to-[rgba(0,245,155,0.05)] border-[var(--green-glow)]',
     default: 'm-d bg-[var(--card)] border-[var(--p-line)]'
   };

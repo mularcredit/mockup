@@ -74,28 +74,28 @@ export default function OrganizationProfile({ onChange }: { onChange?: () => voi
 
             <div className="grid grid-cols-2 gap-x-6 gap-y-5">
               <div className="col-span-2 sm:col-span-1 flex flex-col gap-1.5">
-                <label className="text-[11px] font-medium text-[#C8A84B]/80 ml-1">Legal name</label>
-                <input type="text" defaultValue="ZiraHR Technologies Limited" className="w-full bg-white/[0.02] border border-[#C8A84B]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#C8A84B]/50 focus:bg-[#C8A84B]/[0.02] transition-all duration-300" onChange={onChange}  id="legal_name" />
+                <label className="text-[11px] font-medium text-[#00E5FF]/80 ml-1">Legal name</label>
+                <input type="text" defaultValue="ZiraHR Technologies Limited" className="w-full bg-white/[0.02] border border-[#00E5FF]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#00E5FF]/50 focus:bg-[#00E5FF]/[0.02] transition-all duration-300" onChange={onChange}  id="legal_name" />
               </div>
               
               <div className="col-span-2 sm:col-span-1 flex flex-col gap-1.5">
-                <label className="text-[11px] font-medium text-[#C8A84B]/80 ml-1">Trading name (optional)</label>
-                <input type="text" defaultValue="ZiraHR" className="w-full bg-white/[0.02] border border-[#C8A84B]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#C8A84B]/50 focus:bg-[#C8A84B]/[0.02] transition-all duration-300" onChange={onChange}  id="tradingnameoptional" />
+                <label className="text-[11px] font-medium text-[#00E5FF]/80 ml-1">Trading name (optional)</label>
+                <input type="text" defaultValue="ZiraHR" className="w-full bg-white/[0.02] border border-[#00E5FF]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#00E5FF]/50 focus:bg-[#00E5FF]/[0.02] transition-all duration-300" onChange={onChange}  id="tradingnameoptional" />
               </div>
               
               <div className="col-span-2 sm:col-span-1 flex flex-col gap-1.5">
-                <label className="text-[11px] font-medium text-[#C8A84B]/80 ml-1">Registration number</label>
-                <input type="text" defaultValue="PVT-2023-XXXXX" className="w-full bg-white/[0.02] border border-[#C8A84B]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#C8A84B]/50 focus:bg-[#C8A84B]/[0.02] transition-all duration-300" onChange={onChange}  id="registrationnumber" />
+                <label className="text-[11px] font-medium text-[#00E5FF]/80 ml-1">Registration number</label>
+                <input type="text" defaultValue="PVT-2023-XXXXX" className="w-full bg-white/[0.02] border border-[#00E5FF]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#00E5FF]/50 focus:bg-[#00E5FF]/[0.02] transition-all duration-300" onChange={onChange}  id="registrationnumber" />
               </div>
               
               <div className="col-span-2 sm:col-span-1 flex flex-col gap-1.5">
-                <label className="text-[11px] font-medium text-[#C8A84B]/80 ml-1">Date of incorporation</label>
-                <input type="date" defaultValue="2023-01-15" className="w-full bg-white/[0.02] border border-[#C8A84B]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#C8A84B]/50 focus:bg-[#C8A84B]/[0.02] transition-all duration-300" onChange={onChange}  id="dateofincorporation" />
+                <label className="text-[11px] font-medium text-[#00E5FF]/80 ml-1">Date of incorporation</label>
+                <input type="date" defaultValue="2023-01-15" className="w-full bg-white/[0.02] border border-[#00E5FF]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#00E5FF]/50 focus:bg-[#00E5FF]/[0.02] transition-all duration-300" onChange={onChange}  id="dateofincorporation" />
               </div>
               
               <div className="col-span-2 flex flex-col gap-1.5">
-                <label className="text-[11px] font-medium text-[#C8A84B]/80 ml-1">Industry / sector</label>
-                <select className="w-full bg-white/[0.02] border border-[#C8A84B]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#C8A84B]/50 focus:bg-[#C8A84B]/[0.02] transition-all duration-300" onChange={onChange} id="industrysector">
+                <label className="text-[11px] font-medium text-[#00E5FF]/80 ml-1">Industry / sector</label>
+                <select className="w-full bg-white/[0.02] border border-[#00E5FF]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#00E5FF]/50 focus:bg-[#00E5FF]/[0.02] transition-all duration-300" onChange={onChange} id="industrysector">
                   <option>Technology & Software</option>
                   <option>Financial Services (SACCOs)</option>
                   <option>Education & Schools</option>
@@ -117,24 +117,24 @@ export default function OrganizationProfile({ onChange }: { onChange?: () => voi
 
             <div className="grid grid-cols-2 gap-x-6 gap-y-5">
               <div className="col-span-2 sm:col-span-1 flex flex-col gap-1.5">
-                <label className="text-[11px] font-medium text-[#C8A84B]/80 ml-1">Primary email</label>
-                <div className="relative"><Mail className="w-4 h-4 text-white/30 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" /><input type="email" defaultValue="hr@zirahr.com" className="w-full bg-white/[0.02] border border-[#C8A84B]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#C8A84B]/50 focus:bg-[#C8A84B]/[0.02] transition-all duration-300 pl-9" onChange={onChange}  id="primaryemail" /></div>
+                <label className="text-[11px] font-medium text-[#00E5FF]/80 ml-1">Primary email</label>
+                <div className="relative"><Mail className="w-4 h-4 text-white/30 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" /><input type="email" defaultValue="hr@zirahr.com" className="w-full bg-white/[0.02] border border-[#00E5FF]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#00E5FF]/50 focus:bg-[#00E5FF]/[0.02] transition-all duration-300 pl-9" onChange={onChange}  id="primaryemail" /></div>
               </div>
               
               <div className="col-span-2 sm:col-span-1 flex flex-col gap-1.5">
-                <label className="text-[11px] font-medium text-[#C8A84B]/80 ml-1">Primary phone</label>
-                <div className="relative"><Phone className="w-4 h-4 text-white/30 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" /><input type="tel" defaultValue="+254 700 000000" className="w-full bg-white/[0.02] border border-[#C8A84B]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#C8A84B]/50 focus:bg-[#C8A84B]/[0.02] transition-all duration-300 pl-9" onChange={onChange}  id="primaryphone" /></div>
+                <label className="text-[11px] font-medium text-[#00E5FF]/80 ml-1">Primary phone</label>
+                <div className="relative"><Phone className="w-4 h-4 text-white/30 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" /><input type="tel" defaultValue="+254 700 000000" className="w-full bg-white/[0.02] border border-[#00E5FF]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#00E5FF]/50 focus:bg-[#00E5FF]/[0.02] transition-all duration-300 pl-9" onChange={onChange}  id="primaryphone" /></div>
               </div>
               
               <div className="col-span-2 flex flex-col gap-1.5">
-                <label className="text-[11px] font-medium text-[#C8A84B]/80 ml-1">Website</label>
-                <div className="relative"><Globe className="w-4 h-4 text-white/30 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" /><input type="url" defaultValue="https://zirahr.com" className="w-full bg-white/[0.02] border border-[#C8A84B]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#C8A84B]/50 focus:bg-[#C8A84B]/[0.02] transition-all duration-300 pl-9" onChange={onChange}  id="website" /></div>
+                <label className="text-[11px] font-medium text-[#00E5FF]/80 ml-1">Website</label>
+                <div className="relative"><Globe className="w-4 h-4 text-white/30 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" /><input type="url" defaultValue="https://zirahr.com" className="w-full bg-white/[0.02] border border-[#00E5FF]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#00E5FF]/50 focus:bg-[#00E5FF]/[0.02] transition-all duration-300 pl-9" onChange={onChange}  id="website" /></div>
               </div>
               
               <div className="col-span-2 flex flex-col gap-1.5">
-                <label className="text-[11px] font-medium text-[#C8A84B]/80 ml-1">HQ physical address</label>
+                <label className="text-[11px] font-medium text-[#00E5FF]/80 ml-1">HQ physical address</label>
                 <div className="relative"><MapPin className="w-4 h-4 text-white/30 absolute left-3 top-3 pointer-events-none" /><textarea rows={3} defaultValue="Prism Tower, Upper Hill
-Nairobi, Kenya" className="w-full bg-white/[0.02] border border-[#C8A84B]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#C8A84B]/50 focus:bg-[#C8A84B]/[0.02] transition-all duration-300 pl-9" onChange={onChange}  id="hqphysicaladdress" /></div>
+Nairobi, Kenya" className="w-full bg-white/[0.02] border border-[#00E5FF]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#00E5FF]/50 focus:bg-[#00E5FF]/[0.02] transition-all duration-300 pl-9" onChange={onChange}  id="hqphysicaladdress" /></div>
               </div>
             </div>
           </div>
@@ -151,23 +151,23 @@ Nairobi, Kenya" className="w-full bg-white/[0.02] border border-[#C8A84B]/20 rou
 
             <div className="space-y-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] font-medium text-[#C8A84B]/80 ml-1">KRA PIN</label>
-                <input type="text" defaultValue="P051XXXXXXX" className="w-full bg-white/[0.02] border border-[#C8A84B]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#C8A84B]/50 focus:bg-[#C8A84B]/[0.02] transition-all duration-300" onChange={onChange}  id="krapin" />
+                <label className="text-[11px] font-medium text-[#00E5FF]/80 ml-1">KRA PIN</label>
+                <input type="text" defaultValue="P051XXXXXXX" className="w-full bg-white/[0.02] border border-[#00E5FF]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#00E5FF]/50 focus:bg-[#00E5FF]/[0.02] transition-all duration-300" onChange={onChange}  id="krapin" />
               </div>
               
               <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] font-medium text-[#C8A84B]/80 ml-1">NSSF employer no.</label>
-                <input type="text" defaultValue="XXXXXXXX" className="w-full bg-white/[0.02] border border-[#C8A84B]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#C8A84B]/50 focus:bg-[#C8A84B]/[0.02] transition-all duration-300" onChange={onChange}  id="nssfemployerno" />
+                <label className="text-[11px] font-medium text-[#00E5FF]/80 ml-1">NSSF employer no.</label>
+                <input type="text" defaultValue="XXXXXXXX" className="w-full bg-white/[0.02] border border-[#00E5FF]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#00E5FF]/50 focus:bg-[#00E5FF]/[0.02] transition-all duration-300" onChange={onChange}  id="nssfemployerno" />
               </div>
               
               <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] font-medium text-[#C8A84B]/80 ml-1">SHA/NHIF employer no.</label>
-                <input type="text" defaultValue="XXXXXXXX" className="w-full bg-white/[0.02] border border-[#C8A84B]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#C8A84B]/50 focus:bg-[#C8A84B]/[0.02] transition-all duration-300" onChange={onChange}  id="shanhifemployerno" />
+                <label className="text-[11px] font-medium text-[#00E5FF]/80 ml-1">SHA/NHIF employer no.</label>
+                <input type="text" defaultValue="XXXXXXXX" className="w-full bg-white/[0.02] border border-[#00E5FF]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#00E5FF]/50 focus:bg-[#00E5FF]/[0.02] transition-all duration-300" onChange={onChange}  id="shanhifemployerno" />
               </div>
               
               <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] font-medium text-[#C8A84B]/80 ml-1">Housing levy reg no.</label>
-                <input type="text" defaultValue="XXXXXXXX" className="w-full bg-white/[0.02] border border-[#C8A84B]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#C8A84B]/50 focus:bg-[#C8A84B]/[0.02] transition-all duration-300" onChange={onChange}  id="housinglevyregno" />
+                <label className="text-[11px] font-medium text-[#00E5FF]/80 ml-1">Housing levy reg no.</label>
+                <input type="text" defaultValue="XXXXXXXX" className="w-full bg-white/[0.02] border border-[#00E5FF]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#00E5FF]/50 focus:bg-[#00E5FF]/[0.02] transition-all duration-300" onChange={onChange}  id="housinglevyregno" />
               </div>
             </div>
             
@@ -187,7 +187,7 @@ Nairobi, Kenya" className="w-full bg-white/[0.02] border border-[#C8A84B]/20 rou
                 <label className="block text-[10px] font-semibold text-white mb-2">Primary accent</label>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg bg-[var(--p)] shadow-lg cursor-pointer border border-[var(--glass)]" />
-                  <input type="text" defaultValue="#F5A623" className="flex-1 !bg-transparent border-0 border-b border-[var(--p-line)] rounded-none px-1 py-2 text-[12px] text-[var(--t1)] font-mono focus:border-b-[1.5px] focus:border-[var(--p)] outline-none transition-all" onChange={onChange} />
+                  <input type="text" defaultValue="#00E5FF" className="flex-1 !bg-transparent border-0 border-b border-[var(--p-line)] rounded-none px-1 py-2 text-[12px] text-[var(--t1)] font-mono focus:border-b-[1.5px] focus:border-[var(--p)] outline-none transition-all" onChange={onChange} />
                 </div>
               </div>
               <div>

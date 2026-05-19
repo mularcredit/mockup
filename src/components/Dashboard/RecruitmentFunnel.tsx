@@ -39,7 +39,7 @@ export default function RecruitmentFunnel() {
                         transition={{ delay: i * 0.1, duration: 0.8, ease: "easeOut" }}
                         className="h-[24px] rounded-sm flex items-center justify-between px-3 text-[10px] font-medium"
                         style={{ 
-                            backgroundColor: `rgba(200, 168, 75, ${step.opacity})`,
+                            backgroundColor: `rgba(0, 229, 255, ${step.opacity})`,
                             color: '#ffffff'
                         }}
                     >

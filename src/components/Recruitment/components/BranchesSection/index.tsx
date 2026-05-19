@@ -3,8 +3,9 @@ import { BranchCard } from './BranchCard';
 import { jobPositions } from '../constants/jobPositions';
 import { StatusBadge } from '../StatusBadge';
 import GlowButton from '../../../UI/GlowButton';
-import { Briefcase, Edit, Save, X, Plus } from 'lucide-react';
+import { Edit, Save, X, Plus } from 'lucide-react';
 import { supabase } from '../../../../lib/supabase';
+import toast from 'react-hot-toast';
 
 interface KenyaOfficeLocation {
   id: string;
@@ -42,7 +43,7 @@ export const BranchesSection = () => {
     try {
       setLoading(true);
       setError(null);
-
+ 
       const { data, error: supabaseError } = await supabase
         .from('kenya_office_locations')
         .select('*')
@@ -125,27 +126,6 @@ export const BranchesSection = () => {
     }
   };
 
-  // Delete office (soft delete)
-  const deleteOffice = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this office?')) return;
-
-    try {
-      const { error } = await supabase
-        .from('kenya_office_locations')
-        .update({ is_active: false })
-        .eq('id', id);
-
-      if (error) throw error;
-
-      // Refresh the data
-      await fetchKenyaOfficeLocations();
-      toast.success('Office deleted successfully!');
-    } catch (err) {
-      console.error('Error deleting office:', err);
-      toast.error('Failed to delete office');
-    }
-  };
-
   // Calculate position counts for each location
   const getLocationStats = (locationId: string) => {
     const locationPositions = jobPositions.filter(p => p.branch === locationId);
@@ -162,16 +142,16 @@ export const BranchesSection = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#47d475]"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--p)]"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-[var(--card)] rounded-xl shadow-sm border border-gray-200 p-6">
+      <div className="bg-[var(--card)] rounded-xl border border-[var(--p-line)] p-6">
         <div className="text-center">
-          <p className="text-red-600 mb-4">{error}</p>
+          <p className="text-red-400 mb-4 text-xs font-semibold">{error}</p>
           <GlowButton onClick={fetchKenyaOfficeLocations} size="sm">
             Retry
           </GlowButton>
@@ -181,10 +161,11 @@ export const BranchesSection = () => {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="bg-[var(--card)] rounded-xl shadow-sm border border-gray-200 p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Kenya Office Hiring Needs</h2>
+    <div className="space-y-6 animate-fadeIn">
+      {/* Grid of branch cards */}
+      <div className="bg-[var(--card)] rounded-xl border border-[var(--p-line)] p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-base font-bold text-white tracking-wide">Kenya Office Hiring Needs</h2>
           <div className="flex gap-2">
             <GlowButton onClick={fetchKenyaOfficeLocations} size="sm" variant="secondary">
               Refresh
@@ -200,13 +181,11 @@ export const BranchesSection = () => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {kenyaOfficeLocations.map((location) => {
-            const stats = getLocationStats(location.id);
             return (
               <BranchCard 
                 key={location.id} 
                 branch={location} 
                 positions={jobPositions.filter((p) => p.branch === location.id)} 
-                onEdit={() => startEditing(location)}
               />
             );
           })}
@@ -214,30 +193,31 @@ export const BranchesSection = () => {
         
         {kenyaOfficeLocations.length === 0 && (
           <div className="text-center py-8">
-            <p className="text-gray-500">No office locations found</p>
+            <p className="text-[var(--t3)] text-xs">No office locations found</p>
           </div>
         )}
       </div>
 
-      <div className="bg-[var(--card)] rounded-xl shadow-sm border border-gray-200 p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Kenya Office Hiring Status</h2>
+      {/* Table view */}
+      <div className="bg-[var(--card)] rounded-xl border border-[var(--p-line)] p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-base font-bold text-white tracking-wide">Kenya Office Hiring Status</h2>
           <GlowButton onClick={fetchKenyaOfficeLocations} size="sm" variant="secondary">
             Refresh
           </GlowButton>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-xs">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="text-left py-3 px-4 text-gray-700 font-semibold">Office</th>
-                <th className="text-left py-3 px-4 text-gray-700 font-semibold">Location</th>
-                <th className="text-left py-3 px-4 text-gray-700 font-semibold">County</th>
-                <th className="text-left py-3 px-4 text-gray-700 font-semibold">Hiring Status</th>
-                <th className="text-right py-3 px-4 text-gray-700 font-semibold">Total Positions</th>
-                <th className="text-right py-3 px-4 text-gray-700 font-semibold">Critically Needed</th>
-                <th className="text-right py-3 px-4 text-gray-700 font-semibold">Urgent</th>
-                <th className="text-center py-3 px-4 text-gray-700 font-semibold">Actions</th>
+            <thead>
+              <tr className="border-b border-[var(--p-line)]">
+                <th className="text-left py-3.5 px-4 text-[var(--t3)] font-bold uppercase tracking-wider bg-[var(--p-dim)]/20">Office</th>
+                <th className="text-left py-3.5 px-4 text-[var(--t3)] font-bold uppercase tracking-wider bg-[var(--p-dim)]/20">Location</th>
+                <th className="text-left py-3.5 px-4 text-[var(--t3)] font-bold uppercase tracking-wider bg-[var(--p-dim)]/20">County</th>
+                <th className="text-left py-3.5 px-4 text-[var(--t3)] font-bold uppercase tracking-wider bg-[var(--p-dim)]/20">Hiring Status</th>
+                <th className="text-right py-3.5 px-4 text-[var(--t3)] font-bold uppercase tracking-wider bg-[var(--p-dim)]/20">Total Positions</th>
+                <th className="text-right py-3.5 px-4 text-[var(--t3)] font-bold uppercase tracking-wider bg-[var(--p-dim)]/20">Critically Needed</th>
+                <th className="text-right py-3.5 px-4 text-[var(--t3)] font-bold uppercase tracking-wider bg-[var(--p-dim)]/20">Urgent</th>
+                <th className="text-center py-3.5 px-4 text-[var(--t3)] font-bold uppercase tracking-wider bg-[var(--p-dim)]/20">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -246,17 +226,17 @@ export const BranchesSection = () => {
                 const isEditing = editingId === location.id;
                 
                 return (
-                  <tr key={location.id} className="border-b border-gray-100 hover:bg-gray-50">
+                  <tr key={location.id} className="border-b border-[var(--p-line)] hover:bg-[var(--p-dim)]/10 transition-colors">
                     <td className="py-4 px-4">
                       {isEditing ? (
                         <input
                           type="text"
                           value={editForm.name || ''}
                           onChange={(e) => setEditForm({...editForm, name: e.target.value})}
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-xs"
+                          className="w-full bg-[var(--card)] border border-[var(--p-line)] text-white rounded px-2.5 py-1.5 text-xs focus:outline-none focus:border-[var(--p)]"
                         />
                       ) : (
-                        <p className="text-gray-900 font-semibold">{location.name}</p>
+                        <p className="text-white font-bold">{location.name}</p>
                       )}
                     </td>
                     <td className="py-4 px-4">
@@ -265,11 +245,11 @@ export const BranchesSection = () => {
                           type="text"
                           value={editForm.town || ''}
                           onChange={(e) => setEditForm({...editForm, town: e.target.value})}
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-xs"
+                          className="w-full bg-[var(--card)] border border-[var(--p-line)] text-white rounded px-2.5 py-1.5 text-xs focus:outline-none focus:border-[var(--p)]"
                           placeholder="Town"
                         />
                       ) : (
-                        <p className="text-gray-700">{location.town || location.location}</p>
+                        <p className="text-[var(--t3)] font-medium">{location.town || location.location}</p>
                       )}
                     </td>
                     <td className="py-4 px-4">
@@ -278,11 +258,11 @@ export const BranchesSection = () => {
                           type="text"
                           value={editForm.county || ''}
                           onChange={(e) => setEditForm({...editForm, county: e.target.value})}
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-xs"
+                          className="w-full bg-[var(--card)] border border-[var(--p-line)] text-white rounded px-2.5 py-1.5 text-xs focus:outline-none focus:border-[var(--p)]"
                           placeholder="County"
                         />
                       ) : (
-                        <p className="text-gray-700">{location.county}</p>
+                        <p className="text-[var(--t3)] font-medium">{location.county}</p>
                       )}
                     </td>
                     <td className="py-4 px-4">
@@ -290,7 +270,7 @@ export const BranchesSection = () => {
                         <select
                           value={editForm.hiring_status || ''}
                           onChange={(e) => setEditForm({...editForm, hiring_status: e.target.value})}
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-xs"
+                          className="w-full bg-[var(--card)] border border-[var(--p-line)] text-white rounded px-2.5 py-1.5 text-xs focus:outline-none focus:border-[var(--p)]"
                         >
                           <option value="active">Active</option>
                           <option value="actively-hiring">Actively Hiring</option>
@@ -301,29 +281,29 @@ export const BranchesSection = () => {
                         <StatusBadge status={location.hiring_status} />
                       )}
                     </td>
-                    <td className="py-4 px-4 text-right font-semibold text-gray-900">
+                    <td className="py-4 px-4 text-right font-bold text-white">
                       {stats.total}
                     </td>
-                    <td className="py-4 px-4 text-right font-semibold text-red-600">
+                    <td className="py-4 px-4 text-right font-bold text-red-400">
                       {stats.critical}
                     </td>
-                    <td className="py-4 px-4 text-right font-semibold text-orange-600">
+                    <td className="py-4 px-4 text-right font-bold text-amber-400">
                       {stats.urgent}
                     </td>
                     <td className="py-4 px-4">
-                      <div className="flex justify-center gap-1">
+                      <div className="flex justify-center gap-1.5">
                         {isEditing ? (
                           <>
                             <button
                               onClick={saveEdit}
-                              className="p-1 text-green-600 hover:bg-green-50 rounded"
+                              className="p-1.5 text-cyan-400 hover:bg-[var(--p-dim)] rounded-lg transition-all"
                               title="Save"
                             >
                               <Save className="w-4 h-4" />
                             </button>
                             <button
                               onClick={cancelEditing}
-                              className="p-1 text-gray-600 hover:bg-gray-50 rounded"
+                              className="p-1.5 text-[var(--t3)] hover:bg-[var(--p-dim)] rounded-lg transition-all"
                               title="Cancel"
                             >
                               <X className="w-4 h-4" />
@@ -333,12 +313,11 @@ export const BranchesSection = () => {
                           <>
                             <button
                               onClick={() => startEditing(location)}
-                              className="p-1 text-blue-600 hover:bg-blue-50 rounded"
+                              className="p-1.5 text-[var(--p)] hover:bg-[var(--p-dim)] rounded-lg transition-all"
                               title="Edit"
                             >
                               <Edit className="w-4 h-4" />
                             </button>
-                            
                           </>
                         )}
                       </div>
@@ -351,7 +330,7 @@ export const BranchesSection = () => {
           
           {kenyaOfficeLocations.length === 0 && (
             <div className="text-center py-8">
-              <p className="text-gray-500">No office locations data available</p>
+              <p className="text-[var(--t3)] text-xs">No office locations data available</p>
             </div>
           )}
         </div>
@@ -359,48 +338,48 @@ export const BranchesSection = () => {
 
       {/* Add New Office Modal */}
       {showAddForm && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-[var(--card)] rounded-xl shadow-lg w-full max-w-md">
-            <div className="p-6 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900">Add New Office</h3>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="bg-[var(--card)] border border-[var(--p-line)] rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
+            <div className="p-6 border-b border-[var(--p-line)] bg-gradient-to-r from-[var(--p)]/10 to-transparent">
+              <h3 className="text-base font-bold text-white">Add New Office Location</h3>
             </div>
             <div className="p-6 space-y-4">
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Office Name</label>
+                <label className="block text-[10px] font-bold text-[var(--t3)] uppercase tracking-wider mb-1.5">Office Name</label>
                 <input
                   type="text"
                   value={newOffice.name || ''}
                   onChange={(e) => setNewOffice({...newOffice, name: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-xs"
+                  className="w-full bg-[var(--p-dim)]/40 border border-[var(--p-line)] text-white rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[var(--p)] transition-all"
                   placeholder="e.g., Nairobi Headquarters"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Town</label>
+                <label className="block text-[10px] font-bold text-[var(--t3)] uppercase tracking-wider mb-1.5">Town</label>
                 <input
                   type="text"
                   value={newOffice.town || ''}
                   onChange={(e) => setNewOffice({...newOffice, town: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-xs"
+                  className="w-full bg-[var(--p-dim)]/40 border border-[var(--p-line)] text-white rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[var(--p)] transition-all"
                   placeholder="e.g., Nairobi"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">County</label>
+                <label className="block text-[10px] font-bold text-[var(--t3)] uppercase tracking-wider mb-1.5">County</label>
                 <input
                   type="text"
                   value={newOffice.county || ''}
                   onChange={(e) => setNewOffice({...newOffice, county: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-xs"
+                  className="w-full bg-[var(--p-dim)]/40 border border-[var(--p-line)] text-white rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[var(--p)] transition-all"
                   placeholder="e.g., Nairobi County"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Hiring Status</label>
+                <label className="block text-[10px] font-bold text-[var(--t3)] uppercase tracking-wider mb-1.5">Hiring Status</label>
                 <select
                   value={newOffice.hiring_status || ''}
                   onChange={(e) => setNewOffice({...newOffice, hiring_status: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-xs"
+                  className="w-full bg-[var(--p-dim)]/40 border border-[var(--p-line)] text-white rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[var(--p)] transition-all"
                 >
                   <option value="active">Active</option>
                   <option value="actively-hiring">Actively Hiring</option>
@@ -409,16 +388,16 @@ export const BranchesSection = () => {
                 </select>
               </div>
             </div>
-            <div className="p-6 border-t border-gray-200 flex justify-end gap-3">
+            <div className="p-6 border-t border-[var(--p-line)] flex justify-end gap-3">
               <button
                 onClick={() => setShowAddForm(false)}
-                className="px-4 py-2 text-xs border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                className="px-4 py-2 border border-[var(--p-line)] rounded-lg text-xs font-bold text-[var(--t3)] hover:text-white hover:bg-[var(--p-dim)] transition-all"
               >
                 Cancel
               </button>
               <button
                 onClick={addNewOffice}
-                className="px-4 py-2 text-xs bg-[#47d475] text-white rounded-md hover:bg-[#3bc067]"
+                className="px-4 py-2 text-xs font-bold bg-[var(--p)] text-black rounded-lg hover:shadow-[0_0_15px_rgba(0,229,255,0.4)] hover:bg-cyan-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={!newOffice.name}
               >
                 Add Office

@@ -9,6 +9,46 @@
 ═══════════════════════════════════════════════════ */
 @layer base {
 
+  /* ── Emerald → Aqua Cyber accent ── */
+  .bg-emerald-50, .bg-emerald-100 {
+    background-color: var(--p-dim) !important;
+  }
+  .bg-emerald-500, .bg-emerald-600, .bg-emerald-700 {
+    background-color: var(--p) !important;
+  }
+  .text-emerald-500, .text-emerald-600, .text-emerald-700, .text-emerald-800 {
+    color: var(--p) !important;
+  }
+  .border-emerald-100, .border-emerald-200, .border-emerald-500 {
+    border-color: var(--p-line) !important;
+  }
+  .focus\:ring-emerald-500:focus {
+    --tw-ring-color: var(--p) !important;
+  }
+  .focus\:border-emerald-500:focus {
+    border-color: var(--p) !important;
+  }
+
+  /* ── Green → Aqua Cyber accent ── */
+  .bg-green-50, .bg-green-100 {
+    background-color: var(--p-dim) !important;
+  }
+  .bg-green-500, .bg-green-600, .bg-green-700 {
+    background-color: var(--p) !important;
+  }
+  .text-green-500, .text-green-600, .text-green-700, .text-green-800 {
+    color: var(--p) !important;
+  }
+  .border-green-100, .border-green-200, .border-green-500 {
+    border-color: var(--p-line) !important;
+  }
+  .focus\:ring-green-500:focus {
+    --tw-ring-color: var(--p) !important;
+  }
+  .focus\:border-green-500:focus {
+    border-color: var(--p) !important;
+  }
+
   /* ── Core surface enforcement ── */
   .bg-white {
     background-color: var(--card) !important;
@@ -138,7 +178,7 @@
     color: var(--t1) !important;
   }
 
-  /* ── Indigo → Golden Cyber accent ── */
+  /* ── Indigo → Aqua Cyber accent ── */
   .bg-indigo-50 {
     background-color: var(--p-dim) !important;
   }
@@ -183,7 +223,7 @@
     color: var(--p) !important;
   }
 
-  /* ── Violet → Golden Cyber accent ── */
+  /* ── Violet → Aqua Cyber accent ── */
   .bg-violet-50 {
     background-color: var(--p-dim) !important;
   }
@@ -216,7 +256,7 @@
     color: var(--p) !important;
   }
 
-  /* ── Blue-light → Golden Cyber accent ── */
+  /* ── Blue-light → Aqua Cyber accent ── */
   .bg-blue-50 {
     background-color: var(--p-dim) !important;
   }
@@ -487,11 +527,11 @@
   --glass: rgba(255, 255, 255, 0.03);
   --glass-h: rgba(255, 255, 255, 0.06);
 
-  /* Primary Accent (Golden Cyber) */
-  --p: #F5A623;
-  --p-glow: rgba(245, 166, 35, 0.4);
-  --p-dim: rgba(245, 166, 35, 0.08);
-  --p-line: rgba(245, 166, 35, 0.25);
+  /* Primary Accent (Aqua Cyber) */
+  --p: #00E5FF;
+  --p-glow: rgba(0, 229, 255, 0.4);
+  --p-dim: rgba(0, 229, 255, 0.08);
+  --p-line: rgba(0, 229, 255, 0.25);
 
   /* Semantic Neons */
   --green: #00F59B;
@@ -509,8 +549,8 @@
   --t2: #C4D1C9;
   --t3: #8A9A91;
   --t4: #4A5650;
-  --gold: #C8A84B;
-  --gold-glow: rgba(200, 168, 75, 0.4);
+  --gold: #00E5FF;
+  --gold-glow: rgba(0, 229, 255, 0.4);
 
   /* Effects */
   --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
@@ -525,7 +565,7 @@
   /* Tailwind Compatibility (Shadcn UI overrides) */
   --background: 156 40% 5%;
   --foreground: 156 10% 98%;
-  --primary-tw: 38 92% 55%;
+  --primary-tw: 187 100% 50%;
   --radius: 0.75rem;
 }
 
@@ -537,10 +577,10 @@ body.light {
   --glass: rgba(0, 0, 0, 0.02);
   --glass-h: rgba(0, 0, 0, 0.04);
 
-  --p: #D48806;
-  --p-glow: rgba(212, 136, 6, 0.2);
-  --p-dim: rgba(212, 136, 6, 0.05);
-  --p-line: rgba(212, 136, 6, 0.1);
+  --p: #008294;
+  --p-glow: rgba(0, 130, 148, 0.2);
+  --p-dim: rgba(0, 130, 148, 0.05);
+  --p-line: rgba(0, 130, 148, 0.1);
 
   --green: #008A56;
   --green-glow: rgba(0, 138, 86, 0.2);
@@ -566,8 +606,11 @@ body.light {
   --foreground: 156 40% 5%;
 }
 
+body, html, .font-sans, button, input, select, textarea {
+  font-family: var(--font) !important;
+}
+
 body {
-  font-family: var(--font);
   background: var(--page);
   color: var(--t1);
   font-size: 13px;
@@ -619,7 +662,7 @@ body {
 }
 
 .f-btn:hover {
-  background: #f0a93b !important;
+  background: #33ecff !important;
   transform: translateY(-1px);
   box-shadow: 0 6px 16px var(--p-glow);
 }
@@ -1026,7 +1069,7 @@ h6 {
   border-color: var(--p-line);
 }
 
-.badge-gold {
+.badge-aqua {
   background: var(--p-dim);
   color: var(--p);
   border-color: var(--p-line);

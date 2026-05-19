@@ -5772,7 +5772,7 @@ const SalaryAdvanceAdmin: React.FC<SalaryAdvanceAdminProps> = ({
                 </button>
               )}
 
-              {/* Bulk Pay — solid gold primary CTA */}
+              {/* Bulk Pay — solid aqua primary CTA */}
               {fullyApprovedApplications.length > 0 && (
                 <button
                   onClick={() => setShowBulkPaymentModal(true)}
@@ -5962,8 +5962,8 @@ const SalaryAdvanceAdmin: React.FC<SalaryAdvanceAdminProps> = ({
             />
 
             {/* ── Salary Advance Pipeline (LifecycleMap style) ── */}
-            <div className="border border-[#C8A84B]/20 rounded-[20px] px-6 py-4 bg-white/[0.01] backdrop-blur-sm mb-2">
-              <div className="text-[10px] font-bold text-[#C8A84B]/60 uppercase tracking-widest mb-4">Advance Pipeline</div>
+            <div className="border border-[#00E5FF]/20 rounded-[20px] px-6 py-4 bg-white/[0.01] backdrop-blur-sm mb-2">
+              <div className="text-[10px] font-bold text-[#00E5FF]/60 uppercase tracking-widest mb-4">Advance Pipeline</div>
               <div className="relative grid grid-cols-4 gap-2">
                 {[
                   { number: '01', label: 'Applied', sublabel: 'Staff submits advance request', icon: PenLine, active: true },
@@ -5974,21 +5974,21 @@ const SalaryAdvanceAdmin: React.FC<SalaryAdvanceAdminProps> = ({
                   <div key={stage.number} className="relative z-10 flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-0.5 group">
                     {index < 3 && (
                       <>
-                        <div className="absolute top-[20px] left-[calc(50%+24px)] w-[calc(100%-48px)] h-px bg-[#C8A84B]/40 z-0" />
-                        <div className="absolute top-[20px] left-[100%] w-1.5 h-1.5 rounded-full bg-[#C8A84B]/80 -translate-y-1/2 -translate-x-1/2 z-0" />
+                        <div className="absolute top-[20px] left-[calc(50%+24px)] w-[calc(100%-48px)] h-px bg-[#00E5FF]/40 z-0" />
+                        <div className="absolute top-[20px] left-[100%] w-1.5 h-1.5 rounded-full bg-[#00E5FF]/80 -translate-y-1/2 -translate-x-1/2 z-0" />
                       </>
                     )}
                     <div className={`h-[40px] w-[40px] rounded-full border flex items-center justify-center mb-3 transition-all duration-500 ${
                       stage.active
-                        ? 'border-[#C8A84B]/50 bg-[#C8A84B]/10 group-hover:border-[#C8A84B] group-hover:bg-[#C8A84B]/15'
-                        : 'border-[#C8A84B]/15 bg-white/[0.02] group-hover:border-[#C8A84B]/30'
+                        ? 'border-[#00E5FF]/50 bg-[#00E5FF]/10 group-hover:border-[#00E5FF] group-hover:bg-[#00E5FF]/15'
+                        : 'border-[#00E5FF]/15 bg-white/[0.02] group-hover:border-[#00E5FF]/30'
                     }`}>
                       <stage.icon
-                        className={`w-4 h-4 transition-colors duration-500 ${stage.active ? 'text-[#C8A84B]' : 'text-[#C8A84B]/30 group-hover:text-[#C8A84B]/60'}`}
+                        className={`w-4 h-4 transition-colors duration-500 ${stage.active ? 'text-[#00E5FF]' : 'text-[#00E5FF]/30 group-hover:text-[#00E5FF]/60'}`}
                         strokeWidth={1.2}
                       />
                     </div>
-                    <span className="text-[7px] font-medium tracking-[0.2em] text-[#C8A84B]/60 mb-1 block">{stage.number}</span>
+                    <span className="text-[7px] font-medium tracking-[0.2em] text-[#00E5FF]/60 mb-1 block">{stage.number}</span>
                     <h3 className={`text-[12px] font-medium tracking-tight mb-0.5 ${stage.active ? 'text-white/90' : 'text-white/35'}`}>{stage.label}</h3>
                     <p className="text-[9px] leading-tight text-white/25 font-light px-1">{stage.sublabel}</p>
                   </div>
@@ -6218,7 +6218,7 @@ const SalaryAdvanceAdmin: React.FC<SalaryAdvanceAdminProps> = ({
                                         <CheckCircle className="w-3 h-3" /> Recommend
                                       </button>
                                       <button onClick={() => openRecommendationModal(app, 'bm-recommend-adjusted')}
-                                        className="inline-flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-semibold rounded-lg border transition-all bg-[var(--p-dim)] text-[var(--p)] border-[var(--p-line)] hover:border-[var(--p-glow)] hover:bg-[rgba(245,166,35,0.12)]">
+                                        className="inline-flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-semibold rounded-lg border transition-all bg-[var(--p-dim)] text-[var(--p)] border-[var(--p-line)] hover:border-[var(--p-glow)] hover:bg-[rgba(0, 229, 255,0.12)]">
                                         <Edit3 className="w-3 h-3" /> Adjusted
                                       </button>
                                       <button onClick={() => openRecommendationModal(app, 'bm-recommend-reject')}
@@ -6236,7 +6236,7 @@ const SalaryAdvanceAdmin: React.FC<SalaryAdvanceAdminProps> = ({
                                         <CheckCircle className="w-3 h-3" /> Recommend
                                       </button>
                                       <button onClick={() => openRecommendationModal(app, 'rm-recommend-adjusted')}
-                                        className="inline-flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-semibold rounded-lg border transition-all bg-[var(--p-dim)] text-[var(--p)] border-[var(--p-line)] hover:border-[var(--p-glow)] hover:bg-[rgba(245,166,35,0.12)]">
+                                        className="inline-flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-semibold rounded-lg border transition-all bg-[var(--p-dim)] text-[var(--p)] border-[var(--p-line)] hover:border-[var(--p-glow)] hover:bg-[rgba(0, 229, 255,0.12)]">
                                         <Edit3 className="w-3 h-3" /> Adjusted
                                       </button>
                                       <button onClick={() => openRecommendationModal(app, 'rm-recommend-reject')}
@@ -6262,7 +6262,7 @@ const SalaryAdvanceAdmin: React.FC<SalaryAdvanceAdminProps> = ({
                                         <CheckCircle className="w-3 h-3" /> Approve
                                       </button>
                                       <button onClick={() => openRecommendationModal(app, 'admin-approve-adjusted')}
-                                        className="inline-flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-semibold rounded-lg border transition-all bg-[var(--p-dim)] text-[var(--p)] border-[var(--p-line)] hover:border-[var(--p-glow)] hover:bg-[rgba(245,166,35,0.12)]">
+                                        className="inline-flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-semibold rounded-lg border transition-all bg-[var(--p-dim)] text-[var(--p)] border-[var(--p-line)] hover:border-[var(--p-glow)] hover:bg-[rgba(0, 229, 255,0.12)]">
                                         <Edit3 className="w-3 h-3" /> Adjusted
                                       </button>
                                       <button onClick={() => openRecommendationModal(app, 'admin-reject')}
@@ -6295,7 +6295,7 @@ const SalaryAdvanceAdmin: React.FC<SalaryAdvanceAdminProps> = ({
                                     </span>
                                   )}
                                   {app.status?.toLowerCase() === 'processing' && (
-                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[var(--amber)] bg-[rgba(245,166,35,0.08)] px-2 py-1 rounded-lg border border-[rgba(245,166,35,0.25)] animate-pulse">
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[var(--amber)] bg-[rgba(0, 229, 255,0.08)] px-2 py-1 rounded-lg border border-[rgba(0, 229, 255,0.25)] animate-pulse">
                                       <Loader className="w-3 h-3 animate-spin" /> Processing...
                                     </span>
                                   )}

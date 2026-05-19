@@ -58,19 +58,19 @@ function PremiumSelect({
         return () => document.removeEventListener('mousedown', handler);
     }, []);
 
-    const ringColor = accentColor === 'red' ? 'ring-red-400' : 'ring-violet-500';
-    const activeText = accentColor === 'red' ? 'text-red-600 bg-red-50' : 'text-violet-700 bg-violet-50';
+    const ringColor = accentColor === 'red' ? 'ring-red-400' : 'ring-[var(--p-glow)]';
+    const activeText = accentColor === 'red' ? 'text-red-400 bg-red-500/10 border border-red-500/20' : 'text-[var(--p)] bg-[var(--p-dim)] border border-[var(--p-line)]';
 
     return (
         <div className="relative w-full" ref={ref}>
             <button
                 type="button"
                 onClick={() => setOpen(o => !o)}
-                className={`w-full flex items-center justify-between gap-2 px-3 py-2.5 text-xs border rounded-xl bg-[var(--card)] transition-all ${open ? `border-violet-400 ring-2 ${ringColor}` : 'border-gray-200 hover:border-gray-300'}`}
+                className={`w-full flex items-center justify-between gap-2 px-3 py-2.5 text-xs border rounded-xl bg-[var(--card)] text-white transition-all ${open ? `border-[var(--p)] ring-2 ${ringColor}` : 'border-[var(--p-line)] hover:border-[var(--p)]'}`}
             >
                 <div className="flex items-center gap-2 min-w-0">
                     {Icon && <Icon className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />}
-                    <span className={`truncate ${selected ? 'text-gray-800 font-medium' : 'text-gray-400'}`}>
+                    <span className={`truncate ${selected ? 'text-white font-medium' : 'text-gray-400'}`}>
                         {selected?.label || placeholder}
                     </span>
                 </div>
@@ -83,7 +83,7 @@ function PremiumSelect({
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 4, scale: 0.97 }}
                         transition={{ duration: 0.12 }}
-                        className="absolute z-50 left-0 right-0 mt-1.5 bg-[var(--card)] border border-gray-200 rounded-xl shadow-lg overflow-hidden"
+                        className="absolute z-50 left-0 right-0 mt-1.5 bg-[var(--card)] border border-[var(--p-line)] rounded-xl shadow-lg overflow-hidden"
                     >
                         <div className="max-h-52 overflow-y-auto py-1">
                             {options.map(opt => (
@@ -91,7 +91,7 @@ function PremiumSelect({
                                     key={opt.value}
                                     type="button"
                                     onClick={() => { onChange(opt.value); setOpen(false); }}
-                                    className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between transition-colors hover:bg-gray-50 ${value === opt.value ? activeText + ' font-medium' : 'text-gray-700'}`}
+                                    className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between transition-colors hover:bg-[var(--p-dim)] ${value === opt.value ? activeText + ' font-medium' : 'text-[var(--t3)] hover:text-white'}`}
                                 >
                                     {opt.label}
                                     {value === opt.value && <CheckCircle className="w-3 h-3 flex-shrink-0" />}
@@ -142,11 +142,11 @@ function PremiumDatePicker({ value, onChange, label }: { value: string; onChange
             <button
                 type="button"
                 onClick={() => setOpen(o => !o)}
-                className={`w-full flex items-center justify-between gap-2 px-3 py-2.5 text-xs border rounded-xl bg-[var(--card)] transition-all ${open ? 'border-violet-400 ring-2 ring-violet-500' : 'border-gray-200 hover:border-gray-300'}`}
+                className={`w-full flex items-center justify-between gap-2 px-3 py-2.5 text-xs border rounded-xl bg-[var(--card)] text-white transition-all ${open ? 'border-[var(--p)] ring-2 ring-[var(--p-glow)]' : 'border-[var(--p-line)] hover:border-[var(--p)]'}`}
             >
                 <div className="flex items-center gap-2">
                     <Calendar className="w-3.5 h-3.5 text-gray-400" />
-                    <span className={value ? 'text-gray-800 font-medium' : 'text-gray-400'}>{displayValue || label || 'Select date'}</span>
+                    <span className={value ? 'text-white font-medium' : 'text-gray-400'}>{displayValue || label || 'Select date'}</span>
                 </div>
                 <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`} />
             </button>
@@ -157,12 +157,12 @@ function PremiumDatePicker({ value, onChange, label }: { value: string; onChange
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 4, scale: 0.97 }}
                         transition={{ duration: 0.12 }}
-                        className="absolute z-50 left-0 mt-1.5 bg-[var(--card)] border border-gray-200 rounded-xl shadow-lg p-3 w-64"
+                        className="absolute z-50 left-0 mt-1.5 bg-[var(--card)] border border-[var(--p-line)] rounded-xl shadow-lg p-3 w-64"
                     >
                         <div className="flex items-center justify-between mb-3">
-                            <button type="button" onClick={prevMonth} className="p-1 hover:bg-gray-100 rounded-lg"><ChevronLeft className="w-3.5 h-3.5" /></button>
-                            <span className="text-xs font-semibold text-gray-800">{monthNames[month]} {year}</span>
-                            <button type="button" onClick={nextMonth} className="p-1 hover:bg-gray-100 rounded-lg"><ChevronRight className="w-3.5 h-3.5" /></button>
+                            <button type="button" onClick={prevMonth} className="p-1 hover:bg-[var(--p-dim)] rounded-lg text-white"><ChevronLeft className="w-3.5 h-3.5" /></button>
+                            <span className="text-xs font-semibold text-[var(--t1)]">{monthNames[month]} {year}</span>
+                            <button type="button" onClick={nextMonth} className="p-1 hover:bg-[var(--p-dim)] rounded-lg text-white"><ChevronRight className="w-3.5 h-3.5" /></button>
                         </div>
                         <div className="grid grid-cols-7 gap-0.5 mb-1">
                             {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (
@@ -180,7 +180,7 @@ function PremiumDatePicker({ value, onChange, label }: { value: string; onChange
                                     <button
                                         key={day} type="button" onClick={() => handleDay(day)}
                                         className={`text-[11px] py-1 rounded-lg text-center transition-colors font-medium
-                                            ${isSelected ? 'bg-violet-600 text-white' : isToday ? 'bg-violet-100 text-violet-700' : 'text-gray-700 hover:bg-gray-100'}`}
+                                            ${isSelected ? 'bg-[var(--p)] text-[#07080d] font-bold' : isToday ? 'bg-[var(--p-dim)] text-[var(--p)]' : 'text-gray-300 hover:bg-[var(--p-dim)] hover:text-white'}`}
                                     >{day}</button>
                                 );
                             })}
@@ -314,13 +314,13 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
     const getStatusBadge = (record: EmploymentStatus) => {
         const days = getDaysInfo(record);
         if (record.id < 0 || (!record.joining_date && (record.employment_type === 'Probation' || record.employment_type === 'Contract'))) {
-            return { label: 'Missing Status/Date', color: 'bg-orange-100 text-orange-700 border-orange-200' };
+            return { label: 'Missing Status/Date', color: 'bg-[var(--p-dim)] text-[var(--p)] border-[var(--p-line)]' };
         }
-        if (days !== null && days < 0) return { label: 'Overdue', color: 'bg-red-100 text-red-700 border-red-200' };
-        if (days !== null && days <= 7) return { label: `${days}d left`, color: 'bg-amber-100 text-amber-700 border-amber-200' };
-        if (days !== null && days <= 30) return { label: `${days}d left`, color: 'bg-yellow-100 text-yellow-700 border-yellow-200' };
-        if (record.is_confirmed) return { label: 'Confirmed', color: 'bg-green-100 text-green-700 border-green-200' };
-        return { label: record.employment_type, color: 'bg-blue-100 text-blue-700 border-blue-200' };
+        if (days !== null && days < 0) return { label: 'Overdue', color: 'bg-red-500/10 text-red-400 border-red-500/30' };
+        if (days !== null && days <= 7) return { label: `${days}d left`, color: 'bg-[var(--p-dim)] text-[var(--p)] border-[var(--p-line)]' };
+        if (days !== null && days <= 30) return { label: `${days}d left`, color: 'bg-[var(--p-dim)] text-[var(--p)] border-[var(--p-line)]' };
+        if (record.is_confirmed) return { label: 'Confirmed', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' };
+        return { label: record.employment_type, color: 'bg-[var(--p-dim)] text-[var(--p)] border-[var(--p-line)]' };
     };
 
     const handleAction = async () => {
@@ -502,32 +502,32 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                    <h2 className="text-lg font-bold text-gray-900">Employment Status</h2>
-                    <p className="text-xs text-gray-500">Track probation, contracts, attachments and permanent staff · {filtered.length} records</p>
+                    <h2 className="text-lg font-bold text-[var(--t1)]">Employment Status</h2>
+                    <p className="text-xs text-[var(--t3)]">Track probation, contracts, attachments and permanent staff · {filtered.length} records</p>
                 </div>
                 <div className="flex items-center gap-2">
                     {selectedIds.size > 0 && (
                         <button onClick={() => setShowBulkModal(true)}
-                            className="flex items-center gap-1.5 px-3 py-2 bg-violet-600 text-white text-xs font-medium rounded-lg hover:bg-violet-700 transition-colors">
+                            className="flex items-center gap-1.5 px-3 py-2 bg-[var(--p)] text-[#07080d] text-xs font-bold rounded-lg hover:brightness-110 shadow-[0_0_12px_rgba(0,229,255,0.2)] transition-colors">
                             <Edit3 className="w-3 h-3" /> Bulk Update ({selectedIds.size})
                         </button>
                     )}
                     <button onClick={() => setShowAddModal(true)}
-                        className="flex items-center gap-2 px-4 py-2 bg-violet-600 text-white text-xs font-medium rounded-lg hover:bg-violet-700 transition-colors">
+                        className="flex items-center gap-2 px-4 py-2 bg-[var(--p)] text-[#07080d] text-xs font-bold rounded-lg hover:brightness-110 shadow-[0_0_12px_rgba(0,229,255,0.2)] transition-colors">
                         <Plus className="w-3.5 h-3.5" /> Assign Status
                     </button>
                 </div>
             </div>
 
             {/* Filters */}
-            <div className="bg-[var(--card)] border border-gray-200 rounded-xl p-4 space-y-3">
+            <div className="bg-[var(--card)] border border-[var(--p-line)] rounded-xl p-4 space-y-3">
                 <div className="flex flex-wrap gap-3 items-center">
                     <div className="relative flex-1 min-w-[180px]">
                         <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         <input
                             type="text" placeholder="Search employee name or ID..." value={search}
                             onChange={e => { setSearch(e.target.value); setPage(1); }}
-                            className="w-full pl-9 pr-3 py-2 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500"
+                            className="w-full pl-9 pr-3 py-2 text-xs bg-[var(--card)] text-white border border-[var(--p-line)] rounded-lg focus:outline-none focus:border-[var(--p)] focus:ring-2 focus:ring-[var(--p-glow)]"
                         />
                     </div>
                     <div className="w-40">
@@ -548,8 +548,8 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
                 <div className="flex flex-wrap gap-2">
                     {(['all', 'Probation', 'Contract', 'Permanent', 'Attachment', 'missing_date', 'overdue'] as const).map(f => (
                         <button key={f} onClick={() => { setFilter(f); setPage(1); }}
-                            className={`px-3 py-1.5 rounded-lg text-[11px] font-medium border transition-all
-                                ${filter === f ? 'bg-violet-600 text-white border-violet-600' : 'bg-[var(--card)] text-gray-600 border-gray-200 hover:border-violet-300'}`}>
+                            className={`px-3 py-1.5 rounded-lg text-[11px] font-semibold border transition-all
+                                ${filter === f ? 'bg-[var(--p)] text-[#07080d] border-[var(--p)]' : 'bg-[var(--card)] text-[var(--t3)] border-[var(--p-line)] hover:border-[var(--p)] hover:text-white'}`}>
                             {f === 'all' ? 'All' : f === 'missing_date' ? 'Missing Date' : f === 'overdue' ? 'Overdue' : f}
                         </button>
                     ))}
@@ -559,7 +559,7 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
             {/* List */}
             {loading ? (
                 <div className="flex items-center justify-center h-40">
-                    <Loader2 className="w-6 h-6 animate-spin text-violet-500" />
+                    <Loader2 className="w-6 h-6 animate-spin text-[var(--p)]" />
                 </div>
             ) : filtered.length === 0 ? (
                 <div className="bg-[var(--card)] border border-gray-200 rounded-xl p-12 text-center">
@@ -574,9 +574,9 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
                             type="checkbox"
                             checked={paginated.length > 0 && paginated.every(r => selectedIds.has(r.id))}
                             onChange={toggleAllPage}
-                            className="w-3.5 h-3.5 accent-violet-600"
+                            className="w-3.5 h-3.5 accent-[var(--p)]"
                         />
-                        <span className="text-[11px] text-gray-500">{selectedIds.size > 0 ? `${selectedIds.size} selected` : `Select all on page`}</span>
+                        <span className="text-[11px] text-[var(--t3)]">{selectedIds.size > 0 ? `${selectedIds.size} selected` : `Select all on page`}</span>
                     </div>
 
                     <div className="grid gap-2.5">
@@ -589,21 +589,21 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
                                     key={record.id}
                                     initial={{ opacity: 0, y: 6 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    className={`bg-[var(--card)] border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-sm transition-all ${isSelected ? 'border-violet-300 bg-violet-50/30' : 'border-gray-200'}`}
+                                    className={`bg-[var(--card)] border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:shadow-md transition-all ${isSelected ? 'border-[var(--p)] bg-[var(--p-dim)]' : 'border-[var(--p-line)]'}`}
                                 >
                                     <div className="flex items-center gap-3">
                                         <input
                                             type="checkbox" checked={isSelected} onChange={() => toggleSelect(record.id)}
-                                            className="w-3.5 h-3.5 accent-violet-600 flex-shrink-0"
+                                            className="w-3.5 h-3.5 accent-[var(--p)] flex-shrink-0"
                                         />
                                         <div>
-                                            <p className="text-sm font-semibold text-gray-900">
+                                            <p className="text-sm font-semibold text-white">
                                                 {record.employee?.['First Name']} {record.employee?.['Last Name']}
-                                                {!record.employee && <span className="text-gray-400"> (no profile)</span>}
+                                                {!record.employee && <span className="text-gray-500"> (no profile)</span>}
                                             </p>
-                                            <p className="text-xs text-gray-500">{record['Employee Number']} · {record.employee?.['Job Title'] || '—'}</p>
+                                            <p className="text-xs text-[var(--t3)]">{record['Employee Number']} · {record.employee?.['Job Title'] || '—'}</p>
                                             {record.employee?.Branch && (
-                                                <p className="text-[10px] text-gray-400">{record.employee.Branch}{record.employee.Town ? ` · ${record.employee.Town}` : ''}</p>
+                                                <p className="text-[10px] text-[var(--t4)]">{record.employee.Branch}{record.employee.Town ? ` · ${record.employee.Town}` : ''}</p>
                                             )}
                                             <div className="flex items-center gap-2 mt-1 flex-wrap">
                                                 <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full border ${badge.color}`}>{badge.label}</span>
@@ -619,11 +619,11 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
 
                                     <div className="flex items-center gap-2 ml-auto flex-wrap">
                                         {record.id < 0 || (!record.joining_date && (record.employment_type === 'Probation' || record.employment_type === 'Contract')) ? (
-                                            <span className="text-[10px] px-2 py-1 bg-orange-50 text-orange-600 rounded-lg border border-orange-100 flex items-center gap-1">
-                                                <AlertTriangle className="w-3 h-3" /> Missing Status/Date
+                                            <span className="text-[10px] px-2 py-1 bg-[var(--p-dim)] text-[var(--p)] rounded-lg border border-[var(--p-line)] flex items-center gap-1 font-semibold">
+                                                <AlertTriangle className="w-3 h-3 text-[var(--p)]" /> Missing Status/Date
                                             </span>
                                         ) : days !== null ? (
-                                            <span className={`text-[10px] px-2 py-1 rounded-lg border flex items-center gap-1 ${days < 0 ? 'bg-red-50 text-red-600 border-red-100' : days <= 7 ? 'bg-amber-50 text-amber-600 border-amber-100' : 'bg-blue-50 text-blue-600 border-blue-100'}`}>
+                                            <span className={`text-[10px] px-2 py-1 rounded-lg border flex items-center gap-1 font-semibold ${days < 0 ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-[var(--p-dim)] text-[var(--p)] border-[var(--p-line)]'}`}>
                                                 <Clock className="w-3 h-3" /> {days < 0 ? `${Math.abs(days)}d overdue` : `${days}d left`}
                                             </span>
                                         ) : null}
@@ -631,11 +631,11 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
                                         {record.id > 0 && record.employment_type === 'Probation' && !record.is_confirmed && (
                                             <div className="flex gap-1.5">
                                                 <button onClick={() => { setSelectedRecord(record); setActionType('confirm'); setShowModal(true); }}
-                                                    className="px-2.5 py-1.5 text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg hover:bg-emerald-100 flex items-center gap-1">
+                                                    className="px-2.5 py-1.5 text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-lg hover:bg-emerald-500/20 flex items-center gap-1 font-semibold transition-colors">
                                                     <CheckCircle className="w-3 h-3" /> Confirm
                                                 </button>
                                                 <button onClick={() => { setSelectedRecord(record); setActionType('extend_probation'); setShowModal(true); }}
-                                                    className="px-2.5 py-1.5 text-[10px] bg-amber-50 text-amber-700 border border-amber-200 rounded-lg hover:bg-amber-100 flex items-center gap-1">
+                                                    className="px-2.5 py-1.5 text-[10px] bg-[var(--p-dim)] text-[var(--p)] border border-[var(--p-line)] rounded-lg hover:brightness-110 flex items-center gap-1 font-semibold transition-colors">
                                                     <Clock className="w-3 h-3" /> Extend
                                                 </button>
                                             </div>
@@ -643,11 +643,11 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
                                         {record.id > 0 && record.employment_type === 'Contract' && (
                                             <div className="flex gap-1.5">
                                                 <button onClick={() => { setSelectedRecord(record); setActionType('renew_contract'); setShowModal(true); }}
-                                                    className="px-2.5 py-1.5 text-[10px] bg-violet-50 text-violet-700 border border-violet-200 rounded-lg hover:bg-violet-100 flex items-center gap-1">
+                                                    className="px-2.5 py-1.5 text-[10px] bg-[var(--p-dim)] text-[var(--p)] border border-[var(--p-line)] rounded-lg hover:brightness-110 flex items-center gap-1 font-semibold transition-all">
                                                     <RefreshCw className="w-3 h-3" /> Renew
                                                 </button>
                                                 <button onClick={() => { setSelectedRecord(record); setActionType('convert_permanent'); setShowModal(true); }}
-                                                    className="px-2.5 py-1.5 text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg hover:bg-emerald-100 flex items-center gap-1">
+                                                    className="px-2.5 py-1.5 text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-lg hover:bg-emerald-500/20 flex items-center gap-1 font-semibold transition-colors">
                                                     <UserCheck className="w-3 h-3" /> Convert
                                                 </button>
                                             </div>
@@ -673,7 +673,7 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
                                     const p = Math.max(1, Math.min(page - 2, totalPages - 4)) + i;
                                     return p <= totalPages ? (
                                         <button key={p} onClick={() => setPage(p)}
-                                            className={`px-3 py-1.5 text-xs rounded-lg border ${p === page ? 'bg-violet-600 text-white border-violet-600' : 'border-gray-200 hover:bg-gray-50'}`}>
+                                            className={`px-3 py-1.5 text-xs rounded-lg border ${p === page ? 'bg-[var(--p)] text-[#07080d] border-[var(--p)] font-bold' : 'border-[var(--p-line)] text-gray-300 hover:bg-[var(--p-dim)] hover:text-white'}`}>
                                             {p}
                                         </button>
                                     ) : null;
@@ -694,36 +694,36 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
                     <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
                         className="bg-[var(--card)] rounded-2xl shadow-2xl w-full max-w-sm p-6">
                         <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-sm font-bold text-gray-900">
+                            <h3 className="text-sm font-bold text-white">
                                 {actionType === 'confirm' ? 'Confirm Probation' :
                                     actionType === 'extend_probation' ? 'Extend Probation' :
                                         actionType === 'renew_contract' ? 'Renew Contract' :
                                             'Convert to Permanent'}
                             </h3>
-                            <button onClick={() => { setShowModal(false); setActionType(null); }} className="p-1 hover:bg-gray-100 rounded-lg">
-                                <X className="w-4 h-4 text-gray-500" />
+                            <button onClick={() => { setShowModal(false); setActionType(null); }} className="p-1 hover:bg-[var(--p-dim)] rounded-lg text-white">
+                                <X className="w-4 h-4 text-gray-400" />
                             </button>
                         </div>
-                        <p className="text-xs text-gray-600 mb-4">
+                        <p className="text-xs text-gray-300 mb-4">
                             Employee: <strong>{selectedRecord.employee?.['First Name']} {selectedRecord.employee?.['Last Name']}</strong> ({selectedRecord['Employee Number']})
                         </p>
                         {(actionType === 'extend_probation' || actionType === 'renew_contract') && (
                             <div className="mb-3">
-                                <label className="text-xs font-medium text-gray-700 block mb-1">Extension Months</label>
+                                <label className="text-xs font-semibold text-[var(--t2)] block mb-1">Extension Months</label>
                                 <input type="number" min={1} max={24} value={extensionMonths} onChange={e => setExtensionMonths(Number(e.target.value))}
-                                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-violet-500" />
+                                    className="w-full bg-[var(--card)] text-white border border-[var(--p-line)] rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-[var(--p)] focus:ring-2 focus:ring-[var(--p-glow)]" />
                             </div>
                         )}
                         <div className="mb-4">
-                            <label className="text-xs font-medium text-gray-700 block mb-1">Notes (optional)</label>
+                            <label className="text-xs font-semibold text-[var(--t2)] block mb-1">Notes (optional)</label>
                             <textarea rows={2} value={actionNotes} onChange={e => setActionNotes(e.target.value)}
-                                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-violet-500 resize-none" />
+                                className="w-full bg-[var(--card)] text-white border border-[var(--p-line)] rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-[var(--p)] focus:ring-2 focus:ring-[var(--p-glow)] resize-none" />
                         </div>
                         <div className="flex gap-2">
                             <button onClick={() => { setShowModal(false); setActionType(null); }}
-                                className="flex-1 py-2 text-xs border border-gray-200 rounded-xl hover:bg-gray-50 text-gray-600">Cancel</button>
+                                className="flex-1 py-2 text-xs border border-[var(--p-line)] rounded-xl hover:bg-[var(--p-dim)] text-[var(--t3)] hover:text-white">Cancel</button>
                             <button onClick={handleAction} disabled={saving}
-                                className="flex-1 py-2 text-xs bg-violet-600 text-white rounded-xl hover:bg-violet-700 disabled:opacity-50 flex items-center justify-center gap-1">
+                                className="flex-1 py-2 text-xs bg-[var(--p)] text-[#07080d] font-bold rounded-xl hover:brightness-110 disabled:opacity-50 flex items-center justify-center gap-1 transition-all">
                                 {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle className="w-3.5 h-3.5" />}
                                 Confirm
                             </button>
@@ -737,20 +737,20 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
                     <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
                         className="bg-[var(--card)] rounded-2xl shadow-2xl w-full max-w-md flex flex-col max-h-[90vh] overflow-hidden">
-                        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
+                        <div className="px-6 py-4 border-b border-[var(--p-line)] flex items-center justify-between flex-shrink-0">
                             <div>
-                                <h3 className="text-sm font-bold text-gray-900">Assign Employment Status</h3>
-                                <p className="text-[11px] text-gray-500 mt-0.5">Set type, duration and joining date</p>
+                                <h3 className="text-sm font-bold text-white">Assign Employment Status</h3>
+                                <p className="text-[11px] text-gray-400 mt-0.5">Set type, duration and joining date</p>
                             </div>
-                            <button onClick={() => setShowAddModal(false)} className="p-1.5 hover:bg-gray-100 rounded-xl transition-colors">
-                                <X className="w-4 h-4 text-gray-500" />
+                            <button onClick={() => setShowAddModal(false)} className="p-1.5 hover:bg-[var(--p-dim)] rounded-xl transition-colors text-white">
+                                <X className="w-4 h-4 text-gray-400" />
                             </button>
                         </div>
 
                         <div className="p-6 overflow-y-auto custom-scrollbar flex-1">
                             <div className="space-y-4">
                                 <div>
-                                    <label className="text-xs font-semibold text-gray-700 block mb-1.5">Employee *</label>
+                                    <label className="text-xs font-semibold text-gray-300 block mb-1.5">Employee *</label>
                                     <PremiumSelect
                                         value={addForm.employeeNumber}
                                         onChange={v => {
@@ -801,7 +801,7 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
                                                 type="number" min={1} max={addForm.probation_unit === 'weeks' ? 52 : 12}
                                                 value={addForm.probation_value}
                                                 onChange={e => setAddForm(f => ({ ...f, probation_value: Number(e.target.value) }))}
-                                                className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-violet-500"
+                                                className="flex-1 bg-[var(--card)] text-white border border-[var(--p-line)] rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-[var(--p)] focus:ring-2 focus:ring-[var(--p-glow)]"
                                             />
                                             <div className="w-32">
                                                 <PremiumSelect
@@ -817,28 +817,28 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
                                 )}
                                 {addForm.employment_type === 'Contract' && (
                                     <div>
-                                        <label className="text-xs font-semibold text-gray-700 block mb-1.5">Contract Duration (months)</label>
+                                        <label className="text-xs font-semibold text-gray-300 block mb-1.5">Contract Duration (months)</label>
                                         <input
                                             type="number" min={1} max={60} value={addForm.contract_duration_months}
                                             onChange={e => setAddForm(f => ({ ...f, contract_duration_months: Number(e.target.value) }))}
-                                            className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-violet-500"
+                                            className="w-full bg-[var(--card)] text-white border border-[var(--p-line)] rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-[var(--p)] focus:ring-2 focus:ring-[var(--p-glow)]"
                                         />
                                     </div>
                                 )}
                                 <div>
-                                    <label className="text-xs font-semibold text-gray-700 block mb-1.5">Notes</label>
+                                    <label className="text-xs font-semibold text-gray-300 block mb-1.5">Notes</label>
                                     <textarea rows={2} value={addForm.notes} onChange={e => setAddForm(f => ({ ...f, notes: e.target.value }))}
-                                        className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-violet-500 resize-none"
+                                        className="w-full bg-[var(--card)] text-white border border-[var(--p-line)] rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-[var(--p)] focus:ring-2 focus:ring-[var(--p-glow)] resize-none"
                                         placeholder="Optional notes..." />
                                 </div>
                             </div>
                         </div>
 
-                        <div className="px-6 py-4 border-t border-gray-100 flex gap-3 flex-shrink-0 bg-[var(--glass)]">
+                        <div className="px-6 py-4 border-t border-[var(--p-line)] flex gap-3 flex-shrink-0 bg-[var(--card)]">
                             <button onClick={() => setShowAddModal(false)}
-                                className="flex-1 py-2.5 text-xs font-semibold border border-gray-200 rounded-xl hover:bg-gray-100 text-gray-600 transition-colors">Cancel</button>
+                                className="flex-1 py-2.5 text-xs font-semibold border border-[var(--p-line)] rounded-xl hover:bg-[var(--p-dim)] text-[var(--t3)] hover:text-white transition-colors">Cancel</button>
                             <button onClick={handleAddStatus} disabled={saving}
-                                className="flex-1 py-2.5 text-xs font-semibold bg-violet-600 text-white rounded-xl hover:bg-violet-700 disabled:opacity-50 flex items-center justify-center gap-1.5 transition-colors">
+                                className="flex-1 py-2.5 text-xs font-semibold bg-[var(--p)] text-[#07080d] rounded-xl hover:brightness-110 disabled:opacity-50 flex items-center justify-center gap-1.5 transition-colors">
                                 {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
                                 Save
                             </button>
@@ -851,11 +851,11 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
             {showBulkModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
                     <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-                        className="bg-[var(--card)] rounded-2xl shadow-2xl w-full max-w-xs p-6">
-                        <h3 className="text-sm font-bold text-gray-900 mb-1">Bulk Status Update</h3>
-                        <p className="text-xs text-gray-500 mb-4">{selectedIds.size} employee(s) selected</p>
+                        className="bg-[var(--card)] border border-[var(--p-line)] rounded-2xl shadow-2xl w-full max-w-xs p-6">
+                        <h3 className="text-sm font-bold text-white mb-1">Bulk Status Update</h3>
+                        <p className="text-xs text-[var(--t3)] mb-4">{selectedIds.size} employee(s) selected</p>
                         <div className="mb-4">
-                            <label className="text-xs font-semibold text-gray-700 block mb-1.5">New Employment Type</label>
+                            <label className="text-xs font-semibold text-gray-300 block mb-1.5">New Employment Type</label>
                             <PremiumSelect
                                 value={bulkType}
                                 onChange={v => setBulkType(v as EmploymentType)}
@@ -870,9 +870,9 @@ export default function EmploymentStatusModule({ onRefresh }: { onRefresh?: () =
                         </div>
                         <div className="flex gap-2">
                             <button onClick={() => setShowBulkModal(false)}
-                                className="flex-1 py-2 text-xs border border-gray-200 rounded-xl hover:bg-gray-50">Cancel</button>
+                                className="flex-1 py-2 text-xs border border-[var(--p-line)] rounded-xl hover:bg-[var(--p-dim)] text-[var(--t3)] hover:text-white">Cancel</button>
                             <button onClick={handleBulkAssign} disabled={saving}
-                                className="flex-1 py-2 text-xs bg-violet-600 text-white rounded-xl hover:bg-violet-700 disabled:opacity-50 flex items-center justify-center gap-1">
+                                className="flex-1 py-2 text-xs bg-[var(--p)] text-[#07080d] font-bold rounded-xl hover:brightness-110 disabled:opacity-50 flex items-center justify-center gap-1 transition-all">
                                 {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3" />}
                                 Apply
                             </button>

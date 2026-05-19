@@ -1430,7 +1430,7 @@ export function SMSCenter() {
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="p-4 bg-[rgba(200,168,75,0.06)] border border-[rgba(200,168,75,0.2)] rounded-xl flex items-start gap-3"
+                    className="p-4 bg-[rgba(0, 229, 255,0.06)] border border-[rgba(0, 229, 255,0.2)] rounded-xl flex items-start gap-3"
                   >
                     <Clock className="w-5 h-5 text-[var(--gold)] shrink-0 mt-0.5" />
                     <div>
@@ -1552,7 +1552,7 @@ export function SMSCenter() {
                         <label className="block text-xs font-bold text-[var(--t1)] uppercase tracking-wider">
                           Select Recipients
                         </label>
-                        <span className="text-[10px] text-[var(--gold)] font-bold bg-[rgba(200,168,75,0.06)] border border-[rgba(200,168,75,0.15)] px-2.5 py-0.5 rounded-full">
+                        <span className="text-[10px] text-[var(--gold)] font-bold bg-[rgba(0, 229, 255,0.06)] border border-[rgba(0, 229, 255,0.15)] px-2.5 py-0.5 rounded-full">
                           {selectedEmployees.length} Selected
                         </span>
                       </div>

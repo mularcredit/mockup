@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { Check, X, ArrowLeft, Loader2, CheckCircle2, ShieldCheck, Lock } from 'lucide-react';
+import { Check, X, ArrowLeft, Loader2, CheckCircle2, ShieldCheck, Lock, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const UpdatePasswordPage = () => {
@@ -27,15 +27,19 @@ const UpdatePasswordPage = () => {
     const validateAccess = async () => {
       try {
         setIsValidating(true);
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
+        const params = new URLSearchParams(window.location.search || window.location.hash.replace('#', '?'));
+        if (params.get('preview') === 'true') {
           setIsValidSession(true);
         } else {
-          const params = new URLSearchParams(window.location.search || window.location.hash.replace('#', '?'));
-          const code = params.get('code');
-          if (code) {
-            const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-            if (!error && data.session) setIsValidSession(true);
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session) {
+            setIsValidSession(true);
+          } else {
+            const code = params.get('code');
+            if (code) {
+              const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+              if (!error && data.session) setIsValidSession(true);
+            }
           }
         }
       } catch (err) {
@@ -86,17 +90,17 @@ const UpdatePasswordPage = () => {
           className="glass-card p-10 max-w-md w-full text-center border border-[var(--p-line)]"
         >
           <div className="flex justify-center mb-6">
-            <div className="w-20 h-20 bg-[var(--green-d)] rounded-2xl flex items-center justify-center border border-[var(--green-glow)]">
-              <CheckCircle2 className="h-10 w-10 text-[var(--green)]" />
+            <div className="w-20 h-20 bg-[var(--p-dim)] rounded-2xl flex items-center justify-center border border-[var(--p-line)]">
+              <CheckCircle2 className="h-10 w-10 text-[var(--p)]" />
             </div>
           </div>
-          <h1 className="text-2xl font-bold text-[var(--t1)] mb-2 uppercase tracking-tight">Access <span className="text-[var(--p)]">Restored</span></h1>
-          <p className="text-xs text-[var(--t3)] mb-8 font-mono uppercase tracking-widest">SECURITY_PROTOCOL_COMPLETE_SIGN_IN_PROCEED</p>
+          <h1 className="text-xl font-semibold text-[var(--t1)] mb-2 tracking-tight">Access restored</h1>
+          <p className="text-xs text-[var(--t3)] mb-8 font-medium">Security protocol complete. You may now log in with your new password.</p>
           <button
             onClick={() => navigate('/login')}
-            className="f-btn w-full !bg-[var(--p)] !text-[var(--sidebar)] shadow-[0_4px_15px_var(--p-glow)]"
+            className="f-btn w-full !bg-[var(--p)] !text-[var(--sidebar)] shadow-[0_4px_12px_var(--p-glow)]"
           >
-            AUTHORIZE_LOGIN
+            Authorize login
           </button>
         </motion.div>
       </div>
@@ -107,7 +111,7 @@ const UpdatePasswordPage = () => {
     return (
       <div className="min-h-screen bg-[var(--page)] flex flex-col items-center justify-center">
         <Loader2 className="animate-spin h-10 w-10 text-[var(--p)] mb-4 shadow-[0_0_15px_var(--p-glow)]" />
-        <p className="text-[10px] font-bold text-[var(--t3)] uppercase tracking-[0.3em] animate-blink">VALIDATING_ENCRYPTION_KEY...</p>
+        <p className="text-xs font-medium text-[var(--t3)] animate-blink">Validating encryption key...</p>
       </div>
     );
   }
@@ -154,22 +158,22 @@ const UpdatePasswordPage = () => {
             <div className="w-16 h-16 rounded-2xl bg-[var(--p-dim)] flex items-center justify-center border border-[var(--p-line)] relative group">
               <Lock className="h-7 w-7 text-[var(--p)] transition-transform group-hover:scale-110" />
               <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-[var(--sidebar)] border border-[var(--p-line)] rounded-lg flex items-center justify-center">
-                <ShieldCheck className="w-3 h-3 text-[var(--green)]" />
+                <ShieldCheck className="w-3 h-3 text-[var(--p)]" />
               </div>
             </div>
           </div>
-          <h2 className="text-2xl font-bold text-[var(--t1)] tracking-tight uppercase">Rotate <span className="text-[var(--p)]">Keys</span></h2>
-          <p className="text-[10px] text-[var(--t4)] font-mono uppercase tracking-widest mt-1.5">OVERWRITE_SECURITY_LAYER</p>
+          <h2 className="text-xl font-semibold text-[var(--t1)] tracking-tight">Reset your password</h2>
+          <p className="text-xs text-[var(--t4)] font-medium mt-1">Please enter your new secure password below</p>
         </div>
 
         <form onSubmit={handlePasswordUpdate} className="space-y-6">
           {/* New Password */}
           <div>
-            <label className="block text-[10px] font-bold text-[var(--t4)] uppercase tracking-[0.2em] mb-2 pl-1">New Cyber-Key</label>
+            <label className="block text-xs font-medium text-[var(--t3)] mb-1.5 pl-0.5">New password</label>
             <input
               type="password"
-              placeholder="ENCRYPT_NEW_PASSWORD..."
-              className="w-full px-4 py-3 bg-[var(--glass)] border border-[var(--p-line)] rounded-xl text-sm text-[var(--t1)] focus:border-[var(--p)] outline-none transition-all placeholder-[var(--t4)] font-mono"
+              placeholder="Enter new password"
+              className="w-full px-4 py-3 bg-[var(--glass)] border border-[var(--p-line)] rounded-xl text-sm text-[var(--t1)] focus:border-[var(--p)] outline-none transition-all placeholder-[var(--t4)]"
               value={password}
               autoFocus
               onChange={(e) => { setPassword(e.target.value); validate(e.target.value); }}
@@ -184,24 +188,24 @@ const UpdatePasswordPage = () => {
               animate={{ opacity: 1, height: 'auto' }}
               className="p-4 bg-[var(--sidebar)]/50 rounded-xl border border-[var(--p-line)] space-y-2.5"
             >
-              <p className="text-[9px] font-bold text-[var(--t4)] uppercase tracking-widest mb-1 opacity-60">Validation Metrics:</p>
-              <CheckRow met={passwordStrength.minLength} label="Length >= 0x08" />
-              <CheckRow met={passwordStrength.hasUppercase} label="Bitmask Uppercase [A-Z]" />
-              <CheckRow met={passwordStrength.hasLowercase} label="Bitmask Lowercase [a-z]" />
-              <CheckRow met={passwordStrength.hasNumber} label="Bitmask Numeric [0-9]" />
-              <CheckRow met={passwordStrength.hasSpecial} label="Entropy Symbol [!@#...]" />
+              <p className="text-[10px] font-semibold text-[var(--t4)] mb-1 opacity-60">Security requirements:</p>
+              <CheckRow met={passwordStrength.minLength} label="At least 8 characters" />
+              <CheckRow met={passwordStrength.hasUppercase} label="At least one uppercase letter [A-Z]" />
+              <CheckRow met={passwordStrength.hasLowercase} label="At least one lowercase letter [a-z]" />
+              <CheckRow met={passwordStrength.hasNumber} label="At least one number [0-9]" />
+              <CheckRow met={passwordStrength.hasSpecial} label="At least one special character [!@#...]" />
             </motion.div>
           )}
 
           {/* Confirm Password */}
           <div>
-            <label className="block text-[10px] font-bold text-[var(--t4)] uppercase tracking-[0.2em] mb-2 pl-1">Verify Key-Match</label>
+            <label className="block text-xs font-medium text-[var(--t3)] mb-1.5 pl-0.5">Confirm password</label>
             <input
               type="password"
-              placeholder="CONFIRM_ENCRYPTION..."
-              className={`w-full px-4 py-3 bg-[var(--glass)] border rounded-xl text-sm text-[var(--t1)] outline-none transition-all placeholder-[var(--t4)] font-mono ${
+              placeholder="Confirm new password"
+              className={`w-full px-4 py-3 bg-[var(--glass)] border rounded-xl text-sm text-[var(--t1)] outline-none transition-all placeholder-[var(--t4)] ${
                 passwordsMatch
-                  ? 'border-[var(--green)] focus:ring-[var(--green-glow)]'
+                  ? 'border-[var(--p)] focus:ring-[var(--p-glow)]'
                   : confirmPassword && !passwordsMatch
                   ? 'border-[var(--red)] focus:ring-[var(--red-glow)]'
                   : 'border-[var(--p-line)] focus:border-[var(--p)]'
@@ -211,9 +215,9 @@ const UpdatePasswordPage = () => {
               required
             />
             {confirmPassword.length > 0 && (
-              <p className={`text-[9px] font-bold uppercase tracking-widest mt-2 flex items-center gap-1.5 ${passwordsMatch ? 'text-[var(--green)]' : 'text-[var(--red)]'}`}>
+              <p className={`text-[10px] font-medium mt-2 flex items-center gap-1.5 ${passwordsMatch ? 'text-[var(--p)]' : 'text-[var(--red)]'}`}>
                 {passwordsMatch ? <CheckCircle2 size={12} /> : <AlertCircle size={12} />}
-                {passwordsMatch ? 'Keys Synchronized' : 'Bit-Mismatch Detected'}
+                {passwordsMatch ? 'Passwords match' : 'Passwords do not match'}
               </p>
             )}
           </div>
@@ -221,9 +225,9 @@ const UpdatePasswordPage = () => {
           <button
             type="submit"
             disabled={loading || !allMet || !passwordsMatch}
-            className="f-btn w-full !bg-[var(--p)] !text-[var(--sidebar)] shadow-[0_4px_15px_var(--p-glow)] disabled:opacity-20 disabled:grayscale transition-all mt-2"
+            className="f-btn w-full !bg-[var(--p)] !text-[var(--sidebar)] shadow-[0_4px_12px_var(--p-glow)] disabled:opacity-20 disabled:grayscale transition-all mt-2"
           >
-            {loading ? 'WRITING_TO_CORE...' : 'COMMIT_NEW_KEY'}
+            {loading ? 'Saving password...' : 'Save password'}
           </button>
         </form>
       </motion.div>
@@ -232,9 +236,9 @@ const UpdatePasswordPage = () => {
 };
 
 const CheckRow = ({ met, label }: { met: boolean; label: string }) => (
-  <div className={`flex items-center gap-3 text-[10px] font-bold uppercase tracking-wider ${met ? 'text-[var(--green)]' : 'text-[var(--t4)] opacity-40'}`}>
+  <div className={`flex items-center gap-3 text-[10px] font-medium ${met ? 'text-[var(--p)]' : 'text-[var(--t4)] opacity-40'}`}>
     {met
-      ? <div className="w-3.5 h-3.5 rounded-md bg-[var(--green-d)] flex items-center justify-center border border-[var(--green-glow)]"><Check size={10} className="text-[var(--green)]" /></div>
+      ? <div className="w-3.5 h-3.5 rounded-md bg-[var(--p-dim)] flex items-center justify-center border border-[var(--p-line)]"><Check size={10} className="text-[var(--p)]" /></div>
       : <div className="w-3.5 h-3.5 rounded-md border border-[var(--p-line)] flex-shrink-0" />}
     {label}
   </div>

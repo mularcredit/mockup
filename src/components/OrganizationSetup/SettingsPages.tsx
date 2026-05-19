@@ -215,18 +215,18 @@ export const JobGroupsConfig = () => (
 
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-medium text-[#C8A84B]/80 ml-1">Job Title / Designation</label>
+            <label className="text-[11px] font-medium text-[#00E5FF]/80 ml-1">Job Title / Designation</label>
             <input 
               type="text" 
               placeholder="e.g. Loan Officer" 
-              className="w-full bg-white/[0.02] border border-[#C8A84B]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#C8A84B]/50 focus:bg-[#C8A84B]/[0.02] transition-all duration-300"
+              className="w-full bg-white/[0.02] border border-[#00E5FF]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#00E5FF]/50 focus:bg-[#00E5FF]/[0.02] transition-all duration-300"
             />
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-medium text-[#C8A84B]/80 ml-1">Job Grade / Band</label>
+            <label className="text-[11px] font-medium text-[#00E5FF]/80 ml-1">Job Grade / Band</label>
             <select 
-              className="w-full bg-[var(--page)] border border-[#C8A84B]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#C8A84B]/50 focus:bg-[#C8A84B]/[0.02] transition-all duration-300 appearance-none"
+              className="w-full bg-[var(--page)] border border-[#00E5FF]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#00E5FF]/50 focus:bg-[#00E5FF]/[0.02] transition-all duration-300 appearance-none"
             >
               <option value="">Select Band</option>
               <option value="jg-a">JG-A (Executive)</option>
@@ -237,9 +237,9 @@ export const JobGroupsConfig = () => (
           </div>
           
           <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-medium text-[#C8A84B]/80 ml-1">Department Mapping</label>
+            <label className="text-[11px] font-medium text-[#00E5FF]/80 ml-1">Department Mapping</label>
             <select 
-              className="w-full bg-[var(--page)] border border-[#C8A84B]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#C8A84B]/50 focus:bg-[#C8A84B]/[0.02] transition-all duration-300 appearance-none"
+              className="w-full bg-[var(--page)] border border-[#00E5FF]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#00E5FF]/50 focus:bg-[#00E5FF]/[0.02] transition-all duration-300 appearance-none"
             >
               <option value="">Select Department</option>
               <option value="exec">Executive</option>
@@ -250,9 +250,9 @@ export const JobGroupsConfig = () => (
           </div>
 
                     <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-medium text-[#C8A84B]/80 ml-1">Reports To (Parent Role)</label>
+            <label className="text-[11px] font-medium text-[#00E5FF]/80 ml-1">Reports To (Parent Role)</label>
             <select 
-              className="w-full bg-[var(--page)] border border-[#C8A84B]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#C8A84B]/50 focus:bg-[#C8A84B]/[0.02] transition-all duration-300 appearance-none"
+              className="w-full bg-[var(--page)] border border-[#00E5FF]/20 rounded-lg px-3 py-2.5 text-[13px] text-white/90 outline-none focus:border-[#00E5FF]/50 focus:bg-[#00E5FF]/[0.02] transition-all duration-300 appearance-none"
             >
               <option value="">Select Parent Role (e.g., CEO)</option>
               <option value="ceo">Chief Executive Officer</option>
@@ -279,7 +279,7 @@ export const JobGroupsConfig = () => (
           <input 
             type="text" 
             placeholder="Search job roles..." 
-            className="w-full bg-[var(--page)] border border-[#C8A84B]/20 rounded-xl pl-9 pr-4 py-2 text-[12px] text-white/90 focus:outline-none focus:border-[#C8A84B]/50 transition-all"
+            className="w-full bg-[var(--page)] border border-[#00E5FF]/20 rounded-xl pl-9 pr-4 py-2 text-[12px] text-white/90 focus:outline-none focus:border-[#00E5FF]/50 transition-all"
           />
         </div>
 

@@ -9,7 +9,7 @@ import {
   Package, Smartphone, PieChart, 
   ShieldEllipsis, Settings, ShieldHalf,
   ChevronRight, Layers, ChevronDown,
-  LogOut, Building2
+  LogOut, Building2, Clock
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { usePermissions } from '../../hooks/usePermissions';
@@ -34,6 +34,7 @@ const menuGroups = [
       { id: 'recruitment', label: 'Talent Sourcing', icon: UserPlus2, path: '/recruitment', permission: 'recruitment' },
       { id: 'staffcheck', label: 'Disciplinary Logs', icon: ShieldAlert, path: '/staffcheck', permission: 'staffcheck' },
       { id: 'hr-lifecycle-dashboard', label: 'Employee Journey', icon: HeartHandshake, path: '/hr-lifecycle', permission: 'hr-lifecycle' },
+      { id: 'hr-onboarding-contract', label: 'Statutory Onboarding', icon: UserPlus2, path: '/hr-lifecycle?tab=onboarding', permission: 'hr-lifecycle' },
     ]
   },
   {
@@ -41,6 +42,7 @@ const menuGroups = [
     title: "Time & Attendance",
     icon: CalendarRange,
     items: [
+      { id: 'attendance', label: 'T&A Operations Portal', icon: Clock, path: '/attendance', permission: 'leaves' },
       { id: 'leaves', label: 'Leave Management', icon: CalendarRange, path: '/leaves', permission: 'leaves' },
       { id: 'task-manager', label: 'Duty Rosters', icon: Kanban, path: '/tasks', permission: 'task-manager' },
       { id: 'teams', label: 'Operations Teams', icon: Network, path: '/teams', permission: 'teams' },
@@ -166,22 +168,22 @@ export default function Sidebar({ user, isCollapsed, onToggle, onLogout }: Sideb
                 onClick={() => isCollapsed ? onToggle(false) : toggleGroup(group.id)}
                 className={`w-full flex items-center gap-3 py-2.5 transition-all duration-200 group px-6 relative
                   ${hasActiveChild && !isGroupOpen
-                    ? 'text-[#C8A84B] font-bold'
+                    ? 'text-[#00E5FF] font-bold'
                     : 'text-[var(--t3)]'}
-                  hover:bg-[#C8A84B]/10 hover:text-[#C8A84B]`}
+                  hover:bg-[#00E5FF]/10 hover:text-[#00E5FF]`}
               >
                 {/* Left accent bar - shown on hover only via opacity, no layout shift */}
-                <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-[#C8A84B] opacity-0 group-hover:opacity-60 transition-opacity duration-200" />
+                <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-[#00E5FF] opacity-0 group-hover:opacity-60 transition-opacity duration-200" />
                 
-                <group.icon className={`w-4 h-4 shrink-0 transition-colors duration-200 ${hasActiveChild ? 'text-[#C8A84B]' : 'text-[var(--t3)] group-hover:text-[#C8A84B]'}`} />
+                <group.icon className={`w-4 h-4 shrink-0 transition-colors duration-200 ${hasActiveChild ? 'text-[#00E5FF]' : 'text-[var(--t3)] group-hover:text-[#00E5FF]'}`} />
                 {!isCollapsed && (
                   <>
                     <span className="text-[11.5px] font-semibold flex-1 text-left tracking-tight">{group.title}</span>
-                    <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${isGroupOpen ? 'rotate-180' : ''} ${hasActiveChild ? 'text-[#C8A84B]' : ''}`} />
+                    <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${isGroupOpen ? 'rotate-180' : ''} ${hasActiveChild ? 'text-[#00E5FF]' : ''}`} />
                   </>
                 )}
                 {hasActiveChild && !isGroupOpen && (
-                  <div className="w-1 h-1 rounded-full bg-[#C8A84B] animate-pulse" />
+                  <div className="w-1 h-1 rounded-full bg-[#00E5FF] animate-pulse" />
                 )}
               </button>
 
@@ -200,26 +202,28 @@ export default function Sidebar({ user, isCollapsed, onToggle, onLogout }: Sideb
                     
                     <div className="flex flex-col">
                       {accessibleItems.map((item) => {
-                        const isActive = currentPath.startsWith(item.path);
+                        const isActive = item.path.includes('?')
+                          ? (location.pathname + location.search) === item.path
+                          : location.pathname === item.path;
                         return (
                           <button
                             key={item.id}
                             onClick={() => navigate(item.path)}
                             className={`flex items-center gap-3 py-2 transition-all duration-200 relative group px-6
                               ${isActive 
-                                ? 'bg-[#C8A84B]/10 text-[#C8A84B] font-bold' 
-                                : 'text-[var(--t3)] hover:bg-[#C8A84B]/10 hover:text-[var(--t2)]'}`}
+                                ? 'bg-[#00E5FF]/10 text-[#00E5FF] font-bold' 
+                                : 'text-[var(--t3)] hover:bg-[#00E5FF]/10 hover:text-[var(--t2)]'}`}
                           >
                             {/* Left accent bar via absolute — no layout jump */}
-                            <div className={`absolute left-0 top-0 bottom-0 w-[2px] bg-[#C8A84B] transition-opacity duration-200
+                            <div className={`absolute left-0 top-0 bottom-0 w-[2px] bg-[#00E5FF] transition-opacity duration-200
                               ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-40'}`} />
                             {/* Elegant Dot */}
                             <div className={`absolute left-[22.5px] w-[8px] h-[8px] rounded-full border-2 border-[var(--sidebar)] transition-all z-10
-                              ${isActive ? 'bg-[#C8A84B] scale-110 shadow-[0_0_8px_var(--p-glow)]' : 'bg-[var(--p-line)] group-hover:bg-[var(--t4)]'}`} 
+                              ${isActive ? 'bg-[#00E5FF] scale-110 shadow-[0_0_8px_var(--p-glow)]' : 'bg-[var(--p-line)] group-hover:bg-[var(--t4)]'}`} 
                             />
                             
                             <div className="flex items-center gap-3 ml-5">
-                              <item.icon className={`w-3 h-3 shrink-0 ${isActive ? 'text-[#C8A84B]' : 'text-[var(--t4)] group-hover:text-[var(--t2)]'}`} />
+                              <item.icon className={`w-3 h-3 shrink-0 ${isActive ? 'text-[#00E5FF]' : 'text-[var(--t4)] group-hover:text-[var(--t2)]'}`} />
                               <span className="text-[10.5px] truncate tracking-tight">{item.label}</span>
                             </div>
                           </button>

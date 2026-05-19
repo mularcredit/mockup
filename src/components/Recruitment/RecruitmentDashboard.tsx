@@ -13,6 +13,9 @@ import { NewPositionModal } from './components/NewPositionModal';
 import { ApplicationDetailModal } from './components/ApplicationDetailModal';
 import { branches } from './components/constants/branches';
 import { jobPositions } from './components/constants/jobPositions';
+import JobBoardPreview from './components/JobBoardPreview';
+import AssessmentsSection from './components/AssessmentsSection';
+import InterviewsSection from './components/InterviewsSection';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
@@ -134,11 +137,11 @@ export default function RecruitmentDashboard() {
 
   return (
     <div className="p-4 space-y-6 bg-[var(--page)] min-h-screen max-w-screen-2xl mx-auto">
-      <div className="bg-[var(--card)] rounded-xl shadow-sm border border-gray-200 p-6">
+      <div className="bg-[var(--card)] rounded-xl shadow-sm border border-[var(--p-line)] p-6">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-1">Employee Recruitment Portal</h1>
-            <p className="text-gray-600 text-xs">Manage open positions, applications, and hiring needs across all branches</p>
+            <h1 className="text-2xl font-bold text-[var(--t1)] mb-1">Employee Recruitment Portal</h1>
+            <p className="text-[var(--t3)] text-xs">Manage open positions, applications, and hiring needs across all branches</p>
           </div>
           <div className="flex flex-wrap gap-2 w-full md:w-auto">
             
@@ -223,6 +226,21 @@ export default function RecruitmentDashboard() {
           setSelectedApplication={setSelectedApplication}
           onUpdate={fetchApplications}
         />
+      )}
+
+      {selectedTab === 'public-board' && (
+        <JobBoardPreview 
+          positions={positions} 
+          onApplySubmitted={(newApp) => setApplications([newApp, ...applications])}
+        />
+      )}
+
+      {selectedTab === 'assessments' && (
+        <AssessmentsSection />
+      )}
+
+      {selectedTab === 'interviews' && (
+        <InterviewsSection />
       )}
 
       {selectedTab === 'branches' && (

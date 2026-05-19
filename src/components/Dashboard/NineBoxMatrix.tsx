@@ -2,7 +2,7 @@ import React from 'react';
 
 const nbData = [
     { label: 'High potential\nlow perform', val: 182, color: 'rgba(0,212,126,.07)', textCol: 'var(--green)' },
-    { label: 'High potential\nmid perform', val: 640, color: 'rgba(200, 168, 75, .07)', textCol: 'var(--gold)' },
+    { label: 'High potential\nmid perform', val: 640, color: 'rgba(0, 229, 255, .07)', textCol: 'var(--gold)' },
     { label: 'Star performers', val: 380, color: 'rgba(0,212,126,.18)', textCol: '#000' },
     { label: 'Mid potential\nlow perform', val: 510, color: 'rgba(255,255,255,.02)', textCol: 'var(--t3)' },
     { label: 'Core contributors', val: 3240, color: 'rgba(74,143,212,.07)', textCol: 'var(--blue)' },

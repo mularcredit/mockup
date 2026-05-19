@@ -135,7 +135,7 @@ const MpesaZapPortal: React.FC = () => {
 
             {/* ── METRIC STRIP ── */}
             <div className="grid grid-cols-12 gap-3">
-                <div className="col-span-12 md:col-span-4 p-5 rounded-2xl bg-gradient-to-br from-[rgba(245,166,35,0.1)] to-[rgba(245,166,35,0.02)] border border-[var(--p-glow)] shadow-2xl relative overflow-hidden group hover:translate-y-[-2px] transition-all">
+                <div className="col-span-12 md:col-span-4 p-5 rounded-2xl bg-gradient-to-br from-[rgba(0, 229, 255,0.1)] to-[rgba(0, 229, 255,0.02)] border border-[var(--p-glow)] shadow-2xl relative overflow-hidden group hover:translate-y-[-2px] transition-all">
                     <div className="absolute top-4 right-4 text-[9px] font-semibold text-[var(--p)] bg-[var(--p-dim)] px-2 py-0.5 rounded-full">↑ 12.4% vs April</div>
                     <div className="text-[24px] font-semibold text-[var(--t1)] mb-1">KES 87.4M</div>
                     <div className="text-[11px] font-semibold text-[var(--t2)] mb-2 tracking-tight">Total revenue · May 2025</div>
