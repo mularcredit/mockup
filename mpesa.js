@@ -21,14 +21,10 @@ const MPESA_CONFIG = {
   transactionStatusQueueTimeoutURL: process.env.MPESA_TRANSACTION_STATUS_QUEUE_TIMEOUT_URL,
 };
 
-// C2B Configuration — SERVER_URL env var controls the callback host
-// Set SERVER_URL=https://your-digitalocean-domain.com in your .env on the server
-const SERVER_BASE = process.env.SERVER_URL
-  || (process.env.MPESA_B2C_RESULT_URL ? process.env.MPESA_B2C_RESULT_URL.replace('/api/mpesa/b2c-result', '') : null)
-  || 'https://mpesa-22p0.onrender.com';
+// C2B Configuration - UPDATED WITH YOUR PUBLIC URL
 const C2B_CONFIG = {
   shortCode: process.env.MPESA_SHORTCODE,
-  confirmationURL: `${SERVER_BASE}/api/mpesa/c2b-confirmation`,
+  confirmationURL: "https://mpesa-22p0.onrender.com/api/mpesa/c2b-confirmation",
   responseType: "Completed"
 };
 
