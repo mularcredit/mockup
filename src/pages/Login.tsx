@@ -264,11 +264,6 @@ export default function Login({ onLoginSuccess }: LoginProps) {
 
                 {/* BOTTOM CONTENT */}
                 <div className="left-content-wrapper">
-                    <div className="system-badge">
-                        <span className="badge-dot" />
-                        <span className="badge-text">LIVE SYSTEM · SECURE CONNECTION</span>
-                    </div>
-
                     <h1 className="headline-ultra-thin">
                         Your people.<br />
                         Your <strong>growth.</strong><br />
