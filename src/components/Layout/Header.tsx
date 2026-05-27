@@ -531,7 +531,7 @@ export default function Header({ user, onLogout, selectedTown, onTownChange, sel
                 {companyProfile.company_name}
               </div>
               {companyProfile.company_tagline && (
-                <div className="text-[9px] text-[var(--t4)] mt-0.5 truncate font-light">
+                <div className="text-[9px] text-[var(--t3)] mt-0.5 truncate">
                   {companyProfile.company_tagline}
                 </div>
               )}
