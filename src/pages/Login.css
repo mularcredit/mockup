@@ -41,20 +41,11 @@ html, body {
 }
 
 .bg-ambient {
-    position: absolute;
-    inset: 0;
-    background: 
-        radial-gradient(ellipse at 30% 20%, rgba(0, 229, 255,0.15) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 80%, rgba(29,158,117,0.1) 0%, transparent 45%),
-        radial-gradient(ellipse at 60% 50%, rgba(0, 229, 255,0.06) 0%, transparent 60%);
+    display: none;
 }
 
 .bg-custom-grid {
-    position: absolute;
-    inset: 0;
-    background: 
-        repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(0, 229, 255,0.04) 60px),
-        repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(0, 229, 255,0.04) 60px);
+    display: none;
 }
 
 .left-content-wrapper {

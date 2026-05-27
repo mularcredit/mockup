@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Users, CalendarDays, Wallet, NotepadText, Phone, AlertCircle, Settings, HelpCircle, MapPin, RefreshCw, Cake, Video, BookOpen, FileText, TrendingUp, ChevronRight, Crown, Send, Network, Layers, Target } from "lucide-react";
+import { Users, CalendarDays, Wallet, NotepadText, Phone, AlertCircle, Settings, HelpCircle, MapPin, RefreshCw, Cake, Video, BookOpen, FileText, TrendingUp, ChevronRight, Crown, Send, Network, Layers, Target, BarChart2, ClipboardCheck, UserCog, LayoutDashboard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase"
 import { TownProps } from '../../types/supabase';
@@ -13,6 +13,12 @@ import RecruitmentFunnel from './RecruitmentFunnel';
 import NineBoxMatrix from './NineBoxMatrix';
 import RetentionGauge from './RetentionGauge';
 import LifecycleMap from './LifecycleMap';
+import HRDashboard from './HRDashboard';
+import PayrollDashboardView from './PayrollDashboardView';
+import ManagerDashboard from './ManagerDashboard';
+import ESSDashboard from './ESSDashboard';
+import RecruitmentView from './RecruitmentView';
+import ComplianceDashboard from './ComplianceDashboard';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
 import { Quotes } from "@phosphor-icons/react";
 import LoadingSpinner from '../UI/LoadingSpinner';
@@ -89,8 +95,28 @@ interface ActivityItem {
   amount?: number;
 }
 
+const DASHBOARD_VARIANTS = [
+  { id: 'executive', label: 'Executive', icon: Crown },
+  { id: 'hr', label: 'HR Dashboard', icon: Users },
+  { id: 'payroll', label: 'Payroll', icon: Wallet },
+  { id: 'manager', label: 'Manager', icon: UserCog },
+  { id: 'ess', label: 'ESS', icon: LayoutDashboard },
+  { id: 'recruitment', label: 'Recruitment', icon: Users },
+  { id: 'compliance', label: 'Compliance', icon: ClipboardCheck },
+];
+
+const AI_INSIGHTS = [
+  { type: 'warn', text: 'Sales Division showing burnout risk increase of 18% — review OT patterns' },
+  { type: 'alert', text: '3 employees flagged as high attrition risk this quarter' },
+  { type: 'info', text: 'Next payroll forecast: KES 12.8M (+3.2% from last month)' },
+  { type: 'warn', text: 'Leave concentration detected: 6 staff off same week in Finance Dept' },
+  { type: 'info', text: 'Recruitment pipeline: 2 offers pending acceptance beyond SLA' },
+];
+
 export default function DashboardMain({ selectedTown, onTownChange, selectedRegion }: TownProps) {
   const [activeTab, setActiveTab] = useState("overview");
+  const [activeDashboard, setActiveDashboard] = useState("executive");
+  const [aiInsightIndex, setAiInsightIndex] = useState(0);
   const [showSupportPopup, setShowSupportPopup] = useState(false);
   const [showUnauthorizedPopup, setShowUnauthorizedPopup] = useState(false);
   const [stats, setStats] = useState({
@@ -743,6 +769,14 @@ export default function DashboardMain({ selectedTown, onTownChange, selectedRegi
     }
   };
 
+  // Cycle active AI insight every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAiInsightIndex(i => (i + 1) % AI_INSIGHTS.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   const handleRefresh = () => {
     const currentFetchId = ++fetchIdRef.current;
     fetchDashboardData(currentFetchId);
@@ -826,17 +860,71 @@ export default function DashboardMain({ selectedTown, onTownChange, selectedRegi
         <LoadingSpinner message="Loading" />
       ) : (
         <>
+          {/* ── DASHBOARD VARIANT SELECTOR ── */}
+          <div className="flex items-center gap-1 mb-5 overflow-x-auto scrollbar-hide pb-1">
+            {DASHBOARD_VARIANTS.map(v => {
+              const Icon = v.icon;
+              const isActive = activeDashboard === v.id;
+              return (
+                <button
+                  key={v.id}
+                  onClick={() => setActiveDashboard(v.id)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10.5px] font-semibold whitespace-nowrap transition-all border shrink-0
+                    ${isActive
+                      ? 'bg-[#00E5FF]/15 border-[#00E5FF]/40 text-[#00E5FF] shadow-[0_0_12px_rgba(0,229,255,0.15)]'
+                      : 'border-[var(--p-line)] text-[var(--t3)] hover:text-[var(--t1)] hover:border-[var(--t4)] bg-transparent'
+                    }`}
+                >
+                  <Icon className="w-3 h-3" />
+                  {v.label}
+                  {isActive && <span className="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-pulse ml-0.5" />}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* ── AI INSIGHTS ROW ── */}
+          <div className="flex items-center gap-2 mb-5 overflow-x-auto scrollbar-hide pb-0.5">
+            {AI_INSIGHTS.map((insight, i) => (
+              <div
+                key={i}
+                className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg shrink-0 transition-opacity ${
+                  i === aiInsightIndex ? 'opacity-100' : 'opacity-40'
+                }`}
+                style={{ background: 'var(--glass)' }}
+              >
+                <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                  insight.type === 'alert' ? 'bg-[var(--red)]' :
+                  insight.type === 'warn' ? 'bg-[var(--amber)]' : 'bg-[#00E5FF]'
+                }`} />
+                <span className="text-[10px] text-[var(--t2)] whitespace-nowrap">{insight.text}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* ── ROLE DASHBOARD VIEWS ── */}
+          {activeDashboard === 'hr' && <HRDashboard />}
+          {activeDashboard === 'payroll' && <PayrollDashboardView />}
+          {activeDashboard === 'manager' && <ManagerDashboard />}
+          {activeDashboard === 'ess' && <ESSDashboard />}
+          {activeDashboard === 'recruitment' && <RecruitmentView />}
+          {activeDashboard === 'compliance' && <ComplianceDashboard />}
+
+          {(activeDashboard === 'executive' || activeDashboard === 'learning') && <>
 
           {/* ── KPI STRIP (Refined Density) ── */}
-          <KPIStrip 
+          <KPIStrip
             items={[
               { label: 'Total Employees', value: stats.employees.toLocaleString(), trend: '+12 this month', trendType: 'up' },
-              { label: 'On Leave Today', value: '14', trend: '3 returning tomorrow', trendType: 'up' },
-              { label: 'Gender Ratio', value: '64% M / 36% F', trend: 'Male majority', trendType: 'neutral' },
-              { label: "This Month's Payroll", value: 'KES 12.4M', trend: 'KES 400K higher than last month', trendType: 'up' },
-              { label: 'Open Jobs', value: '3', trend: '12 applications pending', trendType: 'up' },
-              { label: 'Expiring Contracts', value: '7', trend: 'Ending this month', trendType: 'warn' },
+              { label: 'On Leave Today', value: '38', trend: '→ View Department Impact', trendType: 'up' },
+              { label: "Payroll Processed", value: 'KES 12.4M', trend: '→ 5 Exceptions Pending', trendType: 'warn' },
+              { label: 'Open Positions', value: '14', trend: '→ 5 Delayed Beyond SLA', trendType: 'warn' },
+              { label: 'Expiring Contracts', value: '12', trend: '→ 4 Require Immediate Action', trendType: 'warn' },
+              { label: 'Compliance Score', value: '98%', trend: '→ 2 Pending Filings', trendType: 'up' },
+              { label: 'Attrition Risk', value: '16', trend: 'Employees Flagged High Risk', trendType: 'dn' },
+              { label: 'Attendance Rate', value: '94.7%', trend: 'Workforce Present Today', trendType: 'up' },
             ]}
+            columns={8}
           />
 
           {/* ── LIFECYCLE MAP (Employee Journey) ── */}
@@ -961,34 +1049,50 @@ export default function DashboardMain({ selectedTown, onTownChange, selectedRegi
           </div>
 
 
-          {/* ── ROW 4: Recent Activity (c5) + News Bulletins (c4) + Quick Stats (c3) ── */}
+          {/* ── ROW 4: Operational Action Center + News Bulletins + Quick Stats ── */}
           <div className="grid grid-cols-12 gap-3">
-            {/* Statutory Compliance Audit Log */}
+            {/* Operational Action Center */}
             <div className="glass-card col-span-12 lg:col-span-5" style={{ display: 'flex', flexDirection: 'column' }}>
               <div style={{ padding: '18px', borderBottom: '1px solid var(--p-line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--t1)' }}>Pending Approvals & Alerts</div>
-                  <div style={{ fontSize: '10px', color: 'var(--t3)', marginTop: 2 }}>Things that need your attention</div>
+                  <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--t1)' }}>Operational Action Center</div>
+                  <div style={{ fontSize: '10px', color: 'var(--t3)', marginTop: 2 }}>Items requiring your attention now</div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                  <span style={{ fontSize: '9px', color: 'var(--red)', fontWeight: 600 }}>ACTION NEEDED</span>
-                </div>
+                <span style={{ fontSize: '9px', color: 'var(--red)', fontWeight: 700, letterSpacing: '0.08em' }}>ACTION NEEDED</span>
               </div>
-              <div style={{ padding: '12px 18px', overflowY: 'auto', maxHeight: 300 }} className="custom-scrollbar">
+              <div style={{ padding: '12px 18px', overflowY: 'auto', maxHeight: 320 }} className="custom-scrollbar">
                 {[
-                  { user: 'S. Kiprono', act: 'Leave request pending approval', time: 'Since yesterday', col: 'var(--amber)' },
-                  { user: 'J. Mwangi', act: 'Requested KES 5,000 salary advance', time: 'Today', col: 'var(--p)' },
-                  { user: 'A. Ochieng', act: 'Probation period ends in 3 days', time: 'Action needed', col: 'var(--red)' },
-                  { user: 'H. Njoroge', act: 'Missed clock-in today', time: 'Absent', col: 'var(--red)' },
-                  { user: 'System', act: 'Verify SHA numbers for 4 new hires', time: 'Before payroll', col: 'var(--t1)' },
-                ].map((log, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '10px 0', borderBottom: '1px solid var(--glass)' }}>
-                    <div style={{ width: 6, height: 6, borderRadius: '50%', background: log.col, marginTop: 4, flexShrink: 0 }} />
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 11, fontWeight: 500, color: 'var(--t1)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{log.act}</div>
-                      <div style={{ fontSize: 9, color: 'var(--t3)', marginTop: 2 }}>{log.user}</div>
-                    </div>
-                    <div style={{ fontSize: '9px', color: 'var(--t4)' }}>{log.time}</div>
+                  { category: 'Approvals', items: [
+                    { act: 'Leave request — S. Kiprono', time: 'Since yesterday', col: 'var(--amber)' },
+                    { act: 'Payroll run approval pending', time: 'Due today', col: 'var(--amber)' },
+                  ]},
+                  { category: 'Critical Alerts', items: [
+                    { act: 'Probation ending — A. Ochieng (3 days)', time: 'Action needed', col: 'var(--red)' },
+                    { act: '12 contracts expiring this month', time: '4 critical', col: 'var(--red)' },
+                  ]},
+                  { category: 'Compliance Warnings', items: [
+                    { act: 'SHA numbers missing for 4 new hires', time: 'Before payroll', col: 'var(--p)' },
+                    { act: '2 statutory filings overdue', time: 'PAYE + NSSF', col: 'var(--p)' },
+                  ]},
+                  { category: 'Workforce Risks', items: [
+                    { act: 'H. Njoroge — missed clock-in today', time: 'Absent', col: 'var(--red)' },
+                    { act: 'Burnout risk: Sales Division OT spike', time: '+18% this week', col: 'var(--amber)' },
+                  ]},
+                  { category: 'Recruitment Delays', items: [
+                    { act: '5 open positions beyond SLA', time: '>14 days', col: 'var(--amber)' },
+                  ]},
+                ].map((group, gi) => (
+                  <div key={gi} className="mb-1">
+                    <div style={{ fontSize: '8.5px', fontWeight: 700, color: 'var(--t4)', letterSpacing: '0.1em', textTransform: 'uppercase', padding: '8px 0 4px' }}>{group.category}</div>
+                    {group.items.map((log, i) => (
+                      <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '7px 0', borderBottom: '1px solid var(--glass)' }}>
+                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: log.col, marginTop: 4, flexShrink: 0 }} />
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: 11, fontWeight: 500, color: 'var(--t1)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{log.act}</div>
+                        </div>
+                        <div style={{ fontSize: '9px', color: 'var(--t4)', whiteSpace: 'nowrap' }}>{log.time}</div>
+                      </div>
+                    ))}
                   </div>
                 ))}
               </div>
@@ -1044,6 +1148,8 @@ export default function DashboardMain({ selectedTown, onTownChange, selectedRegi
               </button>
             </div>
           </div>
+
+          </>}
         </>
       )}
     </div>

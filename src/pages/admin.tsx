@@ -76,9 +76,6 @@ export default function StaffSignupRequests() {
   if (loading && requests.length === 0) {
     return (
       <div className="min-h-screen bg-[var(--page)] flex flex-col items-center justify-center relative overflow-hidden backdrop-blur-sm">
-        {/* Ambient Background Glow */}
-        <div className="absolute w-64 h-64 rounded-full bg-cyan-500/10 blur-[80px] -z-10 animate-pulse" />
-        
         <div className="flex flex-col items-center justify-center">
           {/* Multi-Ring Elegant Spinner */}
           <div className="relative w-16 h-16 mb-6">

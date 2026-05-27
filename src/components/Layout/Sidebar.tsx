@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import UserAvatar from '../UI/UserAvatar';
-import { 
-  LayoutGrid, Wand2, Kanban, Network, 
-  MessagesSquare, Mails, UsersRound, 
-  UserPlus2, CalendarRange, Target, 
-  Award, UserCheck, ShieldAlert, 
-  HeartHandshake, Landmark, Receipt, 
-  Package, Smartphone, PieChart, 
+import {
+  LayoutGrid, Wand2, Kanban, Network,
+  MessagesSquare, Mails, UsersRound,
+  UserPlus2, CalendarRange, Target,
+  Award, UserCheck, ShieldAlert,
+  HeartHandshake, Landmark, Receipt,
+  Package, Smartphone, PieChart,
   ShieldEllipsis, Settings, ShieldHalf,
-  ChevronRight, Layers, ChevronDown,
-  LogOut, Building2, Clock
+  ChevronDown, LogOut, Building2, Clock,
+  Bell, Zap, FolderOpen, CheckSquare,
+  Timer, BookOpen, BarChart2, TrendingUp,
+  FileText, Wallet, BrainCircuit, Hash,
+  ClipboardList, FileBarChart, Layers
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { usePermissions } from '../../hooks/usePermissions';
@@ -17,47 +20,51 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const menuGroups = [
   {
-    id: 'hustle-hub',
-    title: "Hustle Hub",
+    id: 'workspace',
+    title: "Workspace",
     icon: LayoutGrid,
     items: [
-      { id: 'dashboard', label: 'Command Center', icon: LayoutGrid, path: '/dashboard', permission: 'dashboard' },
-      { id: 'ai-assistant', label: 'Zira Intelligence', icon: Wand2, path: '/ai-assistant', permission: 'ai-assistant' },
+      { id: 'dashboard', label: 'Dashboard', icon: LayoutGrid, path: '/dashboard', permission: 'dashboard' },
+      { id: 'quick-actions', label: 'Quick Actions', icon: Zap, path: '/dashboard', permission: 'dashboard' },
+      { id: 'notifications', label: 'Notifications', icon: Bell, path: '/dashboard', permission: 'dashboard' },
     ]
   },
   {
-    id: 'staff-records',
-    title: "Staff & Records",
+    id: 'people-ops',
+    title: "People Operations",
     icon: UsersRound,
     items: [
-      { id: 'employees', label: 'Wafanyakazi Records', icon: UsersRound, path: '/employees', permission: 'employees' },
-      { id: 'recruitment', label: 'Talent Sourcing', icon: UserPlus2, path: '/recruitment', permission: 'recruitment' },
+      { id: 'employees', label: 'Employee Directory', icon: UsersRound, path: '/employees', permission: 'employees' },
+      { id: 'hr-lifecycle-dashboard', label: 'Employee Lifecycle', icon: HeartHandshake, path: '/hr-lifecycle', permission: 'hr-lifecycle' },
+      { id: 'hr-onboarding-contract', label: 'Onboarding & Offboarding', icon: UserPlus2, path: '/hr-lifecycle?tab=onboarding', permission: 'hr-lifecycle' },
       { id: 'staffcheck', label: 'Disciplinary Logs', icon: ShieldAlert, path: '/staffcheck', permission: 'staffcheck' },
-      { id: 'hr-lifecycle-dashboard', label: 'Employee Journey', icon: HeartHandshake, path: '/hr-lifecycle', permission: 'hr-lifecycle' },
-      { id: 'hr-onboarding-contract', label: 'Statutory Onboarding', icon: UserPlus2, path: '/hr-lifecycle?tab=onboarding', permission: 'hr-lifecycle' },
+      { id: 'documents-center', label: 'Documents Center', icon: FolderOpen, path: '/employees', permission: 'employees' },
+      { id: 'hr-approvals', label: 'HR Approvals', icon: CheckSquare, path: '/hr-lifecycle', permission: 'hr-lifecycle' },
     ]
   },
   {
-    id: 'time-attendance',
-    title: "Time & Attendance",
+    id: 'workforce-mgmt',
+    title: "Workforce Management",
     icon: CalendarRange,
     items: [
-      { id: 'attendance', label: 'T&A Operations Portal', icon: Clock, path: '/attendance', permission: 'leaves' },
+      { id: 'attendance', label: 'Attendance', icon: Clock, path: '/attendance', permission: 'leaves' },
       { id: 'leaves', label: 'Leave Management', icon: CalendarRange, path: '/leaves', permission: 'leaves' },
-      { id: 'task-manager', label: 'Duty Rosters', icon: Kanban, path: '/tasks', permission: 'task-manager' },
-      { id: 'teams', label: 'Operations Teams', icon: Network, path: '/teams', permission: 'teams' },
+      { id: 'task-manager', label: 'Shifts & Duty Rosters', icon: Kanban, path: '/tasks', permission: 'task-manager' },
+      { id: 'timesheets', label: 'Timesheets', icon: ClipboardList, path: '/attendance', permission: 'leaves' },
+      { id: 'overtime', label: 'Overtime Management', icon: Timer, path: '/attendance', permission: 'leaves' },
     ]
   },
   {
-    id: 'pay-statutory',
-    title: "Pay & Statutory",
+    id: 'payroll-compliance',
+    title: "Payroll & Compliance",
     icon: Landmark,
     items: [
-      { id: 'payroll', label: 'Payroll & NSSF/NHIF', icon: Landmark, path: '/payroll', permission: 'payroll' },
-      { id: 'mpesa-zap', label: 'M-Pesa Zap Hub', icon: Smartphone, path: '/mpesa-zap', permission: 'mpesa-zap' },
-      { id: 'advanced', label: 'Salary Advances', icon: Landmark, path: '/salaryadmin', permission: 'salaryadmin' },
+      { id: 'payroll', label: 'Payroll Processing', icon: Landmark, path: '/payroll', permission: 'payroll' },
+      { id: 'statutory', label: 'Statutory Compliance', icon: ShieldHalf, path: '/payroll', permission: 'payroll' },
+      { id: 'tax-center', label: 'Tax Center', icon: FileText, path: '/payroll', permission: 'payroll' },
+      { id: 'mpesa-zap', label: 'M-Pesa Disbursements', icon: Smartphone, path: '/mpesa-zap', permission: 'mpesa-zap' },
+      { id: 'advanced', label: 'Salary Advances & Loans', icon: Wallet, path: '/salaryadmin', permission: 'salaryadmin' },
       { id: 'expense', label: 'Claims & Expenses', icon: Receipt, path: '/expenses', permission: 'expenses' },
-      { id: 'asset', label: 'Company Assets', icon: Package, path: '/asset', permission: 'asset' },
     ]
   },
   {
@@ -65,29 +72,42 @@ const menuGroups = [
     title: "Talent & Growth",
     icon: Target,
     items: [
-      { id: 'performance', label: 'KPI Reviews', icon: Target, path: '/performance', permission: 'performance' },
-      { id: 'training', label: 'Staff Upskilling', icon: Award, path: '/training', permission: 'training' },
-      { id: 'assign-managers', label: 'Leadership Grid', icon: UserCheck, path: '/assign-managers', permission: 'assign-managers' },
+      { id: 'recruitment', label: 'Recruitment / Job Board', icon: UserPlus2, path: '/recruitment', permission: 'recruitment' },
+      { id: 'training', label: 'Learning & Development', icon: BookOpen, path: '/training', permission: 'training' },
+      { id: 'performance', label: 'Performance & KPIs', icon: Target, path: '/performance', permission: 'performance' },
+      { id: 'assign-managers', label: 'Manager Assignment', icon: UserCheck, path: '/assign-managers', permission: 'assign-managers' },
     ]
   },
   {
-    id: 'comm-center',
-    title: "Comm Center",
-    icon: MessagesSquare,
+    id: 'collaboration',
+    title: "Collaboration",
+    icon: Network,
     items: [
+      { id: 'teams', label: 'Teams & Channels', icon: Hash, path: '/teams', permission: 'teams' },
       { id: 'messages', label: 'SMS Broadcast', icon: MessagesSquare, path: '/sms', permission: 'sms' },
       { id: 'email-portal', label: 'Corporate Mail', icon: Mails, path: '/email-portal', permission: 'email-portal' },
     ]
   },
   {
-    id: 'system-config',
-    title: "System Config",
+    id: 'analytics-ai',
+    title: "Analytics & AI",
+    icon: BarChart2,
+    items: [
+      { id: 'ai-assistant', label: 'AI Intelligence', icon: BrainCircuit, path: '/ai-assistant', permission: 'ai-assistant' },
+      { id: 'reports', label: 'Reports Center', icon: FileBarChart, path: '/reports', permission: 'reports' },
+      { id: 'workforce-analytics', label: 'Workforce Analytics', icon: TrendingUp, path: '/reports', permission: 'reports' },
+      { id: 'forecasts', label: 'Forecasts', icon: BarChart2, path: '/reports', permission: 'reports' },
+    ]
+  },
+  {
+    id: 'settings',
+    title: "Settings",
     icon: Settings,
     items: [
       { id: 'org-setup', label: 'Organization Setup', icon: Building2, path: '/organization-setup', permission: 'settings' },
-      { id: 'reports', label: 'Audit Reports', icon: PieChart, path: '/reports', permission: 'reports' },
-      { id: 'settings', label: 'Hub Settings', icon: Settings, path: '/settings', permission: 'settings' },
-      { id: 'role-permissions', label: 'Security Access', icon: ShieldHalf, path: '/role-permissions', permission: 'role-permissions' },
+      { id: 'role-permissions', label: 'Roles & Permissions', icon: ShieldHalf, path: '/role-permissions', permission: 'role-permissions' },
+      { id: 'settings', label: 'System Settings', icon: Settings, path: '/settings', permission: 'settings' },
+      { id: 'asset', label: 'Company Assets', icon: Package, path: '/asset', permission: 'asset' },
       { id: 'email-admin', label: 'Domain Admin', icon: ShieldEllipsis, path: '/adminconfirm', permission: 'adminconfirm' },
     ]
   }
@@ -239,8 +259,19 @@ export default function Sidebar({ user, isCollapsed, onToggle, onLogout }: Sideb
       </div>
 
       {/* sb-foot */}
-      <div className="mt-auto p-4 border-t border-[var(--p-line)] bg-[var(--sidebar)]">
-        <div className="flex flex-col gap-3">
+      <div className="mt-auto border-t border-[var(--p-line)] bg-[var(--sidebar)]">
+        {/* Powered by ZiraHR */}
+        {!isCollapsed && (
+          <div className="px-4 pt-3 pb-1 flex items-center justify-center gap-1.5">
+            <img
+              src={isLightMode ? "/zira-dark.png" : "/ZIRA.png"}
+              alt="ZiraHR"
+              className="h-3 w-auto object-contain opacity-40"
+            />
+            <span className="text-[8px] text-[var(--t4)] font-medium tracking-widest uppercase opacity-60">Powered by ZiraHR</span>
+          </div>
+        )}
+        <div className="p-4 pt-2 flex flex-col gap-3">
           {/* User Profile & Logout */}
           <div className={`flex items-center gap-3 p-2 rounded-2xl bg-[var(--glass)] border border-[var(--p-line)] transition-all ${isCollapsed ? 'justify-center p-1.5' : ''}`}>
             <UserAvatar name={user?.email || 'Admin'} size={isCollapsed ? 28 : 32} />
@@ -251,7 +282,7 @@ export default function Sidebar({ user, isCollapsed, onToggle, onLogout }: Sideb
               </div>
             )}
             {!isCollapsed && onLogout && (
-              <button 
+              <button
                 onClick={onLogout}
                 className="p-2 text-[var(--t4)] hover:text-[var(--red)] transition-all rounded-lg hover:bg-[var(--red-d)]"
                 title="Logout"
@@ -260,7 +291,6 @@ export default function Sidebar({ user, isCollapsed, onToggle, onLogout }: Sideb
               </button>
             )}
           </div>
-
         </div>
       </div>
     </div>

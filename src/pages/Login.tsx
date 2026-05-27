@@ -211,8 +211,7 @@ export default function Login({ onLoginSuccess }: LoginProps) {
                         return;
                     }
 
-                    const client = supabaseAdmin || supabase;
-                    const { data, error } = await client
+                    const { data, error } = await supabase
                         .from('users')
                         .select('branch')
                         .eq('email', email.toLowerCase())
