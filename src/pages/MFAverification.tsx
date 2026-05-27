@@ -300,9 +300,9 @@ export default function MFAVerification() {
 
           {/* LEFT LOGO */}
           <div className="login-logo-left">
-            <img 
-              src="/ZIRA.png" 
-              alt="ZiraHR" 
+            <img
+              src={isLightMode ? '/zira-dark.png' : '/ZIRA.png'}
+              alt="ZiraHR"
               className="login-logo-main"
             />
           </div>

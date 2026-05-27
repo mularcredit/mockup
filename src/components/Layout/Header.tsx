@@ -513,7 +513,32 @@ export default function Header({ user, onLogout, selectedTown, onTownChange, sel
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-[var(--sidebar)] border-b border-[var(--p-line)] h-[56px] flex items-center px-[26px] justify-end">
+      <header className="sticky top-0 z-40 bg-[var(--sidebar)] border-b border-[var(--p-line)] h-[56px] flex items-center px-[26px] justify-between">
+
+        {/* Tenant Branding */}
+        <div className="flex items-center gap-2.5 min-w-0">
+          {companyProfile?.image_url && (
+            <img
+              src={companyProfile.image_url}
+              alt={companyProfile.company_name || 'Company'}
+              className="h-7 w-auto object-contain shrink-0"
+              style={{ maxWidth: 80 }}
+            />
+          )}
+          {companyProfile?.company_name && (
+            <div className="min-w-0">
+              <div className="text-[12px] font-semibold text-[var(--t1)] leading-none truncate">
+                {companyProfile.company_name}
+              </div>
+              {companyProfile.company_tagline && (
+                <div className="text-[9px] text-[var(--t4)] mt-0.5 truncate font-light">
+                  {companyProfile.company_tagline}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
         {/* Action Controls */}
         <div className="flex items-center gap-3">
 
