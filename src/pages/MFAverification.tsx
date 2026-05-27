@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase';
 import toast from 'react-hot-toast';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CircleNotch, ShieldCheck, ArrowLeft, ArrowsClockwise, Quotes } from "@phosphor-icons/react";
+import { CircleNotch, ShieldCheck, ArrowLeft, ArrowsClockwise, Quotes, Sun, Moon } from "@phosphor-icons/react";
 import './Login.css';
 
 interface MFAData {
@@ -56,8 +56,20 @@ export default function MFAVerification() {
     return () => observer.disconnect();
   }, []);
 
+  const toggleTheme = () => {
+    const next = !isLightMode;
+    setIsLightMode(next);
+    if (next) {
+      document.body.classList.add('light');
+      localStorage.setItem('theme', 'light');
+    } else {
+      document.body.classList.remove('light');
+      localStorage.setItem('theme', 'dark');
+    }
+  };
+
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  const hasShownSessionError = useRef(false); 
+  const hasShownSessionError = useRef(false);
   const hasTriggeredInitialSend = useRef(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -317,11 +329,18 @@ export default function MFAVerification() {
 
         {/* RIGHT COLUMN */}
         <div className="login-right-pane">
-          {/* RIGHT LOGO */}
+          {/* RIGHT LOGO + THEME TOGGLE */}
           <div className="login-logo-right">
-            <img 
-              src="/zira-dark.png" 
-              alt="ZiraHR" 
+            <button
+              onClick={toggleTheme}
+              className="theme-toggle-auth"
+              title={isLightMode ? 'Switch to dark mode' : 'Switch to light mode'}
+            >
+              {isLightMode ? <Moon size={15} weight="fill" /> : <Sun size={15} weight="fill" />}
+            </button>
+            <img
+              src="/zira-dark.png"
+              alt="ZiraHR"
               className="login-logo-main"
             />
           </div>

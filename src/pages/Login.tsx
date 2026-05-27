@@ -3,11 +3,13 @@ import { supabase } from '../lib/supabase';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useAppUpdate } from '../sw';
-import { 
+import {
     CircleNotch,
     CheckCircle,
     X,
-    Quotes
+    Quotes,
+    Sun,
+    Moon
 } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './Login.css';
@@ -81,6 +83,18 @@ export default function Login({ onLoginSuccess }: LoginProps) {
         return () => observer.disconnect();
     }, []);
     
+    const toggleTheme = () => {
+        const next = !isLightMode;
+        setIsLightMode(next);
+        if (next) {
+            document.body.classList.add('light');
+            localStorage.setItem('theme', 'light');
+        } else {
+            document.body.classList.remove('light');
+            localStorage.setItem('theme', 'dark');
+        }
+    };
+
     const navigate = useNavigate();
     const { checkForUpdates } = useAppUpdate();
 
@@ -274,24 +288,23 @@ export default function Login({ onLoginSuccess }: LoginProps) {
                         Streamline payroll, manage branch operations, and oversee employee lifecycles through a secure, high-performance platform built for scale.
                     </p>
 
-                    <div className="left-stat-row">
-                        {[['678+', 'Employees'], ['48', 'Branches'], ['99%', 'Uptime']].map(([val, label]) => (
-                            <div key={label}>
-                                <div className="left-stat-val">{val}</div>
-                                <div className="left-stat-lbl">{label}</div>
-                            </div>
-                        ))}
-                    </div>
                 </div>
             </div>
 
             {/* RIGHT COLUMN */}
             <div className="login-right-pane">
-                {/* RIGHT LOGO */}
+                {/* RIGHT LOGO + THEME TOGGLE */}
                 <div className="login-logo-right">
-                    <img 
-                        src="/zira-dark.png" 
-                        alt="ZiraHR" 
+                    <button
+                        onClick={toggleTheme}
+                        className="theme-toggle-auth"
+                        title={isLightMode ? 'Switch to dark mode' : 'Switch to light mode'}
+                    >
+                        {isLightMode ? <Moon size={15} weight="fill" /> : <Sun size={15} weight="fill" />}
+                    </button>
+                    <img
+                        src="/zira-dark.png"
+                        alt="ZiraHR"
                         className="login-logo-main"
                     />
                 </div>
