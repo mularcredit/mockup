@@ -95,6 +95,12 @@ interface ActivityItem {
   amount?: number;
 }
 
+interface CompanyProfile {
+  image_url: string | null;
+  company_name: string | null;
+  company_tagline: string | null;
+}
+
 const DASHBOARD_VARIANTS = [
   { id: 'executive', label: 'Executive', icon: Crown },
   { id: 'hr', label: 'HR Dashboard', icon: Users },
@@ -137,8 +143,23 @@ export default function DashboardMain({ selectedTown, onTownChange, selectedRegi
   const [isNewsLoading, setIsNewsLoading] = useState(true);
   const [isSendingBirthdaySMS, setIsSendingBirthdaySMS] = useState(false);
   const [isLightMode, setIsLightMode] = useState(document.body.classList.contains('light'));
+  const [companyProfile, setCompanyProfile] = useState<CompanyProfile | null>(null);
 
   const navigate = useNavigate();
+
+  // Fetch tenant company profile for dashboard branding
+  useEffect(() => {
+    const fetchCompanyProfile = async () => {
+      const { data } = await supabase
+        .from('company_logo')
+        .select('image_url, company_name, company_tagline')
+        .order('id', { ascending: false })
+        .limit(1)
+        .single();
+      if (data) setCompanyProfile(data);
+    };
+    fetchCompanyProfile();
+  }, []);
 
   // Theme detection for logo
   useEffect(() => {
@@ -860,6 +881,38 @@ export default function DashboardMain({ selectedTown, onTownChange, selectedRegi
         <LoadingSpinner message="Loading" />
       ) : (
         <>
+          {/* ── TENANT IDENTITY ROW ── */}
+          {companyProfile && (
+            <div className="flex items-center justify-between mb-6 pb-5 border-b border-[var(--p-line)]">
+              <div className="flex items-center gap-3">
+                {companyProfile.image_url && (
+                  <img
+                    src={companyProfile.image_url}
+                    alt={companyProfile.company_name || 'Company'}
+                    className="h-10 w-auto object-contain"
+                    style={{ maxWidth: 120 }}
+                  />
+                )}
+                <div>
+                  <div className="text-[14px] font-semibold text-[var(--t1)] leading-snug tracking-tight">
+                    {companyProfile.company_name || 'HRMIS Platform'}
+                  </div>
+                  {companyProfile.company_tagline && (
+                    <div className="text-[10px] text-[var(--t4)] mt-0.5 font-light">
+                      {companyProfile.company_tagline}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-[12px] font-medium text-[var(--t2)]">
+                  {new Date().toLocaleDateString('en-KE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                </div>
+                <div className="text-[10px] text-[var(--t4)] mt-0.5">Executive Overview</div>
+              </div>
+            </div>
+          )}
+
           {/* ── DASHBOARD VARIANT SELECTOR ── */}
           <div className="flex items-center gap-1 mb-5 overflow-x-auto scrollbar-hide pb-1">
             {DASHBOARD_VARIANTS.map(v => {
