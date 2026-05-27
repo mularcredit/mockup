@@ -37,15 +37,118 @@ html, body {
 .bg-fill {
     position: absolute;
     inset: 0;
-    background: #0a0f08;
+    background: #080d09;
+    /* Subtle dot grid texture — no gradient */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Ccircle cx='1' cy='1' r='0.9' fill='%231D9E75' fill-opacity='0.11'/%3E%3C/svg%3E");
 }
 
+/* ── Concentric arc rings radiating from the top-right corner ── */
+/* Outer ring — via bg-engine::before */
+.bg-engine::before {
+    content: '';
+    position: absolute;
+    width: 640px;
+    height: 640px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 229, 255, 0.05);
+    top: -320px;
+    right: -320px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Second ring */
+.bg-engine::after {
+    content: '';
+    position: absolute;
+    width: 440px;
+    height: 440px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 229, 255, 0.08);
+    top: -220px;
+    right: -220px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Third ring — via login-left-pane::before */
+.login-left-pane::before {
+    content: '';
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 229, 255, 0.12);
+    top: -130px;
+    right: -130px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Fourth ring (innermost, green-tinted) */
+.login-left-pane::after {
+    content: '';
+    position: absolute;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    border: 1px solid rgba(29, 158, 117, 0.3);
+    top: -55px;
+    right: -55px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* ── Corner bracket frame — repurpose bg-ambient (TR + BL corners) ── */
 .bg-ambient {
-    display: none;
+    display: block;
+    position: absolute;
+    inset: 22px;
+    background: transparent;
+    pointer-events: none;
+    z-index: 4;
+}
+.bg-ambient::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 16px; height: 16px;
+    border-top: 1px solid rgba(0, 229, 255, 0.38);
+    border-right: 1px solid rgba(0, 229, 255, 0.38);
+}
+.bg-ambient::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 16px; height: 16px;
+    border-bottom: 1px solid rgba(0, 229, 255, 0.38);
+    border-left: 1px solid rgba(0, 229, 255, 0.38);
 }
 
+/* ── Corner bracket frame — repurpose bg-custom-grid (TL + BR corners) ── */
 .bg-custom-grid {
-    display: none;
+    display: block;
+    position: absolute;
+    inset: 22px;
+    background: transparent;
+    pointer-events: none;
+    z-index: 4;
+}
+.bg-custom-grid::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 16px; height: 16px;
+    border-top: 1px solid rgba(0, 229, 255, 0.38);
+    border-left: 1px solid rgba(0, 229, 255, 0.38);
+}
+.bg-custom-grid::after {
+    content: '';
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 16px; height: 16px;
+    border-bottom: 1px solid rgba(0, 229, 255, 0.38);
+    border-right: 1px solid rgba(0, 229, 255, 0.38);
 }
 
 .left-content-wrapper {
@@ -207,6 +310,31 @@ html, body {
     color: #1D9E75 !important;
 }
 
+/* ── Left pane stat strip ── */
+.left-stat-row {
+    display: flex;
+    gap: 28px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 0.5px solid rgba(255, 255, 255, 0.07);
+}
+
+.left-stat-val {
+    font-size: 19px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.82);
+    letter-spacing: -0.02em;
+    line-height: 1;
+}
+
+.left-stat-lbl {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.28);
+    margin-top: 5px;
+}
+
 /* RIGHT COLUMN */
 .login-right-pane {
     padding: 0 100px;
@@ -215,7 +343,7 @@ html, body {
     justify-content: center;
     align-items: flex-start;
     height: 100vh;
-    border-left: 0.5px solid rgba(255, 255, 255, 0.05);
+    border-left: 0.5px solid rgba(255, 255, 255, 0.09);
     background: #0a0f08;
     position: relative;
 }

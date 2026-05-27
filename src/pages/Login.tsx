@@ -264,6 +264,11 @@ export default function Login({ onLoginSuccess }: LoginProps) {
 
                 {/* BOTTOM CONTENT */}
                 <div className="left-content-wrapper">
+                    <div className="system-badge">
+                        <span className="badge-dot" />
+                        <span className="badge-text">LIVE SYSTEM · SECURE CONNECTION</span>
+                    </div>
+
                     <h1 className="headline-ultra-thin">
                         Your people.<br />
                         Your <strong>growth.</strong><br />
@@ -274,6 +279,14 @@ export default function Login({ onLoginSuccess }: LoginProps) {
                         Streamline payroll, manage branch operations, and oversee employee lifecycles through a secure, high-performance platform built for scale.
                     </p>
 
+                    <div className="left-stat-row">
+                        {[['678+', 'Employees'], ['48', 'Branches'], ['99%', 'Uptime']].map(([val, label]) => (
+                            <div key={label}>
+                                <div className="left-stat-val">{val}</div>
+                                <div className="left-stat-lbl">{label}</div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
 
